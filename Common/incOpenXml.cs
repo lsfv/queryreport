@@ -229,8 +229,6 @@ namespace Common
             theRow.RowIndex = rowIndex;
             thesheetData.Append(theRow);
 
-            
-            
             for (int i = 0; i < data.Count; i++)
             {
                 Cell theCell = new Cell();
@@ -253,7 +251,25 @@ namespace Common
                 theRow.InsertAt(theCell, i);
                 theCell.StyleIndex = styleindex;
                 theCell.CellValue = new CellValue(dataRow[i].ToString());
-                theCell.DataType = new EnumValue<CellValues>(CellValues.String);
+                theCell.DataType = new EnumValue<CellValues>(GetValueType(dataRow.Table.Columns[i]));
+            }
+        }
+        private static CellValues GetValueType(DataColumn dataColumn)
+        {
+            List<Type> number = new List<Type>{ typeof(Double), typeof(Decimal), typeof(Int32), typeof(int) };
+            List<Type> date = new List<Type> { typeof(DateTime) };
+
+            if (number.Contains(dataColumn.DataType))
+            {
+                return CellValues.Number;
+            }
+            else if(date.Contains(dataColumn.DataType))
+            {
+                return CellValues.Date;
+            }
+            else
+            {
+                return CellValues.String;
             }
         }
 
