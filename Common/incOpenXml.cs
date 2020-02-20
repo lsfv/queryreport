@@ -250,8 +250,23 @@ namespace Common
                 Cell theCell = new Cell();
                 theRow.InsertAt(theCell, i);
                 theCell.StyleIndex = styleindex;
-                theCell.CellValue = new CellValue(dataRow[i].ToString());
-                theCell.DataType = new EnumValue<CellValues>(GetValueType(dataRow.Table.Columns[i]));
+                CellValues theCellValue = GetValueType(dataRow.Table.Columns[i]);
+                if(theCellValue == CellValues.Number)
+                {
+                    theCell.CellValue = new CellValue(dataRow[i].ToString());
+                    theCell.DataType = new EnumValue<CellValues>(theCellValue);
+                }
+                else if (theCellValue == CellValues.Date)
+                {
+                    theCell.CellValue = new CellValue(((DateTime)dataRow[i]));
+                    theCell.DataType = new EnumValue<CellValues>(theCellValue);
+                }
+                else
+                {
+                    theCell.CellValue = new CellValue(dataRow[i].ToString());
+                    theCell.DataType = new EnumValue<CellValues>(theCellValue);
+                }
+                
             }
         }
         private static CellValues GetValueType(DataColumn dataColumn)
