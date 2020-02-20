@@ -1,0 +1,75 @@
+﻿-- v1.0.0 - Cheong - 2015/03/25 - updated views to reflect schema changes
+EXEC sys.sp_rename @objname = N'dbo.WORDTEMPLATE.ODCFile', 
+    @newname = 'DataFileName', 
+    @objtype = 'COLUMN'
+GO
+/****** Object:  View [dbo].[V_WORDTEMPLATE]    Script Date: 03/25/2015 15:53:17 ******/
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER VIEW [dbo].[V_WORDTEMPLATE]
+AS
+SELECT
+	wt.WORDTEMPLATEID, wt.WORDTEMPLATEName, wt.[Description], wt.VIEWID,
+	sv.SOURCEVIEWNAME, sv.DATABASEID, sl.NAME VIEWLEVEL,
+	wt.TemplateFileName, wt.DataFileName
+FROM         dbo.WORDTEMPLATE wt
+INNER JOIN dbo.SOURCEVIEW sv ON wt.VIEWID = sv.ID
+INNER JOIN dbo.SensitivityLevel sl ON sv.VIEWLEVEL = sl.SLEVEL AND sl.DATABASEID = sv.DATABASEID
+GO
+/****** Object:  View [dbo].[V_WORDREPORT]    Script Date: 03/25/2015 15:53:17 ******/
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER VIEW [dbo].[V_WORDREPORT]
+AS
+SELECT
+	rp.ID, rp.DATABASEID, rp.SVID, rp.REPORTNAME, rp.AUDODATE, rp.CATEGORY, rp.[TYPE],
+	rp.DISTRIBUTIONLEVEL, rp.RPTITLE, rp.ADDUSER, rp.DEFAULTFORMAT, rp.EXTENDFIELD, 
+	wf.WordFileID, wf.WordFileName, wf.[Description], wt.DataFileName, wt.TemplateFileName,
+	wt.VIEWID
+FROM dbo.REPORT rp
+INNER JOIN dbo.SOURCEVIEW sv ON sv.ID = rp.SVID
+INNER JOIN dbo.WORDTEMPLATE wt ON wt.VIEWID = sv.ID
+INNER JOIN dbo.WORDFILE wf ON wf.WordTemplateID = wt.WORDTEMPLATEID
+GO
+/****** Object:  View [dbo].[V_WORDFILE2]    Script Date: 03/25/2015 15:53:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER VIEW [dbo].[V_WORDFILE2]
+AS
+SELECT wf.WordFileID, wf.WordFileName, 
+      wf.[Description], wf.WordTemplateID, 
+      wf.AUDODATE, wt.WORDTEMPLATEName, 
+      wt.VIEWID, sv.DATABASEID, 
+      wt.WORDTEMPLATEID WORDTEMPLATEID2
+FROM dbo.WORDFILE wf
+RIGHT OUTER JOIN dbo.WORDTEMPLATE wt ON wf.WordTemplateID = wt.WORDTEMPLATEID
+INNER JOIN dbo.SOURCEVIEW sv ON wt.VIEWID = sv.ID
+GO
+/****** Object:  View [dbo].[V_WORDFILE]    Script Date: 03/25/2015 15:53:17 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER VIEW [dbo].[V_WORDFILE]
+AS
+SELECT
+	wf.WordFileID, wf.WordFileName, wf.[Description], wf.WordTemplateID, wf.AUDODATE, wt.WORDTEMPLATEName,
+	sv.SOURCEVIEWNAME, sv.DATABASEID, sv.[DESC],
+	sl.NAME VIEWLEVEL,
+	wt.TemplateFileName, wt.VIEWID, wt.DataFileName
+FROM dbo.WORDFILE wf
+INNER JOIN dbo.WORDTEMPLATE wt ON wf.WordTemplateID = wt.WORDTEMPLATEID
+INNER JOIN dbo.SOURCEVIEW sv ON wt.VIEWID = sv.ID
+INNER JOIN dbo.SENSITIVITYLEVEL sl ON sv.VIEWLEVEL = sl.SLEVEL AND sv.DATABASEID = sl.DATABASEID
+GO
+
+
+/**********************************************************************************************/
+In web.config, add the following key in appSettings:
+<add key="WordTemplatePath" value="C:\temp\WordTemplate\"/>
+
+Create WordTemplate folder on the path specified in "value".

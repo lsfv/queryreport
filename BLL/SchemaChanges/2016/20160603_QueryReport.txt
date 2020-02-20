@@ -1,0 +1,152 @@
+﻿--v1.1.0 - Cheong - 2016/06/03 - Fix table column names
+SET QUOTED_IDENTIFIER ON
+SET ARITHABORT ON
+SET NUMERIC_ROUNDABORT OFF
+SET CONCAT_NULL_YIELDS_NULL ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+
+DECLARE
+	@defaultname sysname,
+	@sql nvarchar(200)
+
+IF NOT EXISTS (SELECT * FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'REPORT' AND c.name = 'REPORTGROUPLIST')
+BEGIN
+	BEGIN TRANSACTION
+	BEGIN TRY
+		EXECUTE sp_rename N'dbo.REPORT.DISTRIBUTIONLEVEL', N'REPORTGROUPLIST', 'COLUMN' 
+		ALTER TABLE dbo.REPORT SET (LOCK_ESCALATION = TABLE)
+		COMMIT
+		PRINT N'INFO: Column [REPORT].[DISTRIBUTIONLEVEL] has been changed to [REPORTGROUPLIST] successfully.'
+	END TRY
+	BEGIN CATCH
+		PRINT N'INFO: Error occur when renaming column.'
+		PRINT ERROR_MESSAGE()
+		ROLLBACK
+	END CATCH
+END
+ELSE
+BEGIN
+	PRINT N'INFO: Column [REPORT].[DISTRIBUTIONLEVEL] has been changed to [REPORTGROUPLIST] already.'
+END
+
+IF NOT EXISTS (SELECT * FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'USER' AND c.name = 'REPORTGROUPLIST')
+BEGIN
+	BEGIN TRANSACTION
+	BEGIN TRY
+		EXECUTE sp_rename N'dbo.USER.DISTRIBUTIONLEVEL', N'REPORTGROUPLIST', 'COLUMN' 
+		ALTER TABLE dbo.REPORT SET (LOCK_ESCALATION = TABLE)
+		COMMIT
+		PRINT N'INFO: Column [USER].[DISTRIBUTIONLEVEL] has been changed to [REPORTGROUPLIST] successfully.'
+	END TRY
+	BEGIN CATCH
+		PRINT N'INFO: Error occur when renaming column.'
+		PRINT ERROR_MESSAGE()
+		ROLLBACK
+	END CATCH
+END
+ELSE
+BEGIN
+	PRINT N'INFO: Column [USER].[DISTRIBUTIONLEVEL] has been changed to [REPORTGROUPLIST] already.'
+END
+
+IF (SELECT c.max_length FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'USER' AND c.name = 'EMAIL') = -1
+BEGIN
+	BEGIN TRANSACTION
+	BEGIN TRY
+		ALTER TABLE [USER] ALTER COLUMN VIEWLEVEL nvarchar(2000) NOT NULL
+		ALTER TABLE [USER] ALTER COLUMN REPORTGROUPLIST nvarchar(2000) NOT NULL
+		ALTER TABLE [USER] ALTER COLUMN USERGROUPLEVEL nvarchar(2000) NULL
+		ALTER TABLE [USER] ALTER COLUMN EMAIL nvarchar(2000) NULL
+		COMMIT
+		PRINT N'INFO: nvarchar(MAX) columns of [USER] has been changed to nvarchar(2000) successfully.'
+	END TRY
+	BEGIN CATCH
+		PRINT N'INFO: Error occur when changing [USER] table columns to nvarchar(2000).'
+		PRINT ERROR_MESSAGE()
+		ROLLBACK
+	END CATCH
+END
+ELSE
+BEGIN
+	PRINT N'INFO: nvarchar(MAX) columns of [USER] has been changed to nvarchar(2000) already.'
+END
+
+IF (SELECT c.max_length FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'DATABASE' AND c.name = 'DESC') = -1
+BEGIN
+	BEGIN TRANSACTION
+	BEGIN TRY
+		SET @defaultname = NULL
+		
+		SELECT @defaultname = df.name
+		FROM sys.objects o
+		INNER JOIN sys.columns c ON o.object_id = c.object_id
+		INNER JOIN sys.default_constraints df ON o.object_id = df.parent_object_id AND df.parent_column_id = c.column_id
+		WHERE o.name = 'DATABASE' AND c.name = 'CONNECTIONSTRING'
+
+		IF (@defaultname IS NOT NULL)
+		BEGIN
+			SET @sql = N'ALTER TABLE [dbo].[DATABASE] DROP CONSTRAINT ' + QUOTENAME(@defaultname, '[')
+			EXEC sp_executesql @sql
+		END
+
+		ALTER TABLE [DATABASE] ALTER COLUMN [DESC] nvarchar(2000) NOT NULL
+		ALTER TABLE [DATABASE] ALTER COLUMN CONNECTIONSTRING nvarchar(2000) NOT NULL
+		
+		ALTER TABLE [DATABASE] ADD DEFAULT ('') FOR [CONNECTIONSTRING]
+		
+		COMMIT
+		PRINT N'INFO: nvarchar(MAX) columns of [DATABASE] has been changed to nvarchar(2000) successfully.'
+	END TRY
+	BEGIN CATCH
+		PRINT N'INFO: Error occur when changing [DATABASE] table columns to nvarchar(2000).'
+		PRINT ERROR_MESSAGE()
+		ROLLBACK
+	END CATCH
+END
+ELSE
+BEGIN
+	PRINT N'INFO: nvarchar(MAX) columns of [DATABASE] has been changed to nvarchar(2000) already.'
+END
+
+IF (SELECT c.max_length FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'REPORT' AND c.name = 'EXTENDFIELD') = -1
+BEGIN
+	BEGIN TRANSACTION
+	BEGIN TRY
+		SET @defaultname = NULL
+		
+		SELECT @defaultname = df.name
+		FROM sys.objects o
+		INNER JOIN sys.columns c ON o.object_id = c.object_id
+		INNER JOIN sys.default_constraints df ON o.object_id = df.parent_object_id AND df.parent_column_id = c.column_id
+		WHERE o.name = 'REPORT' AND c.name = 'EXTENDFIELD'
+
+		IF (@defaultname IS NOT NULL)
+		BEGIN
+			SET @sql = N'ALTER TABLE [dbo].[REPORT] DROP CONSTRAINT ' + QUOTENAME(@defaultname, '[')
+			EXEC sp_executesql @sql
+		END
+
+		ALTER TABLE [REPORT] ALTER COLUMN [EXTENDFIELD] nvarchar(2000) NOT NULL
+		
+		ALTER TABLE [REPORT] ADD DEFAULT ('') FOR [EXTENDFIELD]
+		
+		COMMIT
+		PRINT N'INFO: nvarchar(MAX) columns of [REPORT] has been changed to nvarchar(2000) successfully.'
+	END TRY
+	BEGIN CATCH
+		PRINT N'INFO: Error occur when changing [REPORT] table columns to nvarchar(2000).'
+		PRINT ERROR_MESSAGE()
+		ROLLBACK
+	END CATCH
+END
+ELSE
+BEGIN
+	PRINT N'INFO: nvarchar(MAX) columns of [REPORT] has been changed to nvarchar(2000) already.'
+END
+
+IF EXISTS(SELECT * FROM sys.objects o WHERE o.name = 'VIEWCONTENT')
+BEGIN
+	DROP TABLE VIEWCONTENT
+END

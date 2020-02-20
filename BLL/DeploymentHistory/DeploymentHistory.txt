@@ -1,0 +1,29 @@
+﻿*********************************************************
+=== NTT ===
+Deploy Date (BEAUTYGROUP)	: 2015-07-08 Cheong
+Deploy Version: v1.0.0.242
+Deploy DB Schema: finish 20150511_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== NTT ===
+Deploy Date : 2015.10.13 Fai
+Deploy Version: 1.0.0.268
+Deploy Details: Revision [1.0.0.268]
+Deploy DB Schema:	20150723_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== NTT ===
+Deploy Date (DEMO)	: 2016-07-07 Cheong
+Deploy Version: v1.2.0.57
+Deploy DB Schema: finish 20160606_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== NTT ===
+Deploy Date (DEMO)	: 2016-08-31 Fai
+Deploy Version: v1.2.0.72
+Deploy DB Schema: finish 20160721_QueryReport
+*********************************************************

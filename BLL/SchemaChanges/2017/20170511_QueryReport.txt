@@ -1,0 +1,10 @@
+﻿--v1.7.0 Fai 2017.05.11 - DB Connection Encryption
+/*
+Web.config
+
+Modify "user id={0};password={1};"
+
+<add key="DBConnectionUserID" value="72A55078378D6932D25BBC421454A9A1C10054076553E33D0F2BAA44737AB73D1B9A234B4" />
+<add key="DBConnectionPassword" value="72A55078378D6932D25BBC421454A9A1C10054076553E33D0F2BAA44737AB73D1B9A234B4" />
+
+*/

@@ -1,0 +1,82 @@
+﻿*********************************************************
+=== POLYKING ===
+Deploy Date : 2015.09.14 Fai
+Deploy Version: 1.0.0.263
+Deploy Details: Revision [1.0.0.263]
+Remote Database: 20150723_OTHERS.txt
+Deploy DB Schema: 20150723_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== POLYKING ===
+Deploy Date : 2015.11.12 Fai
+Deploy Version: 1.0.0.270
+Deploy Details: Revision [1.0.0.270]
+Deploy DB Schema:	20150723_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== POLYKING ===
+Deploy Date : 2016.03.31 Fai
+Deploy Version: 1.0.0.351
+Deploy Details: Revision [1.0.0.351]
+Deploy DB Schema:	20160324_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== POLYKING ===
+Deploy Date : 2016.06.28 Fai
+Deploy Version: 1.2.0.32
+Deploy DB Schema:	20160606_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== POLYKING ===
+Deploy Date : 2016.09.12 Cheong
+Deploy Version: 1.2.0.72
+Deploy DB Schema:	20160721_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== POLYKING ===
+Deploy Date : 2016.10.04 Fai
+Deploy Version: 1.2.0.83
+Remote Database:	20160510_OTHERS.txt
+Deploy DB Schema:	20160721_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== POLYKING ===
+Deploy Date : 2016.10.28 Fai
+Deploy Version: 1.2.0.93
+Remote Database:	20160510_OTHERS.txt
+Deploy DB Schema:	20161027_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== POLYKING ===
+Deploy Date : 2017.01.24 Fai
+Deploy Version: 1.2.0.125
+Remote Database:	20160510_OTHERS.txt
+Deploy DB Schema:	20161102_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== POLYKING ===
+Deploy Date : 2017.06.02
+Deploy Version: 1.2.0.142
+Remote Database:	20160510_OTHERS.txt
+Deploy DB Schema:	20170511_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== POLYKING ===
+Deploy Date : 2017.06.27
+Deploy Version: 1.2.0.148
+Remote Database:	20160510_OTHERS.txt
+Deploy DB Schema:	20170511_QueryReport.txt
+*********************************************************

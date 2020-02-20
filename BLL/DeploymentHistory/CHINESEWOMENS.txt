@@ -1,0 +1,66 @@
+﻿*********************************************************
+=== Chinese Women's ===
+Deploy Date : 2018.04.23 Billy
+Deploy Version: 1.2.0.163
+Deploy DB Schema:	20170719_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== Chinese Women's ===
+Deploy Date : 2018.10.30 Billy
+Deploy Version: 1.2.0.202
+Deploy DB Schema:	20181026_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== Chinese Women's ===
+Deploy Date : 2018.11.02 Billy
+Deploy Version: 1.2.0.220
+Deploy DB Schema:	20181026_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== Chinese Women's ===
+Deploy Date : 2018.11.05 Billy
+Deploy Version: 1.2.0.222
+Deploy DB Schema:	20181026_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== Chinese Women's ===
+Deploy Date : 2018.11.08 Billy
+Deploy Version: 1.2.0.225
+Deploy DB Schema:	20181026_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== Chinese Women's ===
+Deploy Date : 2018.11.14 Billy
+Deploy Version: 1.2.0.231
+Deploy DB Schema:	20181112_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== Chinese Women's ===
+Deploy Date : 2018.12.18 Billy
+Deploy Version: 1.2.0.243
+Deploy DB Schema:	20181114_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== Chinese Women's ===
+Deploy Date : 2018.12.28 Billy
+Deploy Version: 1.2.0.246
+Deploy DB Schema:	20181114_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+
+

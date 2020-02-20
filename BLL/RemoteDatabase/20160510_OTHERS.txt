@@ -1,0 +1,37 @@
+﻿--v1.1.0 - Cheong - 2016/05/10 - Use CROSS APPLY to leverage bitmap join to increase performance
+-- on DEV server the query time decrease from 5 sec to 2 sec 
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+/*
+ * Only [Username] (Case insensitive) is mandatory on this view.
+ * Feel free to add / remove other columns if you think is appropiate
+ */
+ALTER VIEW [qreport].[v_Security]
+AS
+SELECT
+    CompanyID, 
+    
+	ID = sg.ID, 
+    ContractID,
+    Username
+FROM (
+	SELECT
+		uc.CompanyID, 
+		usg.SecurityGroupID, 
+		c.ID AS ContractID,
+		u.Username,
+		sg.Code
+	FROM t_User u
+	INNER JOIN t_User_Company uc ON u.ID = uc.UserID
+	INNER JOIN t_User_SecurityGroup usg ON u.ID = usg.UserID
+	INNER JOIN t_SecurityGroup sg ON usg.SecurityGroupID = sg.ID
+	INNER JOIN t_User_ContractGroup ucg ON u.ID = ucg.UserID
+	INNER JOIN t_Contract c ON c.ContractGroupID = ucg.ContractGroupID	
+) tmp 
+CROSS APPLY t_SecurityGroup sg
+WHERE sg.Code like RTRIM(tmp.Code) + '%'
+GROUP BY tmp.CompanyID, sg.ID, tmp.ContractID, tmp.Username
+GO
+
+

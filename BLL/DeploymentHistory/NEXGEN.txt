@@ -1,0 +1,15 @@
+﻿*********************************************************
+=== NEXGEN ===
+Deploy Date : 2017.06.13 Fai
+Deploy Version: 1.2.0.142
+Deploy DB Schema:	20161102_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== NEXGEN ===
+Deploy Date : 2017.06.19 Janet
+Deploy Version: 1.2.0.148
+Deploy DB Schema:	20161102_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************

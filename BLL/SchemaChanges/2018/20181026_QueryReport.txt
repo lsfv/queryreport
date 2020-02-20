@@ -1,0 +1,7 @@
+--v1.8.8 Alex 2018.10.26 - Add field to store the subcount label of a report.
+
+ALTER TABLE REPORT ADD SUBCOUNT_LABEL NVARCHAR(15)
+GO
+UPDATE REPORT SET SUBCOUNT_LABEL = N'Sub Count'
+GO
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

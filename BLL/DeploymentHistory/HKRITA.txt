@@ -1,0 +1,7 @@
+﻿*********************************************************
+=== HKRITA ===
+Deploy Date : 2017.11.07 Fai
+Deploy Version: 1.2.0.153
+Deploy DB Schema:	20170719_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************

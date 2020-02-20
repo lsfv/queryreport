@@ -1,0 +1,7 @@
+﻿*********************************************************
+=== ZION ===
+Deploy Date : 2016.10.28 Fai
+Deploy Version: 1.2.0.93
+Deploy DB Schema:	20161027_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************

@@ -1,0 +1,7 @@
+﻿--v1.2.0 Kim 2016.10.24 Add cell style column
+ALTER TABLE [dbo].[REPORTCOLUMN] ADD [FontSize] int NULL
+ALTER TABLE [dbo].[REPORTCOLUMN] ADD [FontBold] bit NOT NULL Default 0
+ALTER TABLE [dbo].[REPORTCOLUMN] ADD [FontItalic] bit NOT NULL Default 0
+ALTER TABLE [dbo].[REPORTCOLUMN] ADD [HorizontalTextAlign] int NOT NULL Default 0
+ALTER TABLE [dbo].[REPORTCOLUMN] ADD [CellFormat] nvarchar(100) NOT NULL Default ''
+ALTER TABLE [dbo].[REPORTCOLUMN] ADD [BackgroundColor] nvarchar(7) NOT NULL Default ''

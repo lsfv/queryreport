@@ -1,0 +1,21 @@
+﻿--v1.0.0 - Cheong - Add field to store Report Header and footer settings for reports
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+SET NOCOUNT ON
+IF NOT EXISTS (SELECT * FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'REPORT' AND c.name = 'REPORT_HEADER')
+BEGIN
+	BEGIN TRAN
+		EXEC sp_executesql N'ALTER TABLE [dbo].[REPORT] ADD [REPORT_HEADER] [nvarchar](255) NULL, [REPORT_FOOTER] [nvarchar](255) NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[REPORT] ADD CONSTRAINT [DF_REPORT_REPORT_HEADER]  DEFAULT ('''') FOR [REPORT_HEADER]'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[REPORT] ADD CONSTRAINT [DF_REPORT_REPORT_FOOTER]  DEFAULT ('''') FOR [REPORT_FOOTER]'
+		EXEC sp_executesql N'UPDATE [dbo].[REPORT] SET [REPORT_HEADER] = '''', [REPORT_FOOTER] = '''''
+		EXEC sp_executesql N'ALTER TABLE [dbo].[REPORT] ALTER COLUMN [REPORT_HEADER] [nvarchar](255) NOT NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[REPORT] ALTER COLUMN [REPORT_FOOTER] [nvarchar](255) NOT NULL'
+	COMMIT
+	PRINT N'INFO: Columns has been added successfully.'
+END
+ELSE
+BEGIN
+	PRINT N'INFO: Columns has been added already.'
+END

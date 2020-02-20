@@ -1,0 +1,4 @@
+-- v1.8.8 Alex 2019.01.07 - Add Report ID, Report Name and Column Name to Error log
+
+ALTER TABLE ERRORLOG ADD ReportID INT, ReportName NVARCHAR(100), ColumnName NVARCHAR(100)
+GO

@@ -1,0 +1,53 @@
+﻿-- This folder contains script to be deployed to other databases
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE FUNCTION [qreport].[fn_ToDecimal]
+(
+    @ColValue nvarchar(max)
+)
+RETURNS decimal(28,4)
+AS
+BEGIN
+	DECLARE @temp decimal(28,4)
+	SET @temp = null
+	
+	DECLARE @T table
+	(
+	  Col varchar(50)
+	)
+
+	INSERT INTO @T VALUES (@ColValue)
+
+	SELECT @temp = CAST('' as xml).value('sql:column("Col") cast as xs:decimal ?', 'decimal(28,4)')
+	FROM @T
+	
+	RETURN @temp
+END
+
+GO
+CREATE FUNCTION [qreport].[fn_ToInt]
+(
+    @ColValue nvarchar(max)
+)
+RETURNS int
+AS
+BEGIN
+	DECLARE @temp int
+	SET @temp = null
+	
+	DECLARE @T table
+	(
+	  Col varchar(50)
+	)
+
+	INSERT INTO @T VALUES (@ColValue)
+
+	SELECT @temp = CAST('' as xml).value('sql:column("Col") cast as xs:int ?', 'int')
+	FROM @T
+	
+	RETURN @temp
+END
+
+GO
+

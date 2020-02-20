@@ -1,0 +1,4 @@
+-- v1.8.8 Alex 2018.10.22 - Sets the sort sequence's default value to 100 
+UPDATE REPORTCOLUMN SET SORT_SEQUENCE = 100
+GO
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

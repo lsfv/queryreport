@@ -1,0 +1,39 @@
+﻿*********************************************************
+=== HKCAAVQ ===
+Deploy Date : 2017.03.15 Fai
+Deploy Version: 1.2.0.128
+Remote Database: 20160510_OTHERS
+Deploy DB Schema: 20161102_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== HKCAAVQ ===
+Deploy Date : 2017.05.19 Janet
+Deploy Version: 1.2.0.138
+Remote Database: 20160510_OTHERS
+Deploy DB Schema: 20170511_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== HKCAAVQ ===
+Deploy Date : 2017.05.26 Janet
+Deploy Version: 1.2.0.142
+Remote Database: 20160510_OTHERS
+Deploy DB Schema: 20170511_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== HKCAAVQ ===
+Deploy Date : 2018.04.18 Ben
+Deploy Version: 1.2.0.160
+Remote Database: 20160510_OTHERS
+Deploy DB Schema: 20170719_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== HKCAAVQ ===
+Deploy Date : 2018.10.30 Billy
+Deploy Version: 1.2.0.202
+Remote Database: 20160510_OTHERS
+Deploy DB Schema: 20181026_QueryReport.txt
+*********************************************************

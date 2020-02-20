@@ -1,0 +1,33 @@
+﻿--v1.0.0 - Cheong - Add field to store width and page layout settings for reports
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'REPORT' AND c.name = 'PRINT_ORIENTATION')
+BEGIN
+	BEGIN TRAN
+		EXEC sp_executesql N'ALTER TABLE [dbo].[REPORT] ADD [PRINT_ORIENTATION] [int] NULL, [PRINT_FITTOPAGE] [smallint] NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[REPORT] ADD CONSTRAINT [DF_REPORT_PRINT_ORIENTATION]  DEFAULT ((-1)) FOR [PRINT_ORIENTATION]'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[REPORT] ADD CONSTRAINT [DF_REPORT_PRINT_FITTOPAGE]  DEFAULT ((-1)) FOR [PRINT_FITTOPAGE]'
+		EXEC sp_executesql N'UPDATE [dbo].[REPORT] SET [PRINT_ORIENTATION] = -1, [PRINT_FITTOPAGE] = -1'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[REPORT] ALTER COLUMN [PRINT_ORIENTATION] [int] NOT NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[REPORT] ALTER COLUMN [PRINT_FITTOPAGE] [smallint] NOT NULL'
+	COMMIT
+END
+ELSE
+BEGIN
+	PRINT N'INFO: Columns has been added already.'
+END
+
+IF NOT EXISTS (SELECT * FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'REPORTCOLUMN' AND c.name = 'EXCEL_COLWIDTH')
+BEGIN
+	BEGIN TRAN
+		EXEC sp_executesql N'ALTER TABLE [dbo].[REPORTCOLUMN] ADD [EXCEL_COLWIDTH] [decimal](18,2) NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[REPORTCOLUMN] ADD CONSTRAINT [DF_REPORTCOLUMN_EXCEL_COLWIDTH] DEFAULT ((-1)) FOR [EXCEL_COLWIDTH]'
+		EXEC sp_executesql N'UPDATE [dbo].[REPORTCOLUMN] SET [EXCEL_COLWIDTH] = -1'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[REPORTCOLUMN] ALTER COLUMN [EXCEL_COLWIDTH] [decimal](18,2) NOT NULL'
+	COMMIT
+END
+ELSE
+BEGIN
+	PRINT N'INFO: Columns has been added already.'
+END

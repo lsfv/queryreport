@@ -1,0 +1,26 @@
+﻿-- v1.0.0 - Cheong - 2015/03/30 - Drop LASTMODIFYDATE, change LASTMODIFYUSER to FORMATTYPE
+IF (SELECT COUNT(*) FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'SOURCEVIEW' AND c.name = 'LASTMODIFYDATE') = 1
+BEGIN
+	ALTER TABLE SOURCEVIEW DROP COLUMN LASTMODIFYDATE
+END
+GO
+IF (SELECT COUNT(*) FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'SOURCEVIEW' AND c.name = 'LASTMODIFYUSER') = 1
+BEGIN
+	EXEC sp_rename N'dbo.SOURCEVIEW.LASTMODIFYUSER', 'FORMATTYPE', 'COLUMN'
+END
+GO
+-- v1.0.0 - Cheong - Modify view for previous change
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER VIEW [dbo].[V_WORDTEMPLATE]
+AS
+SELECT
+	wt.WORDTEMPLATEID, wt.WORDTEMPLATEName, wt.[Description], wt.VIEWID,
+	sv.SOURCEVIEWNAME, sv.DATABASEID, sv.SOURCETYPE, sl.NAME VIEWLEVEL,
+	wt.TemplateFileName, wt.DataFileName
+FROM dbo.SOURCEVIEW sv
+INNER JOIN dbo.SensitivityLevel sl ON sv.VIEWLEVEL = sl.SLEVEL AND sl.DATABASEID = sv.DATABASEID
+INNER JOIN dbo.WORDTEMPLATE wt  ON wt.VIEWID = sv.ID	-- to be changed to left join later
+WHERE sv.FORMATTYPE & 2 = 2 -- for word 
+GO

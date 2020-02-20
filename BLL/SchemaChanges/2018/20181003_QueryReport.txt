@@ -1,0 +1,13 @@
+--v1.8.8 Alex 2018.10.03 - Add column UserID to Dashboard.
+
+ALTER TABLE DASHBOARD ADD UserID int
+GO
+UPDATE DASHBOARD SET UserID = 1
+GO
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+--v1.8.8 Alex 2018.10.03 - Add field to store whether a formula is numeric.
+
+ALTER TABLE REPORTCOLUMN ADD IS_NUMERIC bit
+GO
+UPDATE REPORTCOLUMN SET IS_NUMERIC = 0
+GO

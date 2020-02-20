@@ -1,0 +1,6 @@
+--v1.8.8 Alex 2018.10.11 - Add field to store sort order within groups.
+
+ALTER TABLE REPORTCOLUMN ADD IS_ASCENDING bit
+GO
+UPDATE REPORTCOLUMN SET IS_ASCENDING = 1
+GO

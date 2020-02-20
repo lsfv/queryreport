@@ -1,0 +1,7 @@
+﻿--v1.0.0 - Cheong - 2015/07/23 - drop v_Security
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[dbo].[v_Security]'))
+DROP VIEW [dbo].[v_Security]
+GO

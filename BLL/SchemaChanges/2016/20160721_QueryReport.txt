@@ -1,0 +1,50 @@
+﻿--v1.2.0 - Cheong - 2016/07/21 - Create tables ERRORLOG and AUDITLOG
+SET QUOTED_IDENTIFIER ON
+SET ARITHABORT ON
+SET NUMERIC_ROUNDABORT OFF
+SET CONCAT_NULL_YIELDS_NULL ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+GO
+IF NOT EXISTS (SELECT * FROM sys.objects o WHERE o.name = N'ERRORLOG')
+BEGIN
+	BEGIN TRANSACTION
+	CREATE TABLE [dbo].[ERRORLOG] (
+		[ID] int NOT NULL IDENTITY (1, 1),
+		[UserID] int NOT NULL,
+		[CreateDate] datetime NOT NULL,
+		[Message] nvarchar(255) NOT NULL,
+		[StackTrace] nvarchar(MAX) NULL
+		)  ON [PRIMARY]
+		 TEXTIMAGE_ON [PRIMARY]
+	ALTER TABLE [dbo].[ERRORLOG] SET (LOCK_ESCALATION = TABLE)
+	COMMIT
+	PRINT 'Table ERRORLOG has been created successfully.'
+END
+ELSE
+BEGIN
+	PRINT 'Table ERRORLOG has been created already.'
+END
+
+IF NOT EXISTS (SELECT * FROM sys.objects o WHERE o.name = N'AUDITLOG')
+BEGIN
+	BEGIN TRANSACTION
+	CREATE TABLE [dbo].[AUDITLOG] (
+		[ID] int NOT NULL IDENTITY (1, 1),
+		[UserID] int NOT NULL,
+		[CreateDate] datetime NOT NULL,
+		[MessageType] int NOT NULL,
+		[ModuleName] nvarchar(255) NOT NULL,
+		[Message] nvarchar(255) NOT NULL,
+		[MessageDetail] nvarchar(MAX) NULL
+		)  ON [PRIMARY]
+		 TEXTIMAGE_ON [PRIMARY]
+	ALTER TABLE [dbo].[AUDITLOG] SET (LOCK_ESCALATION = TABLE)
+	COMMIT
+	PRINT 'Table AUDITLOG has been created successfully.'
+END
+ELSE
+BEGIN
+	PRINT 'Table AUDITLOG has been created already.'
+END

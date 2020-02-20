@@ -1,0 +1,5 @@
+--v1.8.8 Alex 2018.11.12 - Replace SORT_SEQUENCE with SEQ with Function is Grp
+
+ALTER TABLE REPORTCOLUMN DROP COLUMN SORT_SEQUENCE;
+GO
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

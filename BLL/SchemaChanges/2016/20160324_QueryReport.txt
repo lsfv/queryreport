@@ -1,0 +1,103 @@
+﻿--v1.0.0 - Cheong - Add fields for WordTemplate fixing
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+-- WORDTEMPLATE
+SET NOCOUNT ON
+IF NOT EXISTS (SELECT * FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'WORDTEMPLATE' AND c.name = 'ModifyDate')
+BEGIN
+	BEGIN TRAN
+	BEGIN TRY
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDTEMPLATE] ADD [ModifyDate] datetime NULL, [ModifyUser] int NULL, [CreateDate] datetime NULL, [CreateUser] int NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDTEMPLATE] ADD CONSTRAINT [DF_WORDTEMPLATE_ModifyDate] DEFAULT (GETDATE()) FOR [ModifyDate]'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDTEMPLATE] ADD CONSTRAINT [DF_WORDTEMPLATE_ModifyUser] DEFAULT ((1)) FOR [ModifyUser]'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDTEMPLATE] ADD CONSTRAINT [DF_WORDTEMPLATE_CreateDate] DEFAULT (GETDATE()) FOR [CreateDate]'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDTEMPLATE] ADD CONSTRAINT [DF_WORDTEMPLATE_CreateUser] DEFAULT ((1)) FOR [CreateUser]'
+		EXEC sp_executesql N'UPDATE [dbo].[WORDTEMPLATE] SET [ModifyDate] = GETDATE(), [ModifyUser] = 1, [CreateDate] = GETDATE(), [CreateUser] = 1'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDTEMPLATE] ALTER COLUMN [ModifyDate] datetime NOT NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDTEMPLATE] ALTER COLUMN [ModifyUser] int NOT NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDTEMPLATE] ALTER COLUMN [CreateDate] datetime NOT NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDTEMPLATE] ALTER COLUMN [CreateUser] int NOT NULL'
+		EXEC sp_executesql N'IF EXISTS (SELECT VIEWID, COUNT(*) FROM WORDTEMPLATE GROUP BY VIEWID HAVING COUNT(*) > 1)
+		BEGIN
+			DELETE WORDTEMPLATE WHERE WORDTEMPLATEID IN (
+				SELECT WORDTEMPLATEID FROM WORDTEMPLATE wt
+				LEFT JOIN (
+					SELECT VIEWID, ModifyDate = MAX(ModifyDate)
+					FROM WORDTEMPLATE
+					GROUP BY VIEWID
+				) latest ON wt.VIEWID = latest.VIEWID AND wt.ModifyDate = latest.ModifyDate
+				WHERE latest.VIEWID IS NULL
+			)
+		END'
+		EXEC sp_executesql N'CREATE UNIQUE NONCLUSTERED INDEX IX_WORDTEMPLATE_VIEWID ON dbo.WORDTEMPLATE(VIEWID)
+			WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]'
+		EXEC sp_executesql N'ALTER TABLE dbo.WORDTEMPLATE SET (LOCK_ESCALATION = TABLE)'
+		COMMIT
+		PRINT N'INFO: Columns has been added successfully.'
+	END TRY
+	BEGIN CATCH
+		PRINT N'INFO: Error occur when adding columns.'
+		PRINT ERROR_MESSAGE()
+		ROLLBACK
+	END CATCH
+END
+ELSE
+BEGIN
+	PRINT N'INFO: Columns has been added already.'
+END
+GO
+-- WORDFILE
+SET NOCOUNT ON
+IF NOT EXISTS (SELECT * FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'WORDFILE' AND c.name = 'ModifyDate')
+BEGIN
+	BEGIN TRAN
+	BEGIN TRY
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDFILE] ADD [RPID] int NULL, [ModifyDate] datetime NULL, [ModifyUser] int NULL, [CreateDate] datetime NULL, [CreateUser] int NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDFILE] ADD CONSTRAINT [DF_WORDFILE_ModifyDate] DEFAULT (GETDATE()) FOR [ModifyDate]'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDFILE] ADD CONSTRAINT [DF_WORDFILE_ModifyUser] DEFAULT ((1)) FOR [ModifyUser]'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDFILE] ADD CONSTRAINT [DF_WORDFILE_CreateDate] DEFAULT (GETDATE()) FOR [CreateDate]'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDFILE] ADD CONSTRAINT [DF_WORDFILE_CreateUser] DEFAULT ((1)) FOR [CreateUser]'
+		EXEC sp_executesql N'UPDATE [dbo].[WORDFILE] SET [RPID] = ISNULL(r.rid, -1), [ModifyDate] = ISNULL(sv.AUDODATE, GETDATE()), [ModifyUser] = 1, [CreateDate] = ISNULL(sv.AUDODATE, GETDATE()), [CreateUser] = 1
+			FROM WORDFILE wf
+			LEFT JOIN WORDTEMPLATE wt ON wf.WordTemplateID = wt.WORDTEMPLATEID
+			LEFT JOIN SOURCEVIEW sv ON wt.VIEWID = sv.ID
+			LEFT JOIN (
+				SELECT SVID, rid = MIN(ID) FROM REPORT GROUP BY SVID
+			) r ON r.SVID = sv.ID'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDFILE] ALTER COLUMN [RPID] int NOT NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDFILE] ALTER COLUMN [ModifyDate] datetime NOT NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDFILE] ALTER COLUMN [ModifyUser] int NOT NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDFILE] ALTER COLUMN [CreateDate] datetime NOT NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDFILE] ALTER COLUMN [CreateUser] int NOT NULL'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDFILE] DROP CONSTRAINT [DF_WORDTEMPLATE_AUDODATE]'
+		EXEC sp_executesql N'ALTER TABLE [dbo].[WORDFILE] DROP COLUMN [AUDODATE]'
+		EXEC sp_executesql N'IF EXISTS (SELECT RPID, COUNT(*) FROM WORDFILE GROUP BY RPID HAVING COUNT(*) > 1)
+		BEGIN
+			DELETE WORDFILE WHERE WordFileID IN (
+				SELECT WordFileID FROM WORDFILE wf
+				LEFT JOIN (
+					SELECT RPID, ModifyDate = MAX(ModifyDate)
+					FROM WORDFILE
+					GROUP BY RPID
+				) latest ON wf.RPID = latest.RPID AND wf.ModifyDate = latest.ModifyDate
+				WHERE latest.RPID IS NULL
+			)
+		END'
+		EXEC sp_executesql N'CREATE UNIQUE NONCLUSTERED INDEX IX_WORDWILE_RPID ON dbo.WORDFILE(RPID)
+			WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]'
+		EXEC sp_executesql N'ALTER TABLE dbo.WORDFILE SET (LOCK_ESCALATION = TABLE)'
+		COMMIT
+		PRINT N'INFO: Columns has been added successfully.'
+	END TRY
+	BEGIN CATCH
+		PRINT N'INFO: Error occur when adding columns.'
+		PRINT ERROR_MESSAGE()
+		ROLLBACK
+	END CATCH
+END
+ELSE
+BEGIN
+	PRINT N'INFO: Columns has been added already.'
+END
+GO

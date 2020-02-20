@@ -1,0 +1,6 @@
+--v1.8.8 Alex 2018.10.12 - Add integer field to store the sort sequence (weight number) of a report.
+
+ALTER TABLE REPORTCOLUMN ADD SORT_SEQUENCE INT
+GO
+UPDATE REPORTCOLUMN SET SORT_SEQUENCE = 0
+GO

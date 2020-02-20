@@ -1,0 +1,32 @@
+﻿--v1.2.0 - Cheong - 2016/07/15 - Add Report Group 'AuditLog' to database if not available
+--For companies that need it
+/*
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+
+DECLARE @databaseid int
+
+DECLARE DBCursor CURSOR FAST_FORWARD FOR
+SELECT
+	ID
+FROM [DATABASE]
+
+OPEN DBCursor
+
+FETCH NEXT FROM DBCursor INTO @databaseid
+WHILE (@@FETCH_STATUS = 0)
+BEGIN
+
+	IF NOT EXISTS (SELECT * FROM REPORTGROUP WHERE DATABASEID = @databaseid AND NAME = N'AuditLog')
+	BEGIN
+		INSERT INTO REPORTGROUP (DATABASEID, NAME, [DESCRIPTION], AUDOTIME) VALUES
+			(@databaseid, N'AuditLog', N'Audit Log', GETDATE())
+	END
+ 
+	FETCH NEXT FROM DBCursor INTO @databaseid
+END
+
+CLOSE DBCursor
+DEALLOCATE DBCursor
+*/

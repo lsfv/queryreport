@@ -1,0 +1,40 @@
+﻿-- v1.0.0 - Cheong - 2015/05/11 - Add databaseid to view for security related filtering
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER VIEW [dbo].[v_Security]
+AS
+SELECT DISTINCT TOP (100) PERCENT 
+	DatabaseID,
+	tmp.ID,
+    CompanyID, 
+    SecurityGroupID = sg.ID, 
+    ContractID,
+    Username
+FROM
+	(SELECT
+		DatabaseID = 1,
+		u.ID,
+		uc.CompanyID, 
+		usg.SecurityGroupID, 
+		c.ID AS ContractID,
+		u.Username,
+		sg.Code
+	FROM DWHRMS_DEMO.dbo.t_User u 
+		INNER JOIN DWHRMS_DEMO.dbo.t_User_Company uc ON 
+			u.ID = uc.UserID 
+		INNER JOIN DWHRMS_DEMO.dbo.t_User_SecurityGroup usg ON 
+			u.ID = usg.UserID
+		INNER JOIN DWHRMS_DEMO.dbo.t_SecurityGroup sg ON 
+			usg.SecurityGroupID = sg.ID
+		INNER JOIN DWHRMS_DEMO.dbo.t_User_ContractGroup ucg ON 
+			u.ID = ucg.UserID
+		INNER JOIN DWHRMS_DEMO.dbo.t_Contract c ON 
+			c.ContractGroupID = ucg.ContractGroupID	
+	) tmp 
+	LEFT OUTER JOIN DWHRMS_DEMO.dbo.t_SecurityGroup sg ON
+		sg.Code like RTRIM(tmp.Code) + '%'
+ORDER BY 
+	1,2,3,4
+
+GO

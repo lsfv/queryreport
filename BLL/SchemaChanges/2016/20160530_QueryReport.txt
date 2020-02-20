@@ -1,0 +1,70 @@
+﻿-- v1.1.0 - Cheong - 2016/05/30 - Add column OrigFileName to WORDFILE
+SET QUOTED_IDENTIFIER ON
+SET ARITHABORT ON
+SET NUMERIC_ROUNDABORT OFF
+SET CONCAT_NULL_YIELDS_NULL ON
+SET ANSI_NULLS ON
+SET ANSI_PADDING ON
+SET ANSI_WARNINGS ON
+SET NOCOUNT ON
+IF NOT EXISTS (SELECT * FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'WORDFILE' AND c.name = 'OrigFileName')
+BEGIN
+	BEGIN TRANSACTION
+	BEGIN TRY
+		EXEC sp_executesql N'ALTER TABLE dbo.WORDFILE DROP CONSTRAINT DF_WORDFILE_ModifyDate'
+		EXEC sp_executesql N'ALTER TABLE dbo.WORDFILE DROP CONSTRAINT DF_WORDFILE_ModifyUser'
+		EXEC sp_executesql N'ALTER TABLE dbo.WORDFILE DROP CONSTRAINT DF_WORDFILE_CreateDate'
+		EXEC sp_executesql N'ALTER TABLE dbo.WORDFILE DROP CONSTRAINT DF_WORDFILE_CreateUser'
+		EXEC sp_executesql N'CREATE TABLE dbo.Tmp_WORDFILE
+			(
+			WordFileID int NOT NULL IDENTITY (1, 1),
+			WordFileName nvarchar(50) NOT NULL,
+			OrigFileName nvarchar(50) NOT NULL,
+			Description nvarchar(200) NOT NULL,
+			WordTemplateID int NOT NULL,
+			RPID int NOT NULL,
+			ModifyDate datetime NOT NULL,
+			ModifyUser int NOT NULL,
+			CreateDate datetime NOT NULL,
+			CreateUser int NOT NULL
+			)  ON [PRIMARY]'
+		
+		EXEC sp_executesql N'ALTER TABLE dbo.Tmp_WORDFILE SET (LOCK_ESCALATION = TABLE)'
+
+		EXEC sp_executesql N'ALTER TABLE dbo.Tmp_WORDFILE ADD CONSTRAINT DF_WORDFILE_ModifyDate DEFAULT (getdate()) FOR ModifyDate'
+		EXEC sp_executesql N'ALTER TABLE dbo.Tmp_WORDFILE ADD CONSTRAINT DF_WORDFILE_ModifyUser DEFAULT ((1)) FOR ModifyUser'
+		EXEC sp_executesql N'ALTER TABLE dbo.Tmp_WORDFILE ADD CONSTRAINT DF_WORDFILE_CreateDate DEFAULT (getdate()) FOR CreateDate'
+		EXEC sp_executesql N'ALTER TABLE dbo.Tmp_WORDFILE ADD CONSTRAINT DF_WORDFILE_CreateUser DEFAULT ((1)) FOR CreateUser'
+
+		IF EXISTS(SELECT * FROM dbo.WORDFILE)
+		BEGIN
+			EXEC sp_executesql N'SET IDENTITY_INSERT dbo.Tmp_WORDFILE ON;
+			INSERT INTO dbo.Tmp_WORDFILE (WordFileID, WordFileName, OrigFileName, Description,
+				WordTemplateID, RPID, ModifyDate, ModifyUser, CreateDate, CreateUser)
+			SELECT WordFileID, WordFileName, OrigFileName = WordFileName, Description,
+				WordTemplateID, RPID, ModifyDate, ModifyUser, CreateDate, CreateUser
+			FROM dbo.WORDFILE WITH (HOLDLOCK TABLOCKX);
+			SET IDENTITY_INSERT dbo.Tmp_WORDFILE OFF;'
+		END
+		
+		EXEC sp_executesql N'DROP TABLE dbo.WORDFILE'
+		
+		EXECUTE sp_rename N'dbo.Tmp_WORDFILE', N'WORDFILE', 'OBJECT' 
+
+		EXEC sp_executesql N'ALTER TABLE dbo.WORDFILE ADD CONSTRAINT PK_WORDFILE PRIMARY KEY CLUSTERED (WordFileID)
+			WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]'
+		EXEC sp_executesql N'CREATE UNIQUE NONCLUSTERED INDEX IX_WORDWILE_RPID ON dbo.WORDFILE (RPID)
+			WITH( STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]'
+		COMMIT
+		PRINT N'INFO: Column [OrigFileName] has been added successfully.'
+	END TRY
+		BEGIN CATCH
+		PRINT N'INFO: Error occur when adding column.'
+		PRINT ERROR_MESSAGE()
+		ROLLBACK
+	END CATCH
+END
+ELSE
+BEGIN
+	PRINT N'INFO: Column [OrigFileName] has been added already.'
+END

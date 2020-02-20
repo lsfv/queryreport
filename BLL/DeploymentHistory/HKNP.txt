@@ -1,0 +1,166 @@
+﻿*********************************************************
+=== HKNP ===
+Deploy Date : 2015.06.04 Fai
+Deploy Version: 1.0.0.230
+Deploy DB Schema: 20150511_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2015.10.13 Fai
+Deploy Version: 1.0.0.268
+Deploy DB Schema:	20150723_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2015.11.11 Fai
+Deploy Version: 1.0.0.270
+Deploy DB Schema:	20150723_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2015.12.07 Fai
+Deploy Version: 1.0.0.280
+Deploy DB Schema:	20150723_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2015.12.29 Cheong
+Deploy Version: 1.0.0.284
+Deploy DB Schema:	20150723_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2015.12.30 Cheong
+Deploy Version: 1.0.0.288
+Deploy DB Schema:	20150723_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2016.1.13 Fai
+Deploy Version: 1.0.0.294
+Deploy DB Schema:	20150723_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2016.1.20 Fai
+Deploy Version: 1.0.0.296
+Deploy DB Schema:	20150723_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2016.1.27 Fai
+Deploy Version: 1.0.0.308
+Deploy DB Schema:	20160121_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2016.2.26 Fai
+Deploy Version: 1.0.0.317
+Deploy DB Schema:	20160121_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2016.3.17 Fai
+Deploy Version: 1.0.0.333
+Deploy DB Schema:	20160226_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2016.04.05 Fai
+Deploy Version: 1.0.0.351
+Deploy DB Schema:	20160324_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2016.05.09 Fai
+Deploy Version: 1.0.0.361
+Deploy DB Schema:	20160324_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2016.05.11 Fai
+Deploy Version: 1.0.0.370
+Deploy DB Schema:	20160324_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2016.06.28 Fai
+Deploy Version: 1.2.0.32
+Deploy DB Schema:	20160606_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2016.07.26 Cheong
+Deploy Version: 1.2.0.67
+Deploy DB Schema:	20160721_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2016.09.28 Fai
+Deploy Version: 1.2.0.76
+Deploy DB Schema:	20160721_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2016.12.16 Fai
+Deploy Version: 1.2.0.110
+Deploy DB Schema:	20161102_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2017.02.01 Fai
+Deploy Version: 1.2.0.125
+Deploy DB Schema:	20161102_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2017.03.28 Fai
+Deploy Version: 1.2.0.130
+Deploy DB Schema:	20161102_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== HKNP ===
+Deploy Date : 2017.06.08 Fai
+Deploy Version: 1.2.0.142
+Deploy DB Schema:	20161102_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************

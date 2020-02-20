@@ -1,0 +1,3 @@
+﻿// v1.0.0 - Cheong - 2015/03/31 - Add the following line in web.config
+    <!-- SQL command execution timeout -->
+    <add key="CommandTimeout" value="300"/>

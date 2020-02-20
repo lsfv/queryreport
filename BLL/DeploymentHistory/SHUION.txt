@@ -1,0 +1,31 @@
+﻿*********************************************************
+=== SHUI ON ===
+Deploy Date : 2017.03.23 Fai
+Deploy Version: 1.2.0.130
+Deploy DB Schema:	20161102_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== SHUI ON ===
+Deploy Date : 2017.05.04 Janet
+Deploy Version: 1.2.0.134
+Deploy DB Schema:	20161102_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== SHUI ON ===
+Deploy Date : 2017.05.12 Janet
+Deploy Version: 1.2.0.138
+Deploy DB Schema:	20161102_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== SHUI ON ===
+Deploy Date : 2018.05.28 Ben
+Deploy Version: 1.2.0.164
+Deploy DB Schema:	20180525_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************

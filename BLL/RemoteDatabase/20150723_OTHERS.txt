@@ -1,0 +1,34 @@
+﻿--v1.0.0 - Cheong - 2015/07/23 - Script to allow switching to other database actually works
+SET ANSI_NULLS ON
+SET QUOTED_IDENTIFIER ON
+GO
+IF  EXISTS (SELECT * FROM sys.views WHERE object_id = OBJECT_ID(N'[qreport].[v_Security]'))
+DROP VIEW [qreport].[v_Security]
+GO
+CREATE VIEW [qreport].[v_Security]
+AS
+SELECT DISTINCT
+	tmp.ID,
+    CompanyID, 
+    SecurityGroupID = sg.ID, 
+    ContractID,
+    Username
+FROM
+	(SELECT
+		u.ID,
+		uc.CompanyID, 
+		usg.SecurityGroupID, 
+		c.ID AS ContractID,
+		u.Username,
+		sg.Code
+	FROM t_User u
+	INNER JOIN t_User_Company uc ON u.ID = uc.UserID
+	INNER JOIN t_User_SecurityGroup usg ON u.ID = usg.UserID
+	INNER JOIN t_SecurityGroup sg ON usg.SecurityGroupID = sg.ID
+	INNER JOIN t_User_ContractGroup ucg ON u.ID = ucg.UserID
+	INNER JOIN t_Contract c ON c.ContractGroupID = ucg.ContractGroupID	
+	) tmp 
+	LEFT OUTER JOIN t_SecurityGroup sg ON sg.Code like RTRIM(tmp.Code) + '%'
+GO
+
+

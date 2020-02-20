@@ -1,0 +1,15 @@
+﻿*********************************************************
+=== Asia Women's ===
+Deploy Date : 2017.09.12 Fai
+Deploy Version: 1.2.0.153
+Deploy DB Schema:	20170719_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== Asia Women's ===
+Deploy Date : 2018.11.23 Billy
+Deploy Version: 1.2.0.233
+Deploy DB Schema:	20181114_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************

@@ -1,0 +1,11 @@
+--v1.8.8 Alex - Add table to save dashboard objects.
+
+CREATE TABLE [DASHBOARD] (
+    [ID] int IDENTITY(1,1) NOT NULL,
+    [Title] NVARCHAR(MAX),
+    [Type] TINYINT NOT NULL,
+	[View] VARCHAR(100) NOT NULL,
+    [GroupBy] VARCHAR(100) NOT NULL,
+    [AggregateType] TINYINT NOT NULL,
+    [AggregateColumn] VARCHAR(100)
+ CONSTRAINT [PK_DASHBOARD] PRIMARY KEY (id));

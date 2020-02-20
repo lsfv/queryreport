@@ -1,0 +1,10 @@
+﻿--v1.2.0 Kim 2016.11.02 Add report style column
+ALTER TABLE [dbo].[REPORT] ADD [FONT_FAMILY] nvarchar(100) NOT NULL Default ''
+ALTER TABLE [dbo].[REPORTCOLUMN] ADD [FONT_COLOR] nvarchar(7) NOT NULL Default ''
+
+EXEC sp_RENAME '[dbo].[REPORTCOLUMN].[FontSize]' , 'FONT_SIZE', 'COLUMN'
+EXEC sp_RENAME '[dbo].[REPORTCOLUMN].[FontBold]' , 'FONT_BOLD', 'COLUMN'
+EXEC sp_RENAME '[dbo].[REPORTCOLUMN].[FontItalic]' , 'FONT_ITALIC', 'COLUMN'
+EXEC sp_RENAME '[dbo].[REPORTCOLUMN].[HorizontalTextAlign]' , 'HORIZONTAL_TEXT_ALIGN', 'COLUMN'
+EXEC sp_RENAME '[dbo].[REPORTCOLUMN].[CellFormat]' , 'CELL_FORMAT', 'COLUMN'
+EXEC sp_RENAME '[dbo].[REPORTCOLUMN].[BackgroundColor]' , 'BACKGROUND_COLOR', 'COLUMN'

@@ -1,0 +1,40 @@
+﻿--v1.1.0 - Cheong - 2016/06/03 - Fix table column length
+IF (SELECT c.max_length FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'WORDFILE' AND c.name = 'WordFileName') = 100
+BEGIN
+	BEGIN TRANSACTION
+	BEGIN TRY
+		ALTER TABLE [WORDFILE] ALTER COLUMN WordFileName nvarchar(100) NOT NULL
+		ALTER TABLE [WORDFILE] ALTER COLUMN OrigFileName nvarchar(100) NOT NULL
+		COMMIT
+		PRINT N'INFO: File columns of [WORDFILE] has been changed to nvarchar(100) successfully.'
+	END TRY
+	BEGIN CATCH
+		PRINT N'INFO: Error occur when changing [WORDFILE] table columns to nvarchar(100).'
+		PRINT ERROR_MESSAGE()
+		ROLLBACK
+	END CATCH
+END
+ELSE
+BEGIN
+	PRINT N'INFO: File columns of [WORDFILE] has been changed to nvarchar(100) already.'
+END
+
+IF (SELECT c.max_length FROM sys.objects o INNER JOIN sys.columns c ON o.object_id = c.object_id WHERE o.name = 'WORDTEMPLATE' AND c.name = 'TemplateFileName') = 100
+BEGIN
+	BEGIN TRANSACTION
+	BEGIN TRY
+		ALTER TABLE [WORDTEMPLATE] ALTER COLUMN TemplateFileName nvarchar(100) NOT NULL
+		ALTER TABLE [WORDTEMPLATE] ALTER COLUMN DataFileName nvarchar(100) NOT NULL
+		COMMIT
+		PRINT N'INFO: File columns of [WORDTEMPLATE] has been changed to nvarchar(100) successfully.'
+	END TRY
+	BEGIN CATCH
+		PRINT N'INFO: Error occur when changing [WORDTEMPLATE] table columns to nvarchar(100).'
+		PRINT ERROR_MESSAGE()
+		ROLLBACK
+	END CATCH
+END
+ELSE
+BEGIN
+	PRINT N'INFO: File columns of [WORDTEMPLATE] has been changed to nvarchar(100) already.'
+END

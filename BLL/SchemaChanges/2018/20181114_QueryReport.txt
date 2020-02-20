@@ -1,0 +1,12 @@
+-- v1.8.8 Alex 2018.11.14 Create a minimal table to store QueryParams
+
+CREATE TABLE dbo.QUERYPARAMS  
+    (   
+    [REPORT] INT NOT NULL,
+	[NAME] NVARCHAR(50),
+	[VALUE] NVARCHAR(100),
+	CONSTRAINT [PK_QUERYPARAMS] PRIMARY KEY NONCLUSTERED 
+	(
+		[REPORT], [NAME]
+	)
+)

@@ -1,0 +1,32 @@
+﻿*********************************************************
+=== FPPM ===
+Deploy Date : 2015.08.14 Fai
+Deploy Version: 1.0.0.263
+Deploy Details: Revision [1.0.0.263]
+Remote Database: 20150723_OTHERS.txt
+Deploy DB Schema: 20150723_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== FPPM ===
+Deploy Date : 2016.03.22 Fai
+Deploy Version: 1.0.0.345
+Remote Database: 20150723_OTHERS.txt
+Deploy DB Schema: 20160226_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== FPPM ===
+Deploy Date (Demo): 2019.04.03 Alex
+Deploy Version: 1.2.0.262
+Deploy DB Schema: 20190318_QueryReport.txt
+Remote Database: 20160510_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== FPPM ===
+Deploy Date (Demo): 2019.05.09 Alex
+Deploy Version: 1.2.0.269
+Deploy DB Schema: 20190506_QueryReport.txt
+Remote Database: 20160510_OTHERS.txt
+*********************************************************

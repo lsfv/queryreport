@@ -1,0 +1,23 @@
+﻿*********************************************************
+=== BEAUTY GROUP ===
+Deploy Date : 2015.05.18 Fai
+Deploy Version: 1.0.0.133
+Deploy Details: Revision [1.0.0.133]
+Deploy DB Schema: 20150331_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== BEAUTY GROUP ===
+Deploy Date : 2016.4.11 Fai
+Deploy Version: 1.0.0.351
+Deploy DB Schema:	20160324_QueryReport.txt
+Remote Database:	20150723_OTHERS.txt
+*********************************************************
+
+*********************************************************
+=== BEAUTY GROUP ===
+Deploy Date : 2019.01.10 Billy
+Deploy Version: 1.2.0.254
+Deploy DB Schema:	20190107_QueryReport.txt
+Remote Database:	20160510_OTHERS.txt
+*********************************************************

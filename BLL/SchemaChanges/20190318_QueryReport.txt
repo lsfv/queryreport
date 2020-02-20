@@ -1,0 +1,5 @@
+-- v1.8.8 Alex 2019.03.18 - Performance Enhancements
+
+ALTER TABLE SOURCEVIEWCOLUMN
+ADD DATA_TYPE VARCHAR(20)
+GO

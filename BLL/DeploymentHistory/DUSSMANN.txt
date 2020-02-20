@@ -1,0 +1,37 @@
+﻿*********************************************************
+=== DUSSMANN ===
+Deploy Date : 2015.07.21 Fai
+Deploy Version: 1.0.0.247
+Deploy Details: Revision [247]
+Deploy DB Schema: 20150710_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== DUSSMANN ===
+Deploy Date : 2016.04.25 Cheong
+Deploy Version: 1.0.0.351
+Deploy Details: Revision [351]
+Deploy DB Schema: 20160324_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== DUSSMANN ===
+Deploy Date : 2017.01.04 Fai
+Deploy Version: 1.2.0.123
+Deploy Details: Revision [123]
+Deploy DB Schema: 20161102_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== DUSSMANN ===
+Deploy Date : 2017.03.13 Fai
+Deploy Version: 1.2.0.125
+Deploy DB Schema:	20161102_QueryReport.txt
+*********************************************************
+
+*********************************************************
+=== DUSSMANN ===
+Deploy Date : 2017.05.10 Fai
+Deploy Version: 1.2.0.134
+Deploy DB Schema:	20161102_QueryReport.txt
+*********************************************************
