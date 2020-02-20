@@ -22,23 +22,23 @@ namespace Common
         #region strategy pattern
         public interface ILoadData
         {
-            void onLoadDataTable(DataTable dt,SheetData worksheetPart,UInt32 titleindex,UInt32 contentindex);
+            void onLoadDataTable(DataTable dt,SheetData worksheetPart,UInt32 titleindex,UInt32 contentindex,UInt32 dateindex);
         }
 
         public class LoadData_SimpleColumn : ILoadData
         {
-            public void onLoadDataTable(DataTable dt, SheetData sheetData, UInt32 titleindex, UInt32 contentindex)
+            public void onLoadDataTable(DataTable dt, SheetData sheetData, UInt32 titleindex, UInt32 contentindex, UInt32 dateindex)
             {
                 UInt32 rowIndex = 1;//rowindex must start from 1;
 
                 //insert column name.
-                CreateRow(sheetData, rowIndex, GetColumnsNames(dt), titleindex);
+                CreateRow(sheetData, rowIndex, GetColumnsNames(dt), titleindex,dateindex);
                 rowIndex++;//虽然放到上一行语句更简洁,但放到这里更容易理解.
 
                 //loop to insert each row.
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    CreateRow(sheetData, rowIndex, dt.Rows[i], contentindex);
+                    CreateRow(sheetData, rowIndex, dt.Rows[i], contentindex,dateindex);
                     rowIndex++;
                 }
             }
@@ -49,7 +49,7 @@ namespace Common
 
         #region style
 
-        private static void GenerateDeafultStyle(WorkbookPart workbookpart,out UInt32 titleStyleIndex,out UInt32 contentIndex)
+        private static void GenerateDeafultStyle(WorkbookPart workbookpart,out UInt32 titleStyleIndex,out UInt32 contentIndex,out UInt32 dateIndex)
         {
             WorkbookStylesPart stylepart = workbookpart.WorkbookStylesPart;
 
@@ -100,8 +100,12 @@ namespace Common
             var fontBlackIndex = createFont(styleSheet, "Microsoft YaHei", (double)11, true, System.Drawing.Color.Black);
             var fontBlackStyleIndex = createCellFormat(styleSheet, fontBlackIndex, null, null);
 
+            var defaultDateStyleIndex = createCellFormat(styleSheet, fontIndex, null, 14);//时间格式
+
             titleStyleIndex = fontBlackStyleIndex;
             contentIndex = fontStyleIndex;
+            dateIndex = defaultDateStyleIndex;
+
             stylepart.Stylesheet.Save();
         }
 
@@ -224,7 +228,7 @@ namespace Common
 
         #endregion
 
-        private static void CreateRow(SheetData thesheetData, UInt32Value rowIndex, List<string> data,UInt32 styleindex)
+        private static void CreateRow(SheetData thesheetData, UInt32Value rowIndex, List<string> data,UInt32 styleindex, UInt32 dateindex)
         {
             Row theRow = new Row();
             theRow.RowIndex = rowIndex;
@@ -240,7 +244,7 @@ namespace Common
             }
         }
 
-        private static void CreateRow(SheetData thesheetData, UInt32Value rowIndex, DataRow dataRow, UInt32 styleindex)
+        private static void CreateRow(SheetData thesheetData, UInt32Value rowIndex, DataRow dataRow, UInt32 styleindex, UInt32 dateindex)
         {
             Row theRow = new Row();
             theRow.RowIndex = rowIndex;
@@ -250,24 +254,26 @@ namespace Common
             {
                 Cell theCell = new Cell();
                 theRow.InsertAt(theCell, i);
-                theCell.StyleIndex = styleindex;
+                
                 CellValues theCellValue = GetValueType(dataRow.Table.Columns[i]);
                 if(theCellValue == CellValues.Number)
                 {
+                    theCell.StyleIndex = styleindex;
                     theCell.CellValue = new CellValue(dataRow[i].ToString());
                     theCell.DataType = new EnumValue<CellValues>(theCellValue);
                 }
                 else if (theCellValue == CellValues.Date)
                 {
+                    theCell.StyleIndex = dateindex;
                     theCell.CellValue = new CellValue(((DateTime)dataRow[i]));
                     theCell.DataType = new EnumValue<CellValues>(theCellValue);
                 }
                 else
                 {
+                    theCell.StyleIndex = styleindex;
                     theCell.CellValue = new CellValue(dataRow[i].ToString());
                     theCell.DataType = new EnumValue<CellValues>(theCellValue);
                 }
-                
             }
         }
         private static CellValues GetValueType(DataColumn dataColumn)
@@ -313,8 +319,8 @@ namespace Common
                 WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
                 workbookpart.Workbook = new Workbook();
 
-                UInt32 contentIndex, titleIndex;
-                GenerateDeafultStyle(workbookpart,out titleIndex,out contentIndex);
+                UInt32 contentIndex, titleIndex, dateIndex;
+                GenerateDeafultStyle(workbookpart,out titleIndex,out contentIndex,out dateIndex);
 
                 //Worksheet
                 WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
@@ -331,7 +337,7 @@ namespace Common
                 if (implateLoadData != null)
                 {
                     SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
-                    implateLoadData.onLoadDataTable(dt, sheetData,titleIndex,contentIndex);
+                    implateLoadData.onLoadDataTable(dt, sheetData,titleIndex,contentIndex,dateIndex);
                 }
 
                 workbookpart.Workbook.Save();
@@ -374,13 +380,13 @@ namespace Common
                         //clear data
                         reportSheetData.RemoveAllChildren();
 
-                        UInt32 contentIndex, titleIndex;
-                        GenerateDeafultStyle(document.WorkbookPart, out titleIndex, out contentIndex);
+                        UInt32 contentIndex, titleIndex, dateIndex;
+                        GenerateDeafultStyle(document.WorkbookPart, out titleIndex, out contentIndex,out dateIndex);
 
                         //load data
                         if (implateLoadData!=null)
                         {
-                            implateLoadData.onLoadDataTable(dt, reportSheetData, titleIndex, contentIndex);
+                            implateLoadData.onLoadDataTable(dt, reportSheetData, titleIndex, contentIndex,dateIndex);
                         }
                     }
                 }
