@@ -24,6 +24,7 @@ namespace Common
         {
             void onLoadDataTable(DataTable dt,SheetData worksheetPart,UInt32 titleindex,UInt32 contentindex);
         }
+
         public class LoadData_SimpleColumn : ILoadData
         {
             public void onLoadDataTable(DataTable dt, SheetData sheetData, UInt32 titleindex, UInt32 contentindex)
