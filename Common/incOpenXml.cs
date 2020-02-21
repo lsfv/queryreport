@@ -379,7 +379,7 @@ namespace Common
             {
                 using (SpreadsheetDocument document = SpreadsheetDocument.Open(filepath, true))
                 {
-                    SetExcelAutoReflush(document);
+                    SetExcelAutoReflesh(document);
 
                     IEnumerable<Sheet> sheets = document.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>().Where(s => s.Name == updateSheetName);
                     if (sheets.Count() == 0)
@@ -419,7 +419,7 @@ namespace Common
             return res;
         }
 
-        private static void SetExcelAutoReflush(SpreadsheetDocument document)
+        private static void SetExcelAutoReflesh(SpreadsheetDocument document)
         {
             var uriPartDictionary = BuildUriPartDictionary(document);
 
