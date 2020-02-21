@@ -354,6 +354,21 @@ namespace Common
             return res;
         }
 
+        private static Dictionary<String, OpenXmlPart> BuildUriPartDictionary(SpreadsheetDocument document)
+        {
+            var uriPartDictionary = new Dictionary<String, OpenXmlPart>();
+            var queue = new Queue<OpenXmlPartContainer>();
+            queue.Enqueue(document);
+            while (queue.Count > 0)
+            {
+                foreach (var part in queue.Dequeue().Parts.Where(part => !uriPartDictionary.Keys.Contains(part.OpenXmlPart.Uri.ToString())))
+                {
+                    uriPartDictionary.Add(part.OpenXmlPart.Uri.ToString(), part.OpenXmlPart);
+                    queue.Enqueue(part.OpenXmlPart);
+                }
+            }
+            return uriPartDictionary;
+        }
 
         private static bool UpdateSpreadsheetWorkbook(string filepath, string updateSheetName, DataTable dt, ILoadData implateLoadData, out string errMSG)
         {
@@ -364,6 +379,8 @@ namespace Common
             {
                 using (SpreadsheetDocument document = SpreadsheetDocument.Open(filepath, true))
                 {
+                    SetExcelAutoReflush(document);
+
                     IEnumerable<Sheet> sheets = document.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>().Where(s => s.Name == updateSheetName);
                     if (sheets.Count() == 0)
                     {
@@ -381,14 +398,15 @@ namespace Common
                         reportSheetData.RemoveAllChildren();
 
                         UInt32 contentIndex, titleIndex, dateIndex;
-                        GenerateDeafultStyle(document.WorkbookPart, out titleIndex, out contentIndex,out dateIndex);
+                        GenerateDeafultStyle(document.WorkbookPart, out titleIndex, out contentIndex, out dateIndex);
 
                         //load data
-                        if (implateLoadData!=null)
+                        if (implateLoadData != null)
                         {
-                            implateLoadData.onLoadDataTable(dt, reportSheetData, titleIndex, contentIndex,dateIndex);
+                            implateLoadData.onLoadDataTable(dt, reportSheetData, titleIndex, contentIndex, dateIndex);
                         }
                     }
+
                 }
             }
             catch (Exception ex)
@@ -399,6 +417,15 @@ namespace Common
             
 
             return res;
+        }
+
+        private static void SetExcelAutoReflush(SpreadsheetDocument document)
+        {
+            var uriPartDictionary = BuildUriPartDictionary(document);
+
+            PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart1 = (PivotTableCacheDefinitionPart)uriPartDictionary["/xl/pivotCache/pivotCacheDefinition1.xml"];
+            PivotCacheDefinition pivotCacheDefinition1 = pivotTableCacheDefinitionPart1.PivotCacheDefinition;
+            pivotCacheDefinition1.RefreshOnLoad = true;
         }
 
         #endregion

@@ -20,8 +20,8 @@ namespace QueryReport
         public const string strSessionKeyColumnInfo = "__SESSION_REPORT_ColumnInfo";
         public const string strSessionKeyReportParameterContainer = "__SESSION_REPORT_ReportParameterContainer";
         public const string strSessionKeyFormulaFields = "__SESSION_REPORT_FormulaFields";
-        public const string strBtnText_replace = "Replace Template";
-        public const string strBtnText_add = "Add Template";
+        public const string strBtnText_replace = "Upload";
+        public const string strBtnText_add = "Upload";
         public const string TEMPLATEMESSAGEPREFIX = "Template : ";
         public const string TEMPLATEEMTYFILE = "No template file.";
 

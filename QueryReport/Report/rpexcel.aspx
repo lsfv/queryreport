@@ -1137,19 +1137,12 @@
             <div class="modal-content">
                 <div class="modal-header"><h4 class="modal-title">Pivotable Template Management</h4></div>
                 <div class="modal-body">
-<%--                    <div class="row">
-                        <div class="col-xs-4" ><label>Download template</label></div>
-                        <div class="col-xs-8">
-                            <input type="button" id="btn_downTemplate" value="Download" class="btn form-control" runat="server"  style="width:300px" onserverclick="btn_downTemplate_ServerClick"/>
-                        </div>
-                    </div>
-                    <br />--%>
                     <div class="row">
-                        <div class="col-xs-4" ><label>Upload template</label></div>
-                        <div class="col-xs-8">
+                        <div class="col-xs-3" ><label>Upload template</label></div>
+                        <div class="col-xs-9">
                             <asp:FileUpload ID="fu_exceltempletea" runat="server" CssClass="btn form-control btn-block" Style="width: 300px" />
                             <input type="button" id="btn_uploadTemplateb" value="Upload" runat="server" Text="Add Template" class="btn form-control btn-block" style="width:300px" onserverclick="btn_uploadTemplate_ServerClick"/>
-                            <label runat="server" ID="lt_filenamec" class="form-control btn-block" style="width:300px"></label>
+                            <label runat="server" ID="lt_filenamec" class="form-control btn-block" style="width:600px; font-size:13px"></label>
                         </div>
                     </div>
                 </div>
