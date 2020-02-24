@@ -20,25 +20,41 @@ namespace Common
     public static class incOpenXml
     {
         #region strategy pattern
+        public class CellStyleIndexCollection
+        {
+            public UInt32 title;
+            public UInt32 Number;
+            public UInt32 dateTime;
+            public UInt32 StringStyle;
+
+            public CellStyleIndexCollection(uint title, uint number, uint dateTime, uint StringStyle)
+            {
+                this.title = title;
+                Number = number;
+                this.dateTime = dateTime;
+                StringStyle = StringStyle;
+            }
+        }
+
         public interface ILoadData
         {
-            void onLoadDataTable(DataTable dt,SheetData worksheetPart,UInt32 titleindex,UInt32 contentindex,UInt32 dateindex);
+            void onLoadDataTable(DataTable dt,SheetData worksheetPart, CellStyleIndexCollection indexs);
         }
 
         public class LoadData_SimpleColumn : ILoadData
         {
-            public void onLoadDataTable(DataTable dt, SheetData sheetData, UInt32 titleindex, UInt32 contentindex, UInt32 dateindex)
+            public void onLoadDataTable(DataTable dt, SheetData sheetData, CellStyleIndexCollection indexs)
             {
                 UInt32 rowIndex = 1;//rowindex must start from 1;
 
                 //insert column name.
-                CreateRow(sheetData, rowIndex, GetColumnsNames(dt), titleindex,dateindex);
+                CreateRow(sheetData, rowIndex, GetColumnsNames(dt), indexs);
                 rowIndex++;//虽然放到上一行语句更简洁,但放到这里更容易理解.
 
                 //loop to insert each row.
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    CreateRow(sheetData, rowIndex, dt.Rows[i], contentindex,dateindex);
+                    CreateRow(sheetData, rowIndex, dt.Rows[i], indexs);
                     rowIndex++;
                 }
             }
@@ -49,7 +65,7 @@ namespace Common
 
         #region style
 
-        private static void GenerateDeafultStyle(WorkbookPart workbookpart,out UInt32 titleStyleIndex,out UInt32 contentIndex,out UInt32 dateIndex)
+        private static void GenerateDeafultStyle(WorkbookPart workbookpart,out UInt32 titleStyleIndex,out UInt32 normalIndex,out UInt32 dateIndex)
         {
             WorkbookStylesPart stylepart = workbookpart.WorkbookStylesPart;
 
@@ -116,7 +132,7 @@ namespace Common
             var defaultDateStyleIndex = createCellFormat(styleSheet, fontIndex, null, numberFormatDate_index.NumberFormatId);//时间格式 14:yyyy/mm/dd 
 
             titleStyleIndex = fontBlackStyleIndex;
-            contentIndex = fontStyleIndex;
+            normalIndex = fontStyleIndex;
             dateIndex = defaultDateStyleIndex;
 
             stylepart.Stylesheet.Save();
@@ -241,7 +257,7 @@ namespace Common
 
         #endregion
 
-        private static void CreateRow(SheetData thesheetData, UInt32Value rowIndex, List<string> data,UInt32 styleindex, UInt32 dateindex)
+        private static void CreateRow(SheetData thesheetData, UInt32Value rowIndex, List<string> data, CellStyleIndexCollection indexs)
         {
             Row theRow = new Row();
             theRow.RowIndex = rowIndex;
@@ -251,13 +267,13 @@ namespace Common
             {
                 Cell theCell = new Cell();
                 theRow.InsertAt(theCell, i);
-                theCell.StyleIndex = styleindex;
+                theCell.StyleIndex = indexs.title;
                 theCell.CellValue = new CellValue(data[i]);
                 theCell.DataType = new EnumValue<CellValues>(CellValues.String);
             }
         }
 
-        private static void CreateRow(SheetData thesheetData, UInt32Value rowIndex, DataRow dataRow, UInt32 styleindex, UInt32 dateindex)
+        private static void CreateRow(SheetData thesheetData, UInt32Value rowIndex, DataRow dataRow, CellStyleIndexCollection indexs)
         {
             Row theRow = new Row();
             theRow.RowIndex = rowIndex;
@@ -271,19 +287,19 @@ namespace Common
                 CellValues theCellValue = GetValueType(dataRow.Table.Columns[i]);
                 if(theCellValue == CellValues.Number)
                 {
-                    theCell.StyleIndex = styleindex;
+                    theCell.StyleIndex = indexs.Number;
                     theCell.CellValue = new CellValue(dataRow[i].ToString());
                     theCell.DataType = new EnumValue<CellValues>(theCellValue);
                 }
                 else if (theCellValue == CellValues.Date)
                 {
-                    theCell.StyleIndex = dateindex;
+                    theCell.StyleIndex = indexs.dateTime;
                     theCell.CellValue = new CellValue(((DateTime)dataRow[i]));
                     theCell.DataType = new EnumValue<CellValues>(theCellValue);
                 }
                 else
                 {
-                    theCell.StyleIndex = styleindex;
+                    theCell.StyleIndex = indexs.StringStyle;
                     theCell.CellValue = new CellValue(dataRow[i].ToString());
                     theCell.DataType = new EnumValue<CellValues>(theCellValue);
                 }
@@ -350,7 +366,8 @@ namespace Common
                 if (implateLoadData != null)
                 {
                     SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
-                    implateLoadData.onLoadDataTable(dt, sheetData,titleIndex,contentIndex,dateIndex);
+                    CellStyleIndexCollection cellStyleIndex = new CellStyleIndexCollection(titleIndex, contentIndex, dateIndex, contentIndex);
+                    implateLoadData.onLoadDataTable(dt, sheetData, cellStyleIndex);
                 }
 
                 workbookpart.Workbook.Save();
@@ -416,7 +433,8 @@ namespace Common
                         //load data
                         if (implateLoadData != null)
                         {
-                            implateLoadData.onLoadDataTable(dt, reportSheetData, titleIndex, contentIndex, dateIndex);
+                            CellStyleIndexCollection cellStyleIndex = new CellStyleIndexCollection(titleIndex, contentIndex, dateIndex, contentIndex);
+                            implateLoadData.onLoadDataTable(dt, reportSheetData, cellStyleIndex);
                         }
                     }
 
