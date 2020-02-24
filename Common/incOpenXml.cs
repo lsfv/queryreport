@@ -276,6 +276,30 @@ namespace Common
 
         #endregion
 
+        private static bool SetPivotSource(WorkbookPart wbPart, string sheetName,string firstReference, string lastReference)
+        {
+            bool res = false;
+            try
+            {
+                var pivottableCashes = wbPart.PivotTableCacheDefinitionParts;
+                foreach (PivotTableCacheDefinitionPart pivottablecachePart in pivottableCashes)
+                {
+                    pivottablecachePart.PivotCacheDefinition.CacheSource.RemoveAllChildren();
+                    pivottablecachePart.PivotCacheDefinition.CacheSource.Append(new WorksheetSource()
+                    {
+                        Sheet = sheetName,
+                        Reference = new StringValue(firstReference + ":" + lastReference)
+                    });
+                }
+                res = true;
+            }
+            catch
+            {
+                res = false;
+            }
+            return res;
+        }
+
         private static void CreateRow(SheetData thesheetData, UInt32Value rowIndex, List<string> data, CellStyleIndexCollection indexs)
         {
             Row theRow = new Row();
@@ -324,6 +348,7 @@ namespace Common
                 }
             }
         }
+
         private static CellValues GetValueType(DataColumn dataColumn)
         {
             List<Type> number = new List<Type>{ typeof(Double), typeof(Decimal), typeof(Int32), typeof(int), typeof(Int16),typeof(Int64)};
@@ -469,22 +494,32 @@ namespace Common
         {
             try
             {
-                var uriPartDictionary = BuildUriPartDictionary(document);
-
-                PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart1 = (PivotTableCacheDefinitionPart)uriPartDictionary["/xl/pivotCache/pivotCacheDefinition1.xml"];
-                PivotCacheDefinition pivotCacheDefinition1 = pivotTableCacheDefinitionPart1.PivotCacheDefinition;
-                pivotCacheDefinition1.RefreshOnLoad = true;
+                WorkbookPart wbPart = document.WorkbookPart;
+                var pivottableCashes = wbPart.PivotTableCacheDefinitionParts;
+                foreach (PivotTableCacheDefinitionPart pivottablecachePart in pivottableCashes)
+                {
+                    pivottablecachePart.PivotCacheDefinition.RefreshOnLoad = true;
+                }
             }
-            catch
+            catch (Exception e)
             {
-                //do nothing when directery is's contain key or it is null.
+                throw e;
             }
-            
         }
-
         #endregion
 
         #region public
+        public static bool SetPivotSource(string filePath, string SourcesheetName, string firstReference, string lastReference)
+        {
+            bool res = false;
+            using (SpreadsheetDocument document = SpreadsheetDocument.Open(filePath, true))
+            {
+                SetExcelAutoReflesh(document);
+                res = SetPivotSource(document.WorkbookPart, SourcesheetName, firstReference, lastReference);
+            }
+            return res;
+        }
+
         public static bool UpdataData4XlsxExcel(DataTable rpdt, string dataSheetName, out string errMsg, string filePath)
         {
             bool res = false;
