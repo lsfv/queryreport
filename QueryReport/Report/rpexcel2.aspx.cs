@@ -278,7 +278,7 @@ namespace QueryReport
                                 bool res= Common.Utils.IOFile.CreateFloder(floder,out errMsg);
                                 if (res)
                                 {
-                                    pivotablePath = floder + "/Temple_" + myReport.REPORTNAME + ".xlsx";
+                                    pivotablePath = floder + "/" + myReport.REPORTNAME + ".xlsx";
                                     pivotableFileName = System.IO.Path.GetFileName(pivotablePath);
                                     isSuccess = Common.incOpenXml.GenerateXlsxExcel(this.rpdt, out errMsg, pivotablePath);
                                 }

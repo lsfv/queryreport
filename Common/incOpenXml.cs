@@ -100,7 +100,7 @@ namespace Common
             var fontBlackIndex = createFont(styleSheet, "Microsoft YaHei", (double)11, true, System.Drawing.Color.Black);
             var fontBlackStyleIndex = createCellFormat(styleSheet, fontBlackIndex, null, null);
 
-            var defaultDateStyleIndex = createCellFormat(styleSheet, fontIndex, null, 14);//时间格式
+            var defaultDateStyleIndex = createCellFormat(styleSheet, fontIndex, null, 14);//时间格式 14:yyyy/mm/dd 
 
             titleStyleIndex = fontBlackStyleIndex;
             contentIndex = fontStyleIndex;
@@ -421,11 +421,19 @@ namespace Common
 
         private static void SetExcelAutoReflesh(SpreadsheetDocument document)
         {
-            var uriPartDictionary = BuildUriPartDictionary(document);
+            try
+            {
+                var uriPartDictionary = BuildUriPartDictionary(document);
 
-            PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart1 = (PivotTableCacheDefinitionPart)uriPartDictionary["/xl/pivotCache/pivotCacheDefinition1.xml"];
-            PivotCacheDefinition pivotCacheDefinition1 = pivotTableCacheDefinitionPart1.PivotCacheDefinition;
-            pivotCacheDefinition1.RefreshOnLoad = true;
+                PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart1 = (PivotTableCacheDefinitionPart)uriPartDictionary["/xl/pivotCache/pivotCacheDefinition1.xml"];
+                PivotCacheDefinition pivotCacheDefinition1 = pivotTableCacheDefinitionPart1.PivotCacheDefinition;
+                pivotCacheDefinition1.RefreshOnLoad = true;
+            }
+            catch
+            {
+                //do nothing when directery is's contain key or it is null.
+            }
+            
         }
 
         #endregion

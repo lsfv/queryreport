@@ -414,7 +414,7 @@ namespace QueryReport
                     newtemplate.ModifyDate = DateTime.Now;
                     newtemplate.ModifyUser = me.ID;
                     int id = WebHelper.bllWordFile.AddFile(newtemplate);
-                    this.lblErrorText.Text = "add" + id;
+                    //this.lblErrorText.Text = "add" + id;
                     //这里体现了 asp.net 开发的一种模式.   pageload 只初始化控件,所有控件的修改都是在事件中处理,而是不放入到pageload
                     this.btn_uploadTemplateb.Value = strBtnText_replace;
                     this.lt_filenamec.InnerText = TEMPLATEMESSAGEPREFIX + fileOrigName;
@@ -428,13 +428,13 @@ namespace QueryReport
                     template.ModifyDate = DateTime.Now;
                     template.ModifyUser = me.ID;
                     WebHelper.bllWordFile.UpdateFile(template);
-                    this.lblErrorText.Text = "replace" + template.WordFileID;
+                    //this.lblErrorText.Text = "replace" + template.WordFileID;
                     this.lt_filenamec.InnerText = TEMPLATEMESSAGEPREFIX + fileOrigName;
                 }
             }
             String successMsg = string.Format("Success!");
             string failMsg = string.Format("Fail:{0}", errmsg);
-            this.lblErrorText.Text = isUpload == true ? successMsg : failMsg;
+            //this.lblErrorText.Text = isUpload == true ? successMsg : failMsg;
 
             this.lblJavascript.Text = WebHelper.GetJSModelShow();
         }
