@@ -1132,8 +1132,8 @@
         });
     </script>
     
-        <div id="templatemgt" class="modal fade" role="dialog" aria-hidden="true" style="margin-top: 50px" >
-        <div class="modal-dialog">
+        <div id="templatemgt" class="modal fade" role="dialog" aria-hidden="true" style="margin-top: 50px">
+        <div class="modal-dialog" style="width:760px">
             <div class="modal-content">
                 <div class="modal-header"><h4 class="modal-title">Pivotable Template Management</h4></div>
                 <div class="modal-body">
@@ -1142,7 +1142,8 @@
                         <div class="col-xs-9">
                             <asp:FileUpload ID="fu_exceltempletea" runat="server" CssClass="btn form-control btn-block" Style="width: 300px" />
                             <input type="button" id="btn_uploadTemplateb" value="Upload" runat="server" Text="Add Template" class="btn form-control btn-block" style="width:300px" onserverclick="btn_uploadTemplate_ServerClick"/>
-                            <label runat="server" ID="lt_filenamec" class="form-control btn-block" style="width:600px; font-size:13px"></label>
+                            <label runat="server" ID="lt_filenamec" class="form-control btn-block" style="font-size:13px"></label>
+                            <label runat="server" ID="lt_popMessage" class="control-label" style=" font-size:13px; color:red">error.</label>
                         </div>
                     </div>
                 </div>
