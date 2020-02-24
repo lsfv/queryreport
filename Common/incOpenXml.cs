@@ -90,8 +90,21 @@ namespace Common
                 stylepart.Stylesheet.CellFormats = new CellFormats();
             }
 
+            if(stylepart.Stylesheet.NumberingFormats==null)
+            {
+                stylepart.Stylesheet.NumberingFormats = new NumberingFormats();
+            }
+
+
             Stylesheet styleSheet = stylepart.Stylesheet;
             var fontIndex = createFont(styleSheet, "Microsoft YaHei", (double)11, false, System.Drawing.Color.Black);
+            var numberFormatDate_index = new NumberingFormat();
+            numberFormatDate_index.FormatCode = new StringValue("yyyy-mm-dd");
+            numberFormatDate_index.NumberFormatId = 240;
+
+            stylepart.Stylesheet.NumberingFormats.InsertAt(numberFormatDate_index, stylepart.Stylesheet.NumberingFormats.Count());
+
+
             var fontStyleIndex = createCellFormat(styleSheet, fontIndex, null, null);
 
             var fillIndex = createFill(styleSheet, System.Drawing.Color.White);
@@ -100,7 +113,7 @@ namespace Common
             var fontBlackIndex = createFont(styleSheet, "Microsoft YaHei", (double)11, true, System.Drawing.Color.Black);
             var fontBlackStyleIndex = createCellFormat(styleSheet, fontBlackIndex, null, null);
 
-            var defaultDateStyleIndex = createCellFormat(styleSheet, fontIndex, null, 14);//时间格式 14:yyyy/mm/dd 
+            var defaultDateStyleIndex = createCellFormat(styleSheet, fontIndex, null, numberFormatDate_index.NumberFormatId);//时间格式 14:yyyy/mm/dd 
 
             titleStyleIndex = fontBlackStyleIndex;
             contentIndex = fontStyleIndex;
@@ -278,7 +291,7 @@ namespace Common
         }
         private static CellValues GetValueType(DataColumn dataColumn)
         {
-            List<Type> number = new List<Type>{ typeof(Double), typeof(Decimal), typeof(Int32), typeof(int) };
+            List<Type> number = new List<Type>{ typeof(Double), typeof(Decimal), typeof(Int32), typeof(int), typeof(Int16),typeof(Int64)};
             List<Type> date = new List<Type> { typeof(DateTime) };
 
             if (number.Contains(dataColumn.DataType))
