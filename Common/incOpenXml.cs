@@ -27,24 +27,43 @@ namespace Common
             public UInt32 dateTime;
             public UInt32 StringStyle;
 
-            public CellStyleIndexCollection(uint title, uint number, uint dateTime, uint StringStyle)
+            public CellStyleIndexCollection(uint title, uint number, uint dateTime, uint _StringStyle)
             {
                 this.title = title;
                 Number = number;
                 this.dateTime = dateTime;
-                StringStyle = StringStyle;
+                StringStyle = _StringStyle;
             }
         }
 
         public interface ILoadData
         {
             void onLoadDataTable(DataTable dt,SheetData worksheetPart, CellStyleIndexCollection indexs);
+
+            void onUpdateDataTable(DataTable dt, SheetData worksheetPart, CellStyleIndexCollection indexs);
         }
 
         public class LoadData_SimpleColumn : ILoadData
         {
             public void onLoadDataTable(DataTable dt, SheetData sheetData, CellStyleIndexCollection indexs)
             {
+                UInt32 rowIndex = 1;//rowindex must start from 1;
+
+                //insert column name.
+                CreateRow(sheetData, rowIndex, GetColumnsNames(dt), indexs);
+                rowIndex++;//虽然放到上一行语句更简洁,但放到这里更容易理解.
+
+                //loop to insert each row.
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    CreateRow(sheetData, rowIndex, dt.Rows[i], indexs);
+                    rowIndex++;
+                }
+            }
+
+            public void onUpdateDataTable(DataTable dt, SheetData sheetData, CellStyleIndexCollection indexs)
+            {
+                sheetData.RemoveAllChildren();//clear all data.
                 UInt32 rowIndex = 1;//rowindex must start from 1;
 
                 //insert column name.
@@ -424,9 +443,6 @@ namespace Common
                         Worksheet theSheet = worksheetPart.Worksheet;
                         SheetData reportSheetData = theSheet.GetFirstChild<SheetData>();
 
-                        //clear data
-                        reportSheetData.RemoveAllChildren();
-
                         UInt32 contentIndex, titleIndex, dateIndex;
                         GenerateDeafultStyle(document.WorkbookPart, out titleIndex, out contentIndex, out dateIndex);
 
@@ -434,10 +450,9 @@ namespace Common
                         if (implateLoadData != null)
                         {
                             CellStyleIndexCollection cellStyleIndex = new CellStyleIndexCollection(titleIndex, contentIndex, dateIndex, contentIndex);
-                            implateLoadData.onLoadDataTable(dt, reportSheetData, cellStyleIndex);
+                            implateLoadData.onUpdateDataTable(dt, reportSheetData, cellStyleIndex);
                         }
                     }
-
                 }
             }
             catch (Exception ex)
