@@ -20,25 +20,60 @@ namespace Common
     public static class incOpenXml
     {
         #region strategy pattern
+        public class CellStyleIndexCollection
+        {
+            public UInt32 title;
+            public UInt32 Number;
+            public UInt32 dateTime;
+            public UInt32 StringStyle;
+
+            public CellStyleIndexCollection(uint title, uint number, uint dateTime, uint _StringStyle)
+            {
+                this.title = title;
+                Number = number;
+                this.dateTime = dateTime;
+                StringStyle = _StringStyle;
+            }
+        }
+
         public interface ILoadData
         {
-            void onLoadDataTable(DataTable dt,SheetData worksheetPart,UInt32 titleindex,UInt32 contentindex,UInt32 dateindex);
+            void onLoadDataTable(DataTable dt,SheetData worksheetPart, CellStyleIndexCollection indexs);
+
+            void onUpdateDataTable(DataTable dt, SheetData worksheetPart, CellStyleIndexCollection indexs);
         }
 
         public class LoadData_SimpleColumn : ILoadData
         {
-            public void onLoadDataTable(DataTable dt, SheetData sheetData, UInt32 titleindex, UInt32 contentindex, UInt32 dateindex)
+            public void onLoadDataTable(DataTable dt, SheetData sheetData, CellStyleIndexCollection indexs)
             {
                 UInt32 rowIndex = 1;//rowindex must start from 1;
 
                 //insert column name.
-                CreateRow(sheetData, rowIndex, GetColumnsNames(dt), titleindex,dateindex);
+                CreateRow(sheetData, rowIndex, GetColumnsNames(dt), indexs);
                 rowIndex++;//虽然放到上一行语句更简洁,但放到这里更容易理解.
 
                 //loop to insert each row.
                 for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                    CreateRow(sheetData, rowIndex, dt.Rows[i], contentindex,dateindex);
+                    CreateRow(sheetData, rowIndex, dt.Rows[i], indexs);
+                    rowIndex++;
+                }
+            }
+
+            public void onUpdateDataTable(DataTable dt, SheetData sheetData, CellStyleIndexCollection indexs)
+            {
+                sheetData.RemoveAllChildren();//clear all data.
+                UInt32 rowIndex = 1;//rowindex must start from 1;
+
+                //insert column name.
+                CreateRow(sheetData, rowIndex, GetColumnsNames(dt), indexs);
+                rowIndex++;//虽然放到上一行语句更简洁,但放到这里更容易理解.
+
+                //loop to insert each row.
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    CreateRow(sheetData, rowIndex, dt.Rows[i], indexs);
                     rowIndex++;
                 }
             }
@@ -49,7 +84,7 @@ namespace Common
 
         #region style
 
-        private static void GenerateDeafultStyle(WorkbookPart workbookpart,out UInt32 titleStyleIndex,out UInt32 contentIndex,out UInt32 dateIndex)
+        private static void GenerateDeafultStyle(WorkbookPart workbookpart,out UInt32 titleStyleIndex,out UInt32 normalIndex,out UInt32 dateIndex)
         {
             WorkbookStylesPart stylepart = workbookpart.WorkbookStylesPart;
 
@@ -116,7 +151,7 @@ namespace Common
             var defaultDateStyleIndex = createCellFormat(styleSheet, fontIndex, null, numberFormatDate_index.NumberFormatId);//时间格式 14:yyyy/mm/dd 
 
             titleStyleIndex = fontBlackStyleIndex;
-            contentIndex = fontStyleIndex;
+            normalIndex = fontStyleIndex;
             dateIndex = defaultDateStyleIndex;
 
             stylepart.Stylesheet.Save();
@@ -241,7 +276,31 @@ namespace Common
 
         #endregion
 
-        private static void CreateRow(SheetData thesheetData, UInt32Value rowIndex, List<string> data,UInt32 styleindex, UInt32 dateindex)
+        private static bool SetPivotSource(WorkbookPart wbPart, string sheetName,string firstReference, string lastReference)
+        {
+            bool res = false;
+            try
+            {
+                var pivottableCashes = wbPart.PivotTableCacheDefinitionParts;
+                foreach (PivotTableCacheDefinitionPart pivottablecachePart in pivottableCashes)
+                {
+                    pivottablecachePart.PivotCacheDefinition.CacheSource.RemoveAllChildren();
+                    pivottablecachePart.PivotCacheDefinition.CacheSource.Append(new WorksheetSource()
+                    {
+                        Sheet = sheetName,
+                        Reference = new StringValue(firstReference + ":" + lastReference)
+                    });
+                }
+                res = true;
+            }
+            catch
+            {
+                res = false;
+            }
+            return res;
+        }
+
+        private static void CreateRow(SheetData thesheetData, UInt32Value rowIndex, List<string> data, CellStyleIndexCollection indexs)
         {
             Row theRow = new Row();
             theRow.RowIndex = rowIndex;
@@ -251,13 +310,13 @@ namespace Common
             {
                 Cell theCell = new Cell();
                 theRow.InsertAt(theCell, i);
-                theCell.StyleIndex = styleindex;
+                theCell.StyleIndex = indexs.title;
                 theCell.CellValue = new CellValue(data[i]);
                 theCell.DataType = new EnumValue<CellValues>(CellValues.String);
             }
         }
 
-        private static void CreateRow(SheetData thesheetData, UInt32Value rowIndex, DataRow dataRow, UInt32 styleindex, UInt32 dateindex)
+        private static void CreateRow(SheetData thesheetData, UInt32Value rowIndex, DataRow dataRow, CellStyleIndexCollection indexs)
         {
             Row theRow = new Row();
             theRow.RowIndex = rowIndex;
@@ -271,24 +330,25 @@ namespace Common
                 CellValues theCellValue = GetValueType(dataRow.Table.Columns[i]);
                 if(theCellValue == CellValues.Number)
                 {
-                    theCell.StyleIndex = styleindex;
+                    theCell.StyleIndex = indexs.Number;
                     theCell.CellValue = new CellValue(dataRow[i].ToString());
                     theCell.DataType = new EnumValue<CellValues>(theCellValue);
                 }
                 else if (theCellValue == CellValues.Date)
                 {
-                    theCell.StyleIndex = dateindex;
+                    theCell.StyleIndex = indexs.dateTime;
                     theCell.CellValue = new CellValue(((DateTime)dataRow[i]));
                     theCell.DataType = new EnumValue<CellValues>(theCellValue);
                 }
                 else
                 {
-                    theCell.StyleIndex = styleindex;
+                    theCell.StyleIndex = indexs.StringStyle;
                     theCell.CellValue = new CellValue(dataRow[i].ToString());
                     theCell.DataType = new EnumValue<CellValues>(theCellValue);
                 }
             }
         }
+
         private static CellValues GetValueType(DataColumn dataColumn)
         {
             List<Type> number = new List<Type>{ typeof(Double), typeof(Decimal), typeof(Int32), typeof(int), typeof(Int16),typeof(Int64)};
@@ -350,7 +410,8 @@ namespace Common
                 if (implateLoadData != null)
                 {
                     SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
-                    implateLoadData.onLoadDataTable(dt, sheetData,titleIndex,contentIndex,dateIndex);
+                    CellStyleIndexCollection cellStyleIndex = new CellStyleIndexCollection(titleIndex, contentIndex, dateIndex, contentIndex);
+                    implateLoadData.onLoadDataTable(dt, sheetData, cellStyleIndex);
                 }
 
                 workbookpart.Workbook.Save();
@@ -407,19 +468,16 @@ namespace Common
                         Worksheet theSheet = worksheetPart.Worksheet;
                         SheetData reportSheetData = theSheet.GetFirstChild<SheetData>();
 
-                        //clear data
-                        reportSheetData.RemoveAllChildren();
-
                         UInt32 contentIndex, titleIndex, dateIndex;
                         GenerateDeafultStyle(document.WorkbookPart, out titleIndex, out contentIndex, out dateIndex);
 
                         //load data
                         if (implateLoadData != null)
                         {
-                            implateLoadData.onLoadDataTable(dt, reportSheetData, titleIndex, contentIndex, dateIndex);
+                            CellStyleIndexCollection cellStyleIndex = new CellStyleIndexCollection(titleIndex, contentIndex, dateIndex, contentIndex);
+                            implateLoadData.onUpdateDataTable(dt, reportSheetData, cellStyleIndex);
                         }
                     }
-
                 }
             }
             catch (Exception ex)
@@ -449,10 +507,20 @@ namespace Common
                 throw e;
             }
         }
-
         #endregion
 
         #region public
+        public static bool SetPivotSource(string filePath, string SourcesheetName, string firstReference, string lastReference)
+        {
+            bool res = false;
+            using (SpreadsheetDocument document = SpreadsheetDocument.Open(filePath, true))
+            {
+                SetExcelAutoReflesh(document);
+                res = SetPivotSource(document.WorkbookPart, SourcesheetName, firstReference, lastReference);
+            }
+            return res;
+        }
+
         public static bool UpdataData4XlsxExcel(DataTable rpdt, string dataSheetName, out string errMsg, string filePath)
         {
             bool res = false;
