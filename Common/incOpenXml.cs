@@ -432,21 +432,22 @@ namespace Common
             return res;
         }
 
+
         private static void SetExcelAutoReflesh(SpreadsheetDocument document)
         {
             try
             {
-                var uriPartDictionary = BuildUriPartDictionary(document);
-
-                PivotTableCacheDefinitionPart pivotTableCacheDefinitionPart1 = (PivotTableCacheDefinitionPart)uriPartDictionary["/xl/pivotCache/pivotCacheDefinition1.xml"];
-                PivotCacheDefinition pivotCacheDefinition1 = pivotTableCacheDefinitionPart1.PivotCacheDefinition;
-                pivotCacheDefinition1.RefreshOnLoad = true;
+                WorkbookPart wbPart = document.WorkbookPart;
+                var pivottableCashes = wbPart.PivotTableCacheDefinitionParts;
+                foreach (PivotTableCacheDefinitionPart pivottablecachePart in pivottableCashes)
+                {
+                    pivottablecachePart.PivotCacheDefinition.RefreshOnLoad = true;
+                }
             }
-            catch
+            catch (Exception e)
             {
-                //do nothing when directery is's contain key or it is null.
+                throw e;
             }
-            
         }
 
         #endregion
