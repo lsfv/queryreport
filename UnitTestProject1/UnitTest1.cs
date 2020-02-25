@@ -9,11 +9,10 @@ namespace UnitTestProject1
     [TestClass]
     public class UnitTest1
     {
-        string path2 = "C:/testfile/myexcelAAA3.xlsx";
         string path = "C:/testfile/myexcelAAA.xlsx";
 
         [TestMethod]
-        public void TestExcelFile()
+        public void CreateExcel()
         {
             DataTable dataTable = Common.incUnitTest.GetDatatable();
             string errMSG = "";
@@ -29,17 +28,22 @@ namespace UnitTestProject1
         {
             string errMSG = "";
             DataTable dataTable2 = Common.incUnitTest.GetDatatable2();
-            bool res = Common.incOpenXml.UpdataData4XlsxExcel(dataTable2, "Report", out errMSG, path2);
+            bool res = Common.incOpenXml.UpdataData4XlsxExcel(dataTable2, "Report", out errMSG, path);
             Console.Write(errMSG);
             Assert.AreEqual(res, true);
         }
 
-        //没有自动更新.
         [TestMethod]
         public void UpdateVitoTableBySpecialRange()
         {
             bool res= Common.incOpenXml.SetPivotSource(path, "Report", "A1", "B2");
             Assert.AreEqual(res == true, true);
+        }
+
+        [TestMethod]
+        public void tempTest()
+        {
+            Common.incOpenXml.testUnit(path);
         }
     }
 }

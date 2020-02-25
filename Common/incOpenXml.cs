@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using DocumentFormat.OpenXml.Validation;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
@@ -11,6 +12,13 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
+
+//todo 标签和对象 res=items.ElementAt(index).Text.InnerText;
+//1.table  更新默认,更新指定起止行.
+//2.table  新建立默认,更新指定起止行.
+//3.得到指定row,column 的数据 .
+//4.得到指定区域数据.
+
 /// <summary>
 /// 其于OpenXml SDK写的帮助类
 /// </summary>
@@ -38,9 +46,49 @@ namespace Common
 
         public interface ILoadData
         {
-            void onLoadDataTable(DataTable dt,SheetData worksheetPart, CellStyleIndexCollection indexs);
+            void onLoadDataTable(DataTable dt,SheetData sheetData, CellStyleIndexCollection indexs);
 
-            void onUpdateDataTable(DataTable dt, SheetData worksheetPart, CellStyleIndexCollection indexs);
+            void onUpdateDataTable(DataTable dt, SheetData sheetData, CellStyleIndexCollection indexs);
+        }
+
+        public class LoadData_WithGuard : ILoadData
+        {
+            public void onLoadDataTable(DataTable dt, SheetData sheetData, CellStyleIndexCollection indexs)
+            {
+                UInt32 rowIndex = 1;//rowindex must start from 1;
+                List<string> startGuard = new List<string>() { "_reportData"};
+                List<string> endGuard = new List<string>() { "_end" };
+                CreateRow_String_NormalStyle(sheetData, rowIndex, startGuard, indexs);
+                rowIndex++;
+                CreateRow_String_TitleStyle(sheetData, rowIndex, GetColumnsNames(dt), indexs);
+                rowIndex++;
+
+                //loop to insert each row.
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    CreateRow(sheetData, rowIndex, dt.Rows[i], indexs);
+                    rowIndex++;
+                }
+                CreateRow_String_NormalStyle(sheetData, rowIndex, endGuard, indexs);
+                rowIndex++;
+            }
+
+            public void onUpdateDataTable(DataTable dt, SheetData sheetData, CellStyleIndexCollection indexs)
+            {
+                sheetData.RemoveAllChildren();//clear all data.
+                UInt32 rowIndex = 1;//rowindex must start from 1;
+
+                //insert column name.
+                CreateRow_String_TitleStyle(sheetData, rowIndex, GetColumnsNames(dt), indexs);
+                rowIndex++;//虽然放到上一行语句更简洁,但放到这里更容易理解.
+
+                //loop to insert each row.
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    CreateRow(sheetData, rowIndex, dt.Rows[i], indexs);
+                    rowIndex++;
+                }
+            }
         }
 
         public class LoadData_SimpleColumn : ILoadData
@@ -50,7 +98,7 @@ namespace Common
                 UInt32 rowIndex = 1;//rowindex must start from 1;
 
                 //insert column name.
-                CreateRow(sheetData, rowIndex, GetColumnsNames(dt), indexs);
+                CreateRow_String_TitleStyle(sheetData, rowIndex, GetColumnsNames(dt), indexs);
                 rowIndex++;//虽然放到上一行语句更简洁,但放到这里更容易理解.
 
                 //loop to insert each row.
@@ -67,7 +115,7 @@ namespace Common
                 UInt32 rowIndex = 1;//rowindex must start from 1;
 
                 //insert column name.
-                CreateRow(sheetData, rowIndex, GetColumnsNames(dt), indexs);
+                CreateRow_String_TitleStyle(sheetData, rowIndex, GetColumnsNames(dt), indexs);
                 rowIndex++;//虽然放到上一行语句更简洁,但放到这里更容易理解.
 
                 //loop to insert each row.
@@ -276,6 +324,56 @@ namespace Common
 
         #endregion
 
+        //private static int findFirstRow(SheetData sheetData, string target)
+        //{
+        //    int res = -1;
+        //    if (sheetData.GetEnumerator().GetType() == typeof(IEnumerator<Row>))
+        //    {
+        //        IEnumerator<Row> items = (IEnumerator<Row>)sheetData.GetEnumerator();
+        //        while(items.Current.GetFirstChild<Cell>().)
+        //    }
+        //    else
+        //    {
+        //        throw new Exception("error type,type of child is't row");
+        //    }
+
+        //    return res;
+        //}
+
+        private static string getCellValue(Cell cell,WorkbookPart workbookPart)
+        {
+            string res = null;
+            try
+            {
+                if (cell.DataType == CellValues.String)
+                {
+                    res = cell.CellValue.ToString();
+                }
+                else if (cell.DataType == CellValues.SharedString)
+                {
+                    res = getShareString(workbookPart, int.Parse(cell.InnerText));
+                }
+            }
+            catch
+            {//do noting just res=null
+            }
+            return res;
+        }
+
+        private static string getShareString(WorkbookPart workbookPart,int index)
+        {
+            string res = null;
+            if(workbookPart.SharedStringTablePart!=null && workbookPart.SharedStringTablePart.SharedStringTable!=null)
+            {
+                IEnumerable<SharedStringItem> items = workbookPart.SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>();
+                if (items.Count() > index)
+                {
+                    res = items.ElementAt(index).Text.InnerText;
+                }
+            }
+            return res;
+        }
+
         private static bool SetPivotSource(WorkbookPart wbPart, string sheetName,string firstReference, string lastReference)
         {
             bool res = false;
@@ -300,7 +398,7 @@ namespace Common
             return res;
         }
 
-        private static void CreateRow(SheetData thesheetData, UInt32Value rowIndex, List<string> data, CellStyleIndexCollection indexs)
+        private static void CreateRow_String_TitleStyle(SheetData thesheetData, UInt32Value rowIndex, List<string> data, CellStyleIndexCollection indexs)
         {
             Row theRow = new Row();
             theRow.RowIndex = rowIndex;
@@ -311,6 +409,22 @@ namespace Common
                 Cell theCell = new Cell();
                 theRow.InsertAt(theCell, i);
                 theCell.StyleIndex = indexs.title;
+                theCell.CellValue = new CellValue(data[i]);
+                theCell.DataType = new EnumValue<CellValues>(CellValues.String);
+            }
+        }
+
+        private static void CreateRow_String_NormalStyle(SheetData thesheetData, UInt32Value rowIndex, List<string> data, CellStyleIndexCollection indexs)
+        {
+            Row theRow = new Row();
+            theRow.RowIndex = rowIndex;
+            thesheetData.Append(theRow);
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                Cell theCell = new Cell();
+                theRow.InsertAt(theCell, i);
+                theCell.StyleIndex = indexs.StringStyle;
                 theCell.CellValue = new CellValue(data[i]);
                 theCell.DataType = new EnumValue<CellValues>(CellValues.String);
             }
@@ -379,48 +493,96 @@ namespace Common
         }
 
         // By default, AutoSave = true, Editable = true, and Type = xlsx.
-        private static bool CreateSpreadsheetWorkbook(string filepath,string firstSheetName,DataTable dt,ILoadData implateLoadData,out string errMSG)
+        private static bool CreateSpreadsheetWorkbook2(string filepath, string firstSheetName, DataTable dt, ILoadData implateLoadData, out string errMSG)
         {
             bool res = true;
             errMSG = "";
-
             try
             {
-                SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(filepath, SpreadsheetDocumentType.Workbook);
-
-                //建立Workbook
-                WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
-                workbookpart.Workbook = new Workbook();
-
-                UInt32 contentIndex, titleIndex, dateIndex;
-                GenerateDeafultStyle(workbookpart,out titleIndex,out contentIndex,out dateIndex);
-
-                //Worksheet
-                WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
-                worksheetPart.Worksheet = new Worksheet(new SheetData());
-
-                // Add Sheets to the Workbook.
-                Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
-
-                // Append a new worksheet and associate it with the workbook.
-                Sheet sheet = new Sheet() { Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = firstSheetName };
-
-                sheets.Append(sheet);
-
-                if (implateLoadData != null)
+                //1.建立涉及到的目录2.sheetdata, worksheet.添加到目录.3.sheet,sheets,workbook添加sheets元素.
+                using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(filepath, SpreadsheetDocumentType.Workbook))
                 {
-                    SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
-                    CellStyleIndexCollection cellStyleIndex = new CellStyleIndexCollection(titleIndex, contentIndex, dateIndex, contentIndex);
-                    implateLoadData.onLoadDataTable(dt, sheetData, cellStyleIndex);
+                    WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
+                    WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
+
+                    SheetData sheetData = new SheetData();
+                    Worksheet worksheet = new Worksheet();
+                    worksheet.InsertAt<SheetData>(sheetData, 0);
+                    worksheetPart.Worksheet = worksheet;
+
+
+                    Sheet sheet = new Sheet()
+                    {
+                        Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
+                        SheetId = 1,
+                        Name=firstSheetName
+                    };
+                    Sheets sheets = new Sheets();
+                    sheets.Append(sheet);
+                    Workbook workbook = new Workbook();
+                    workbook.AppendChild<Sheets>(sheets);
+                    workbookpart.Workbook = workbook;
+
+
+                    UInt32 contentIndex, titleIndex, dateIndex;
+                    GenerateDeafultStyle(workbookpart, out titleIndex, out contentIndex, out dateIndex);
+
+                    if (implateLoadData != null)
+                    {
+                        CellStyleIndexCollection cellStyleIndex = new CellStyleIndexCollection(titleIndex, contentIndex, dateIndex, contentIndex);
+                        implateLoadData.onLoadDataTable(dt, sheetData, cellStyleIndex);
+                    }
                 }
-
-                workbookpart.Workbook.Save();
-
-                // Close the document.
-                spreadsheetDocument.Close();
             }
-            catch(Exception ex)
+            catch
             {
+
+            }
+            return res;
+            }
+
+        // By default, AutoSave = true, Editable = true, and Type = xlsx.
+        private static bool CreateSpreadsheetWorkbook(string filepath, string firstSheetName, DataTable dt, ILoadData implateLoadData, out string errMSG)
+        {
+            bool res = true;
+            errMSG = "";
+            try
+            {
+                //1.建立文档2.添加WorkbookPart(xl目录?猜测)3.建立workbook.4.建立样式表5.建立WorksheetPart(wroksheet目录)
+                //6.建立worksheet.7.建立sheetdata.
+                using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(filepath, SpreadsheetDocumentType.Workbook))
+                {
+                    WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
+                    workbookpart.Workbook = new Workbook();
+
+                    UInt32 contentIndex, titleIndex, dateIndex;
+                    GenerateDeafultStyle(workbookpart, out titleIndex, out contentIndex, out dateIndex);
+
+                    //Worksheet
+                    WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
+                    worksheetPart.Worksheet = new Worksheet(new SheetData());
+
+                    // Add Sheets to the Workbook.
+                    Sheets sheets = spreadsheetDocument.WorkbookPart.Workbook.AppendChild<Sheets>(new Sheets());
+
+                    // Append a new worksheet and associate it with the workbook.
+                    Sheet sheet = new Sheet() { Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart), SheetId = 1, Name = firstSheetName };
+
+                    sheets.Append(sheet);
+
+                    if (implateLoadData != null)
+                    {
+                        SheetData sheetData = worksheetPart.Worksheet.GetFirstChild<SheetData>();
+                        CellStyleIndexCollection cellStyleIndex = new CellStyleIndexCollection(titleIndex, contentIndex, dateIndex, contentIndex);
+                        implateLoadData.onLoadDataTable(dt, sheetData, cellStyleIndex);
+                    }
+
+                    workbookpart.Workbook.Save();
+                }
+            }
+            catch (Exception ex)
+            {
+
                 res = false;
                 errMSG = ex.Message;
             }
@@ -510,6 +672,22 @@ namespace Common
         #endregion
 
         #region public
+        public static bool GenerateXlsxExcel(DataTable rpdt, out string errMsg, string filePath,int row,int column)
+        {
+            bool res = false;
+            ILoadData loadDataHandler = new LoadData_WithGuard();
+            res = CreateSpreadsheetWorkbook(filePath, "Report", rpdt, loadDataHandler, out errMsg);
+            return res;
+        }
+
+        public static bool UpdataData4XlsxExcel(DataTable rpdt, string dataSheetName, out string errMsg, string filePath)
+        {
+            bool res = false;
+            ILoadData loadDataHandler = new LoadData_WithGuard();
+            res = UpdateSpreadsheetWorkbook(filePath, dataSheetName, rpdt, loadDataHandler, out errMsg);
+            return res;
+        }
+
         public static bool SetPivotSource(string filePath, string SourcesheetName, string firstReference, string lastReference)
         {
             bool res = false;
@@ -521,19 +699,30 @@ namespace Common
             return res;
         }
 
-        public static bool UpdataData4XlsxExcel(DataTable rpdt, string dataSheetName, out string errMsg, string filePath)
-        {
-            bool res = false;
-            res = UpdateSpreadsheetWorkbook(filePath, dataSheetName, rpdt, new LoadData_SimpleColumn(), out errMsg);
-            return res;
-        }
+        
 
         public static bool GenerateXlsxExcel(DataTable rpdt, out string errMsg, string filePath)
         {
             bool res = false;
-            ILoadData loadDataHandler = new LoadData_SimpleColumn();//linson. 采用接口,来扩展变化,把变化抽离出来,而不是每次直接修改整体方法!
-            res = CreateSpreadsheetWorkbook(filePath, "Report", rpdt, loadDataHandler, out errMsg);
+            ILoadData loadDataHandler = new LoadData_WithGuard();//linson. 采用接口,来扩展变化,把变化抽离出来,而不是每次直接修改整体方法!
+            res = CreateSpreadsheetWorkbook2(filePath, "Report", rpdt, loadDataHandler, out errMsg);
             return res;
+        }
+
+        public static void testUnit(string filePath)
+        {
+            try
+            {
+                using (SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filePath, true))
+                {
+                    string a = getShareString(spreadsheetDocument.WorkbookPart, 1);
+                    Debug.WriteLine(a);
+                }
+            }
+            catch (Exception e)
+            {
+                throw e;
+            }
         }
         #endregion
 
