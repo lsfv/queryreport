@@ -11,6 +11,7 @@ using System.IO;
 using ICSharpCode.SharpZipLib.Checksums;
 using ICSharpCode.SharpZipLib.Zip;
 using ICSharpCode.SharpZipLib.GZip;
+using System.IO.Packaging;
 
 /// <summary>
 /// ZipFloClass 的摘要说明
@@ -64,6 +65,53 @@ namespace Common
 
                     s.Write(buffer, 0, buffer.Length);
                 }
+            }
+        }
+
+        public static bool UncompressFile(string DescfolderName, string compressedFileName, bool overrideExisting)
+        {
+            bool result = false;
+            try
+            {
+                if (!File.Exists(compressedFileName))
+                {
+                    return result;
+                }
+
+                DirectoryInfo directoryInfo = new DirectoryInfo(DescfolderName);
+                if (!directoryInfo.Exists)
+                    directoryInfo.Create();
+
+                using (Package package = Package.Open(compressedFileName, FileMode.Open, FileAccess.Read))
+                {
+                    foreach (PackagePart packagePart in package.GetParts())
+                    {
+                        ExtractPart(packagePart, DescfolderName, overrideExisting);
+                    }
+                }
+
+                result = true;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("Error unzipping file " + compressedFileName, e);
+            }
+
+            return result;
+        }
+        
+        private static void ExtractPart(PackagePart packagePart, string targetDirectory, bool overrideExisting)
+        {
+            string stringPart = targetDirectory + HttpUtility.UrlDecode(packagePart.Uri.ToString()).Replace('\\', '/');
+
+            if (!Directory.Exists(Path.GetDirectoryName(stringPart)))
+                Directory.CreateDirectory(Path.GetDirectoryName(stringPart));
+
+            if (!overrideExisting && File.Exists(stringPart))
+                return;
+            using (FileStream fileStream = new FileStream(stringPart, FileMode.Create))
+            {
+                packagePart.GetStream().CopyTo(fileStream);
             }
         }
 

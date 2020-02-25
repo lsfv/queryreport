@@ -11,6 +11,7 @@ namespace UnitTestProject1
     {
         string path = "C:/testfile/myexcelAAA.xlsx";
 
+
         [TestMethod]
         public void CreateExcel()
         {
@@ -19,7 +20,7 @@ namespace UnitTestProject1
             
             
             FileInfo fileInfo = new FileInfo(path);
-            bool res= Common.incOpenXml.GenerateXlsxExcel(dataTable, out errMSG, path);
+            bool res= Common.incOpenXml.GenerateXlsxExcel(dataTable, out errMSG, path,5,2);
             Assert.AreEqual(res, true);
         }
 
@@ -28,16 +29,9 @@ namespace UnitTestProject1
         {
             string errMSG = "";
             DataTable dataTable2 = Common.incUnitTest.GetDatatable2();
-            bool res = Common.incOpenXml.UpdataData4XlsxExcel(dataTable2, "Report", out errMSG, path);
+            bool res = Common.incOpenXml.UpdataData4XlsxExcel(dataTable2, "Report", out errMSG, path,5,2);
             Console.Write(errMSG);
             Assert.AreEqual(res, true);
-        }
-
-        [TestMethod]
-        public void UpdateVitoTableBySpecialRange()
-        {
-            bool res= Common.incOpenXml.SetPivotSource(path, "Report", "A1", "B2");
-            Assert.AreEqual(res == true, true);
         }
 
         [TestMethod]
@@ -45,5 +39,14 @@ namespace UnitTestProject1
         {
             Common.incOpenXml.testUnit(path);
         }
+
+        [TestMethod]
+        public void unzipExcel()
+        {
+            string filepath = path;
+            string descpath = "C:/testfile/unzip" + DateTime.Now.ToFileTimeUtc();
+            Common.ZipFloClass.UncompressFile(descpath, filepath, true);
+        }
+
     }
 }
