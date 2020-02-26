@@ -20,8 +20,9 @@ namespace UnitTestProject1
             
             
             FileInfo fileInfo = new FileInfo(path);
-            bool res= Common.incOpenXml.GenerateXlsxExcel(dataTable, out errMSG, path,5,2);
+            bool res= Common.incOpenXml.createXlsxExcel(dataTable, out errMSG, path,5,2);
             Assert.AreEqual(res, true);
+            unzip(path);
         }
 
         [TestMethod]
@@ -43,9 +44,14 @@ namespace UnitTestProject1
         [TestMethod]
         public void unzipExcel()
         {
-            string filepath = path;
+            string filepath = "C:/testfile/zzabc.xlsx";
+            unzip(filepath);
+        }
+
+        private void unzip(string file)
+        {
             string descpath = "C:/testfile/unzip" + DateTime.Now.ToFileTimeUtc();
-            Common.ZipFloClass.UncompressFile(descpath, filepath, true);
+            Common.ZipFloClass.UncompressFile(descpath, file, true);
         }
 
     }

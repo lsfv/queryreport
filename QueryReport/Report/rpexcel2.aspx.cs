@@ -280,7 +280,7 @@ namespace QueryReport
                                 {
                                     pivotablePath = floder + "/" + myReport.REPORTNAME + ".xlsx";
                                     pivotableFileName = System.IO.Path.GetFileName(pivotablePath);
-                                    isSuccess = Common.incOpenXml.GenerateXlsxExcel(this.rpdt, out errMsg, pivotablePath);
+                                    //isSuccess = Common.incOpenXml.GenerateXlsxExcel(this.rpdt, out errMsg, pivotablePath);
                                 }
                                 else
                                 {

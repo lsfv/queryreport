@@ -13,29 +13,42 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
-//todo 标签和对象 res=items.ElementAt(index).Text.InnerText;
-//1.table  新建立默认,更新指定起始行.
-//2.table  更新默认,更新指定起止行.
-//3.得到指定row,column 的数据 .
-//4.得到指定区域数据.
-
 /// <summary>
 /// 其于OpenXml SDK写的帮助类
+/// linson.20200226
 /// </summary>
 
 namespace Common
 {
     public static class incOpenXml
     {
-
+        public const string STRFIRST_SHEETNAME = "Report";
+        public static bool createXlsxExcel(DataTable rpdt, out string errMsg, string filePath, int row = 1, int column = 1)
+        {
+            bool res = false;
+            errMsg = null;
+            MyExcelFile excelFile = new MyExcelFile(filePath, true, STRFIRST_SHEETNAME);
+            if(excelFile.isValid())
+            {
+                //todo:use excelfile do something.
+                DataTable dt = incUnitTest.GetOneValueDatatable();
+                excelFile.SetCellValue(2,2,dt.Rows[0]);
+                excelFile.SaveAndClose();//必须手动关闭,释放资源,否则没有自动释放之前,无法打开.
+                res = true;
+                errMsg = "";
+            }
+            else
+            {
+                res = false;
+                errMsg = excelFile.errMsg;
+            }
+            return res;
+        }
         #region nouse
         public static bool UpdataData4XlsxExcel(DataTable rpdt, string dataSheetName, out string errMsg, string filePath, int row = 1, int column = 1)
         {
             throw new Exception();
         }
-
-        public static bool GenerateXlsxExcel(DataTable rpdt, out string errMsg, string filePath, int row = 1, int column = 1)
-        { throw new Exception(); }
 
         public static void testUnit(string filePath)
         {
@@ -44,6 +57,437 @@ namespace Common
         #endregion
     }
 
+    internal class MyExcelFile :IDisposable
+    {
+        private SpreadsheetDocument document = null;
+        private DefaultCellStyle defaultCellStyle = null;
+        public string errMsg = null;
+        
+        //open file.
+        public MyExcelFile(string filePath_load)
+        {
+            if (File.Exists(filePath_load) && Path.GetExtension(filePath_load)=="xlsx")
+            {
+                try
+                {
+                    //todo:open file and init parameter.
+                }
+                catch(Exception e)
+                {
+                    errMsg = e.Message;
+                }
+            }
+            else
+            {
+                errMsg = "file is not exist,or extension is not xlsx.";
+            }
+        }
+        //create file.
+        public MyExcelFile(string filePath_create,bool overWirte,string defaultSheetName)
+        {
+            if(Path.GetExtension(filePath_create) != ".xlsx")
+            {
+                errMsg = "file extension is not xlsx.";
+            }
+            else
+            {
+                if(File.Exists(filePath_create) && overWirte==false)
+                {
+                    errMsg = "file is exist already";
+                }
+                else
+                {
+                    try
+                    {
+                        document = createXlsxExcelFile(filePath_create, defaultSheetName, out errMsg,out defaultCellStyle);
+                    }
+                    catch (Exception e)
+                    {
+                        errMsg = e.Message;
+                    }
+                }
+            }
+        }
+        public bool SetCellValue(UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow)
+        {
+            SheetData sheetData = document.WorkbookPart.WorksheetParts.First().Worksheet.GetFirstChild<SheetData>();
+            return setCellValue(sheetData, rowNumber, columnNumber, dataRow,defaultCellStyle);
+        }
+        
+        public bool isValid()
+        {
+            return document != null;
+        }
+
+        public void SaveAndClose()
+        {
+            if (document != null)
+            {
+                document.Close();
+            }
+        }
+
+        public void Dispose()
+        {
+            if(document!=null)
+            {
+                document.Close();
+            }
+        }
+
+
+        #region 尽量用static 方法,降低耦合度.
+        private static CellValues GetValueType(DataColumn dataColumn)
+        {
+            List<Type> number = new List<Type> { typeof(Double), typeof(Decimal), typeof(Int32), typeof(int), typeof(Int16), typeof(Int64) };
+            List<Type> date = new List<Type> { typeof(DateTime) };
+
+            if (number.Contains(dataColumn.DataType))
+            {
+                return CellValues.Number;
+            }
+            else if (date.Contains(dataColumn.DataType))
+            {
+                return CellValues.Date;
+            }
+            else
+            {
+                return CellValues.String;
+            }
+        }
+
+        //public static void setValue()
+        //{
+        //    CellValues theCellValue = GetValueType(dataRow.Table.Columns[i]);
+        //    if (theCellValue == CellValues.Number)
+        //    {
+        //        theCell.StyleIndex = indexs.Number;
+        //        theCell.CellValue = new CellValue(dataRow[i].ToString());
+        //        theCell.DataType = new EnumValue<CellValues>(theCellValue);
+        //    }
+        //    else if (theCellValue == CellValues.Date)
+        //    {
+        //        theCell.StyleIndex = indexs.dateTime;
+        //        theCell.CellValue = new CellValue(((DateTime)dataRow[i]));
+        //        theCell.DataType = new EnumValue<CellValues>(theCellValue);
+        //    }
+        //    else
+        //    {
+        //        theCell.StyleIndex = indexs.StringStyle;
+        //        theCell.CellValue = new CellValue(dataRow[i].ToString());
+        //        theCell.DataType = new EnumValue<CellValues>(theCellValue);
+        //    }
+        //}
+
+        public static bool setCellValue(SheetData sheetData,UInt32 rowNumber,UInt32 columnNumber, DataRow dataRow,DefaultCellStyle defaultCellStyle)
+        {
+            bool res = false;
+            if (dataRow.Table.Columns.Count != 1)
+            {
+                res = false;
+            }
+            else
+            {
+                bool isExist = sheetData.Elements<Row>().Where(x => x.RowIndex == rowNumber).Count() > 0;
+                if (isExist)
+                {
+                    //modify
+                }
+                else
+                {
+                    Row newrow = new Row();
+                    newrow.RowIndex = rowNumber;
+                    Cell theCell = new Cell();
+                    //todo:how to set range of cell?
+
+                    CellValues theCellValue = GetValueType(dataRow.Table.Columns[0]);
+                    theCell.DataType = new EnumValue<CellValues>(theCellValue);
+                    
+                    if (theCellValue == CellValues.Date)
+                    {
+                        theCell.StyleIndex = defaultCellStyle.dateTimeIndex;
+                        theCell.CellValue = new CellValue(((DateTime)dataRow[0]));
+                    }
+                    else
+                    {
+                        theCell.CellValue = new CellValue(dataRow[0].ToString());
+                        theCell.StyleIndex = defaultCellStyle.normalIndex;
+                    }
+
+                    newrow.Append(theCell);
+                    sheetData.Append(newrow);
+                }
+            }
+            return res;
+        }
+
+        //建立一个字体
+        private static UInt32Value createFont(Stylesheet styleSheet, string fontName, Nullable<double> fontSize, bool isBold, System.Drawing.Color foreColor)
+        {
+            if (styleSheet.Fonts.Count == null)
+            {
+                styleSheet.Fonts.Count = (UInt32Value)0;
+            }
+            Font font = new Font();
+            if (!string.IsNullOrEmpty(fontName))
+            {
+                FontName name = new FontName()
+                {
+                    Val = fontName
+                };
+                font.Append(name);
+            }
+
+            if (fontSize.HasValue)
+            {
+                FontSize size = new FontSize()
+                {
+                    Val = fontSize.Value
+                };
+                font.Append(size);
+            }
+
+            if (isBold == true)
+            {
+                Bold bold = new Bold();
+                font.Append(bold);
+            }
+
+            if (foreColor != null)
+            {
+                Color color = new Color()
+                {
+                    Rgb = new HexBinaryValue()
+                    {
+                        Value =
+                            System.Drawing.ColorTranslator.ToHtml(
+                                System.Drawing.Color.FromArgb(
+                                    foreColor.A,
+                                    foreColor.R,
+                                    foreColor.G,
+                                    foreColor.B)).Replace("#", "")
+                    }
+                };
+                font.Append(color);
+            }
+            styleSheet.Fonts.Append(font);
+            UInt32Value result = styleSheet.Fonts.Count;
+            styleSheet.Fonts.Count++;
+            return result;
+        }
+        //创建一个单元格样式
+        private static UInt32Value createCellFormat(Stylesheet styleSheet, UInt32Value borderid,  UInt32Value fontIndex, UInt32Value fillIndex, UInt32Value numberFormatId)
+        {
+            if (styleSheet.CellFormats.Count == null)
+            {
+                styleSheet.CellFormats.Count = (UInt32Value)0;
+            }
+            CellFormat cellFormat = new CellFormat();
+            cellFormat.BorderId = 0;
+            //if (borderid == null)
+            //{
+            //    cellFormat.BorderId = 0;
+            //    cellFormat.ApplyBorder = true;
+            //}
+            //else
+            //{
+            //    cellFormat.BorderId = borderid;
+            //    cellFormat.ApplyBorder = true;
+            //}
+            if (fontIndex != null)
+            {
+                cellFormat.ApplyFont = true;
+                cellFormat.FontId = fontIndex;
+            }
+            if (fillIndex != null)
+            {
+                cellFormat.FillId = fillIndex;
+                cellFormat.ApplyFill = true;
+            }
+            if (numberFormatId != null)
+            {
+                cellFormat.NumberFormatId = numberFormatId;
+                cellFormat.ApplyNumberFormat = true;
+            }
+
+            styleSheet.CellFormats.Append(cellFormat);
+            UInt32Value result = styleSheet.CellFormats.Count;
+            styleSheet.CellFormats.Count++;
+            return result;
+        }
+        //建立一个最小样式表.
+        private static void createDeafultStyle(WorkbookPart workbookpart, out DefaultCellStyle cellStyle)
+        {
+
+            cellStyle = new DefaultCellStyle(0, 0, 0);
+            if (workbookpart != null)
+            {
+                //1.建立必要的文件和其根节点.
+                if (workbookpart.WorkbookStylesPart == null)
+                {
+                    workbookpart.AddNewPart<WorkbookStylesPart>();
+                }
+                if (workbookpart.WorkbookStylesPart.Stylesheet == null)
+                {
+                    workbookpart.WorkbookStylesPart.Stylesheet = new Stylesheet();
+                }
+                if (workbookpart.WorkbookStylesPart.Stylesheet.Fonts == null)
+                {
+                    workbookpart.WorkbookStylesPart.Stylesheet.Fonts = new Fonts();
+                }
+                if (workbookpart.WorkbookStylesPart.Stylesheet.Fills == null)
+                {
+                    workbookpart.WorkbookStylesPart.Stylesheet.Fills = new Fills(new Fill(new PatternFill() { PatternType = PatternValues.None }), new Fill(new PatternFill() { PatternType = PatternValues.Gray125 }));
+                }
+                if (workbookpart.WorkbookStylesPart.Stylesheet.Borders == null)
+                {
+                    workbookpart.WorkbookStylesPart.Stylesheet.Borders = new Borders();
+                    workbookpart.WorkbookStylesPart.Stylesheet.Borders.Append(new Border(new RightBorder(), new TopBorder(), new BottomBorder(), new DiagonalBorder()));
+                }
+                if (workbookpart.WorkbookStylesPart.Stylesheet.CellFormats == null)
+                {
+                    workbookpart.WorkbookStylesPart.Stylesheet.CellFormats = new CellFormats();
+                }
+                if (workbookpart.WorkbookStylesPart.Stylesheet.NumberingFormats == null)
+                {
+                    workbookpart.WorkbookStylesPart.Stylesheet.NumberingFormats = new NumberingFormats();
+                }
+
+                //自定义字体
+                UInt32 defaultFont = createFont(workbookpart.WorkbookStylesPart.Stylesheet, "Microsoft YaHei", (double)11, false, System.Drawing.Color.Black);
+                UInt32 BoldFont = createFont(workbookpart.WorkbookStylesPart.Stylesheet, "Microsoft YaHei", (double)11, true, System.Drawing.Color.Black);
+                //自定义数字格式,时间格式
+                UInt32 dateDeafult = 240;
+                var numberFormatDate_index = new NumberingFormat();
+                numberFormatDate_index.FormatCode = new StringValue("yyyy-mm-dd");
+                numberFormatDate_index.NumberFormatId = dateDeafult;//随意定义100~200之间.
+                workbookpart.WorkbookStylesPart.Stylesheet.NumberingFormats.InsertAt(numberFormatDate_index, workbookpart.WorkbookStylesPart.Stylesheet.NumberingFormats.Count());
+                //自定义最终给用户的单元格式.
+                //todo:这里应该扩展机会会大.需要重构
+                cellStyle.normalIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, defaultFont, null, null);
+                cellStyle.blackIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, BoldFont, null, null);
+                cellStyle.dateTimeIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, defaultFont, null, dateDeafult);
+            }
+
+
+            //if (stylepart.Stylesheet.Fills == null)
+            //{
+            //    stylepart.Stylesheet.Fills = new Fills(
+            //    new Fill(new PatternFill() { PatternType = PatternValues.None }),
+            //    new Fill(new PatternFill() { PatternType = PatternValues.Gray125 })
+            //    );
+            //}
+
+            //if (stylepart.Stylesheet.Borders == null)
+            //{
+            //    stylepart.Stylesheet.Borders = new Borders(
+            //    new Border(
+            //    new RightBorder(),
+            //    new TopBorder(),
+            //    new BottomBorder(),
+            //    new DiagonalBorder())
+            //    );
+            //}
+
+            //if (stylepart.Stylesheet.CellFormats == null)
+            //{
+            //    stylepart.Stylesheet.CellFormats = new CellFormats();
+            //}
+
+            //if (stylepart.Stylesheet.NumberingFormats == null)
+            //{
+            //    stylepart.Stylesheet.NumberingFormats = new NumberingFormats();
+            //}
+
+
+            //Stylesheet styleSheet = stylepart.Stylesheet;
+            //var fontIndex = createFont(styleSheet, "Microsoft YaHei", (double)11, false, System.Drawing.Color.Black);
+            //var numberFormatDate_index = new NumberingFormat();
+            //numberFormatDate_index.FormatCode = new StringValue("yyyy-mm-dd");
+            //numberFormatDate_index.NumberFormatId = 240;
+
+            //stylepart.Stylesheet.NumberingFormats.InsertAt(numberFormatDate_index, stylepart.Stylesheet.NumberingFormats.Count());
+
+
+            //var fontStyleIndex = createCellFormat(styleSheet, fontIndex, null, null);
+
+            //var fillIndex = createFill(styleSheet, System.Drawing.Color.White);
+            //var fillRedStyleIndex = createCellFormat(styleSheet, fontIndex, fillIndex, null);
+
+            //var fontBlackIndex = createFont(styleSheet, "Microsoft YaHei", (double)11, true, System.Drawing.Color.Black);
+            //var fontBlackStyleIndex = createCellFormat(styleSheet, fontBlackIndex, null, null);
+
+            //var defaultDateStyleIndex = createCellFormat(styleSheet, fontIndex, null, numberFormatDate_index.NumberFormatId);//时间格式 14:yyyy/mm/dd 
+
+            //titleStyleIndex = fontBlackStyleIndex;
+            //normalIndex = fontStyleIndex;
+            //dateIndex = defaultDateStyleIndex;
+
+            //stylepart.Stylesheet.Save();
+        }
+        private static SpreadsheetDocument createXlsxExcelFile(string filepath, string firstSheetName, out string errMSG,out DefaultCellStyle defaultCellStyle)
+        {
+            SpreadsheetDocument spreadsheetDocument = null;
+            defaultCellStyle = null;
+            errMSG = "";
+            try
+            {
+                //建立xlsx文件
+                spreadsheetDocument = SpreadsheetDocument.Create(filepath, SpreadsheetDocumentType.Workbook, true);
+
+                //建立xl,worksheets目录(会默认生成0字节的workbook和worksheet,以及2个res文档)
+                WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
+                WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
+
+                //建立workbook文档,设定模式的worksheet (sheet的3个属性必须填写,特别的是name是这里设定,有点不符合常见的抽象思维)
+                Workbook workbook = new Workbook();
+                Sheets sheets = new Sheets();
+                Sheet sheet = new Sheet()
+                {
+                    Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
+                    SheetId = 1,
+                    Name = firstSheetName
+                };
+                sheets.Append(sheet);
+                workbook.AppendChild<Sheets>(sheets);
+                workbookpart.Workbook = workbook;
+
+                //建立默认的worksheet文档(可以先workbook,后worksheet)
+                SheetData sheetData = new SheetData();
+                Worksheet worksheet = new Worksheet();
+                worksheet.Append(sheetData);
+                worksheetPart.Worksheet = worksheet;//给默认的worksheet赋值,否则0字节.
+
+                //建立样式文件
+                createDeafultStyle(workbookpart, out defaultCellStyle);
+                spreadsheetDocument.Save();
+            }
+            catch (Exception e)
+            {
+                spreadsheetDocument = null;
+                defaultCellStyle = null;
+                errMSG = e.Message;
+            }
+            return spreadsheetDocument;
+        }
+
+        
+
+        public class DefaultCellStyle
+        {
+            public UInt32 normalIndex { get; set; }
+            public UInt32 dateTimeIndex { get; set; }
+            public UInt32 blackIndex { get; set; }
+
+            public DefaultCellStyle(UInt32 _normalIndex, UInt32 _dateTimeIndex, UInt32 _blackIndex)
+            {
+                normalIndex = _normalIndex;
+                dateTimeIndex = _dateTimeIndex;
+                blackIndex = _blackIndex;
+            }
+        }
+        #endregion
+    }
 
 
     public static class nouse

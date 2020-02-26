@@ -24,6 +24,24 @@ namespace Common
             databable_books.Columns.Add("Description", Type.GetType("System.String"));
         }
 
+        public static DataTable GetOneValueDatatable()
+        {
+            DataTable databable_books = new DataTable("Books");
+
+       
+
+            databable_books.Columns.Add("Product", Type.GetType("System.String"));
+
+
+            DataRow newRow;
+            newRow = databable_books.NewRow();
+            newRow["Product"] = "c++";
+            databable_books.Rows.Add(newRow);
+
+
+            return databable_books;
+        }
+
         public static DataTable GetDatatable()
         {
             DataTable databable_books = new DataTable("Books");
