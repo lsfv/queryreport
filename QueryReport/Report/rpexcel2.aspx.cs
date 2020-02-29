@@ -270,7 +270,7 @@ namespace QueryReport
                             {
                                 Debug.WriteLine("update:" + pivotablePath);
                                 pivotableFileName = System.IO.Path.GetFileName(pivotablePath);
-                                isSuccess = Common.incOpenXml.UpdataData4XlsxExcel(this.rpdt, "Report", out errMsg, pivotablePath);
+                                //isSuccess = Common.incOpenXml.UpdataData4XlsxExcel(this.rpdt, "Report", out errMsg, pivotablePath);
                             }
                             else//no template
                             {

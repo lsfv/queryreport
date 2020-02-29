@@ -13,6 +13,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Xml;
 
+
 /// <summary>
 /// 其于OpenXml SDK写的帮助类
 /// linson.20200226
@@ -20,57 +21,21 @@ using System.Xml;
 
 namespace Common
 {
-    public static class incOpenXml
-    {
-        public const string STRFIRST_SHEETNAME = "Report";
-        public static bool createXlsxExcel(DataTable rpdt, out string errMsg, string filePath, int row = 1, int column = 1)
-        {
-            bool res = false;
-            errMsg = null;
-            MyExcelFile excelFile = new MyExcelFile(filePath, true, STRFIRST_SHEETNAME);
-            if(excelFile.isValid())
-            {
-                //todo:use excelfile do something.
-                DataTable dt = incUnitTest.GetOneValueDatatable();
-                excelFile.SetCellValue(2,2,dt.Rows[0]);
-                excelFile.SaveAndClose();//必须手动关闭,释放资源,否则没有自动释放之前,无法打开.
-                res = true;
-                errMsg = "";
-            }
-            else
-            {
-                res = false;
-                errMsg = excelFile.errMsg;
-            }
-            return res;
-        }
-        #region nouse
-        public static bool UpdataData4XlsxExcel(DataTable rpdt, string dataSheetName, out string errMsg, string filePath, int row = 1, int column = 1)
-        {
-            throw new Exception();
-        }
-
-        public static void testUnit(string filePath)
-        {
-            throw new Exception();
-        }
-        #endregion
-    }
-
-    internal class MyExcelFile :IDisposable
+    public class MyExcelFile :IDisposable
     {
         private SpreadsheetDocument document = null;
-        private DefaultCellStyle defaultCellStyle = null;
-        public string errMsg = null;
-        
+        public DefaultCellStyle defaultCellStyle = new DefaultCellStyle(0,0,0);
+
+        #region public function 为什么public 简单包一个静态方法?主要是因为想让主要方法设为static,减低耦合度.而为了使用方便,又用public 包一下,方便使用. 非常好的一个策略.
         //open file.
-        public MyExcelFile(string filePath_load)
+        public MyExcelFile(string filePath_load,out string errMsg)
         {
-            if (File.Exists(filePath_load) && Path.GetExtension(filePath_load)=="xlsx")
+            errMsg = "";
+            if (File.Exists(filePath_load) && Path.GetExtension(filePath_load)==".xlsx")
             {
                 try
                 {
-                    //todo:open file and init parameter.
+                    document= openFile(filePath_load, out errMsg, out defaultCellStyle);
                 }
                 catch(Exception e)
                 {
@@ -83,37 +48,48 @@ namespace Common
             }
         }
         //create file.
-        public MyExcelFile(string filePath_create,bool overWirte,string defaultSheetName)
+        public MyExcelFile(string filePath_create,bool overWirte,string defaultSheetName,out string myerrmsg)
         {
-            if(Path.GetExtension(filePath_create) != ".xlsx")
+            myerrmsg = "";
+            if (Path.GetExtension(filePath_create) != ".xlsx")
             {
-                errMsg = "file extension is not xlsx.";
+                myerrmsg = "file extension is not xlsx.";
             }
             else
             {
                 if(File.Exists(filePath_create) && overWirte==false)
                 {
-                    errMsg = "file is exist already";
+                    myerrmsg = "file is exist already";
                 }
                 else
                 {
                     try
                     {
-                        document = createXlsxExcelFile(filePath_create, defaultSheetName, out errMsg,out defaultCellStyle);
+                        document = createXlsxExcelFile(filePath_create, defaultSheetName, out myerrmsg, out defaultCellStyle);
                     }
                     catch (Exception e)
                     {
-                        errMsg = e.Message;
+                        myerrmsg = e.Message;
                     }
                 }
             }
         }
-        public bool SetCellValue(UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow)
+        public bool SetOrUpdateCellValue(string sheetName, UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow,UInt32 customStyle=0)
         {
-            SheetData sheetData = document.WorkbookPart.WorksheetParts.First().Worksheet.GetFirstChild<SheetData>();
-            return setCellValue(sheetData, rowNumber, columnNumber, dataRow,defaultCellStyle);
+            SheetData sheetData = getWorksheet(document, sheetName).Elements<SheetData>().First();
+            return SetOrUpdateCellValue(sheetData, rowNumber, columnNumber, dataRow,defaultCellStyle,customStyle);
         }
-        
+        public bool SetOrUpdateRow(string sheetName, UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow)
+        {
+            SheetData sheetData = getWorksheet(document, sheetName).Elements<SheetData>().First();
+            return SetOrUpdateRow(sheetData, rowNumber, columnNumber, dataRow, defaultCellStyle);
+        }
+        public Cell GetCell(string sheetName, UInt32 rowNumber, UInt32 columnNumber)
+        {
+            SheetData sheetData = getWorksheet(document, sheetName).Elements<SheetData>().First();
+            return GetACell(sheetData, rowNumber, columnNumber);
+        }
+
         public bool isValid()
         {
             return document != null;
@@ -135,18 +111,235 @@ namespace Common
             }
         }
 
+        public string getShareString(int index)
+        {
+            return getShareString(document, index);
+        }
 
-        #region 尽量用static 方法,降低耦合度.
-        private static CellValues GetValueType(DataColumn dataColumn)
+        #endregion
+
+        #region private
+        private static bool SetOrUpdateRow(SheetData sheetData, UInt32 startRow,UInt32 startColumn, DataRow dataRow,DefaultCellStyle defaultCellStyle)
+        {
+            bool res = false;
+            Row newRow = new Row();
+            newRow.RowIndex = startRow;
+            for (UInt32 i = 0; i < dataRow.Table.Columns.Count; i++)
+            {
+                Cell newCell = new Cell();
+                newCell.CellReference = GetCellReference(startColumn + i, startRow);
+
+                CellValues celltype = GetValueType(dataRow.Table.Columns[(int)i].DataType);
+
+                newCell.DataType = new EnumValue<CellValues>(celltype);
+
+                if (celltype == CellValues.Number)
+                {
+                    newCell.StyleIndex = defaultCellStyle.normalIndex;
+                    newCell.CellValue = new CellValue(dataRow[(int)i].ToString());
+                    
+                }
+                else if (celltype == CellValues.Date)
+                {
+                    newCell.StyleIndex = defaultCellStyle.dateTimeIndex;
+                    newCell.CellValue = new CellValue(((DateTime)dataRow[(int)i]));
+                }
+                else
+                {
+                    newCell.StyleIndex = defaultCellStyle.normalIndex;
+                    newCell.CellValue = new CellValue(dataRow[(int)i].ToString());
+                }
+                newRow.Append(newCell);
+            }
+            //是否存在row,1.存在,删除.2.现在是否存在大于row,存在,在前插入.不存在.直接附加.
+            var rows = sheetData.Elements<Row>().Where(x => x.RowIndex == startRow);
+            if (rows.Count()>0)
+            {
+                sheetData.RemoveChild(rows.First());
+            }
+
+            var biggerrows = sheetData.Elements<Row>().Where(x => x.RowIndex > startRow);
+            if (biggerrows.Count()<=0)
+            {
+                sheetData.Append(newRow);
+            }
+            else
+            {
+                sheetData.InsertBefore(newRow, biggerrows.First());
+            }
+
+            return res;
+        }
+        private static bool SetOrUpdateCellValue(SheetData sheetData, UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow, DefaultCellStyle defaultCellStyle, UInt32 customStyle = 0)
+        {
+            bool res = false;
+
+            if ((dataRow.Table.Columns.Count == 1))
+            {
+                //1.是否存在Row,存在跟新,不存在建立新Row.2.是否有比这个Row更大的Row,有插入大Row之前.否则直接附加在sheetdata后面.
+                string cellRefrence = GetCellReference(columnNumber, rowNumber);
+
+                IEnumerable<Row> equalOrbiggerRows = sheetData.Elements<Row>().Where(x => x.RowIndex >= rowNumber);
+                Row equalRow = null, biggerRow = null;
+                if (equalOrbiggerRows != null && equalOrbiggerRows.Count() > 0 && equalOrbiggerRows.First().RowIndex == rowNumber)
+                {
+                    equalRow = equalOrbiggerRows.First();
+                }
+                else if (equalOrbiggerRows != null && equalOrbiggerRows.Count() > 0 && equalOrbiggerRows.First().RowIndex > rowNumber)
+                {
+                    biggerRow = equalOrbiggerRows.First();
+                }
+
+                if (equalRow != null)
+                {
+                    //1.是否存在cell,存在跟新,不存在建立新cell.2.是否有比这个cell更大的cell,有插入大cell之前.否则直接附加在Row后面.
+
+                    IEnumerable<Cell> equalOrbiggerCells = equalRow.Elements<Cell>().Where(x => x.CellReference >= new StringValue(cellRefrence));
+
+                    Cell equalCell = null;
+                    Cell biggerCell = null;
+                    if (equalOrbiggerCells != null && equalOrbiggerCells.Count() > 0 && equalOrbiggerCells.First().CellReference == cellRefrence)
+                    {
+                        equalCell = equalOrbiggerCells.First();
+                    }
+                    else if (equalOrbiggerCells != null && equalOrbiggerCells.Count() > 0 && equalOrbiggerCells.First().CellReference > new StringValue(cellRefrence))
+                    {
+                        biggerCell = equalOrbiggerCells.First();
+                    }
+
+                    Cell newCell = createCell(cellRefrence, dataRow.Table.Columns[0].DataType, dataRow[0], defaultCellStyle, out Exception tempExc, customStyle);
+                    if (equalCell != null)
+                    {
+                        equalOrbiggerRows.First().ReplaceChild(newCell, equalCell);
+                    }
+                    else
+                    {
+                        if (biggerCell != null)
+                        {
+                            equalOrbiggerRows.First().InsertBefore(newCell, biggerCell);
+                        }
+                        else
+                        {
+                            equalOrbiggerRows.First().Append(newCell);
+                        }
+                    }
+                    res = true;
+                }
+                else
+                {
+                    Row newrow = new Row();
+                    newrow.RowIndex = rowNumber;
+
+                    Cell theCell = createCell(cellRefrence, dataRow.Table.Columns[0].DataType, dataRow[0], defaultCellStyle, out Exception tempExc, customStyle);
+                    if (theCell != null)
+                    {
+                        newrow.Append(theCell);
+                    }
+
+                    if (biggerRow != null)
+                    {
+                        sheetData.InsertBefore(newrow, equalOrbiggerRows.First());//插入的行不是最大的,插到比它大的前面.
+                    }
+                    else
+                    {
+                        sheetData.Append(newrow); ;//插入的行是最大的,直接附加到最后
+                    }
+                    res = true;
+                }
+            }
+            return res;
+        }
+        private static Cell GetACell(SheetData sheetData, UInt32 rowNumber, UInt32 columnNumber)
+        {
+            Cell res = null;
+            var rows = sheetData.Elements<Row>().Where(x => x.RowIndex == rowNumber);
+            if (rows != null)
+            {
+                var row = rows.First();
+                var cells = row.Elements<Cell>().Where(x => x.CellReference == GetCellReference(columnNumber, rowNumber));
+                if (cells != null && cells.Count()>0)
+                {
+                    res = cells.First();
+                }
+            }
+            return res;
+        }
+        private static Worksheet getWorksheet(SpreadsheetDocument document, string sheetname)
+        {
+            Worksheet res = null;
+            IEnumerable<Sheet> sheets = document.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>().Where(s => s.Name == sheetname);
+            if (sheets.Count() == 0)
+            {
+                res = null;
+            }
+            else
+            {
+                string relationshipId = sheets.First().Id.Value;
+                WorksheetPart worksheetPart = (WorksheetPart)document.WorkbookPart.GetPartById(relationshipId);
+                res = worksheetPart.Worksheet;
+            }
+            return res;
+        }
+        private static SpreadsheetDocument openFile(string filepath,out string errMsg,out DefaultCellStyle defaultCellStyle)
+        {
+            SpreadsheetDocument res = null;
+            defaultCellStyle = null;
+            errMsg = "";
+            try
+            {
+                res = SpreadsheetDocument.Open(filepath, true);
+                SetExcelPivotTableCacheAutoReflesh(res, out errMsg);
+                createDeafultStyle(res.WorkbookPart, out defaultCellStyle);
+            }
+            catch(Exception e)
+            {
+                res = null;
+                errMsg = "open error:" + e.Message;
+            }
+            return res;
+        }
+        private static void SetExcelPivotTableCacheAutoReflesh(SpreadsheetDocument document,out string errMsg)
+        {
+            errMsg = "";
+            try
+            {
+                WorkbookPart wbPart = document.WorkbookPart;
+                var pivottableCashes = wbPart.PivotTableCacheDefinitionParts;
+                foreach (PivotTableCacheDefinitionPart pivottablecachePart in pivottableCashes)
+                {
+                    pivottablecachePart.PivotCacheDefinition.RefreshOnLoad = true;
+                }
+            }
+            catch (Exception e)
+            {
+                errMsg = e.Message;//todo:learn try catch.
+            }
+        }
+        private static string GetCellReference(UInt32 colIndex,UInt32 rowIndex)
+        {
+            UInt32 dividend = colIndex;
+            string columnName = String.Empty;
+            UInt32 modifier;
+
+            while (dividend > 0)
+            {
+                modifier = (dividend - 1) % 26;
+                columnName = Convert.ToChar(65 + modifier).ToString() + columnName;
+                dividend = (UInt32)((dividend - modifier) / 26);
+            }
+
+            return columnName+rowIndex.ToString();
+        }
+        private static CellValues GetValueType(Type type)
         {
             List<Type> number = new List<Type> { typeof(Double), typeof(Decimal), typeof(Int32), typeof(int), typeof(Int16), typeof(Int64) };
             List<Type> date = new List<Type> { typeof(DateTime) };
 
-            if (number.Contains(dataColumn.DataType))
+            if (number.Contains(type))
             {
                 return CellValues.Number;
             }
-            else if (date.Contains(dataColumn.DataType))
+            else if (date.Contains(type))
             {
                 return CellValues.Date;
             }
@@ -155,72 +348,43 @@ namespace Common
                 return CellValues.String;
             }
         }
-
-        //public static void setValue()
-        //{
-        //    CellValues theCellValue = GetValueType(dataRow.Table.Columns[i]);
-        //    if (theCellValue == CellValues.Number)
-        //    {
-        //        theCell.StyleIndex = indexs.Number;
-        //        theCell.CellValue = new CellValue(dataRow[i].ToString());
-        //        theCell.DataType = new EnumValue<CellValues>(theCellValue);
-        //    }
-        //    else if (theCellValue == CellValues.Date)
-        //    {
-        //        theCell.StyleIndex = indexs.dateTime;
-        //        theCell.CellValue = new CellValue(((DateTime)dataRow[i]));
-        //        theCell.DataType = new EnumValue<CellValues>(theCellValue);
-        //    }
-        //    else
-        //    {
-        //        theCell.StyleIndex = indexs.StringStyle;
-        //        theCell.CellValue = new CellValue(dataRow[i].ToString());
-        //        theCell.DataType = new EnumValue<CellValues>(theCellValue);
-        //    }
-        //}
-
-        public static bool setCellValue(SheetData sheetData,UInt32 rowNumber,UInt32 columnNumber, DataRow dataRow,DefaultCellStyle defaultCellStyle)
+        //todo:还是需要去掉customStyle.因为可以修改成员变量的值来达到目的.更简化.
+        private static Cell createCell(string reference,Type type,object value,DefaultCellStyle defaultCellStyle,out Exception exc,UInt32 customStyle=0)
         {
-            bool res = false;
-            if (dataRow.Table.Columns.Count != 1)
+            Cell theCell = null;
+            exc = null;
+            try
             {
-                res = false;
-            }
-            else
-            {
-                bool isExist = sheetData.Elements<Row>().Where(x => x.RowIndex == rowNumber).Count() > 0;
-                if (isExist)
+                theCell = new Cell();
+                theCell.CellReference = reference;
+
+                CellValues theCellValue = GetValueType(type);
+                theCell.DataType = new EnumValue<CellValues>(theCellValue);
+
+                if (theCellValue == CellValues.Date)
                 {
-                    //modify
+                    theCell.StyleIndex = defaultCellStyle.dateTimeIndex;
+                    theCell.CellValue = new CellValue(((DateTime)value));
                 }
                 else
                 {
-                    Row newrow = new Row();
-                    newrow.RowIndex = rowNumber;
-                    Cell theCell = new Cell();
-                    //todo:how to set range of cell?
-
-                    CellValues theCellValue = GetValueType(dataRow.Table.Columns[0]);
-                    theCell.DataType = new EnumValue<CellValues>(theCellValue);
-                    
-                    if (theCellValue == CellValues.Date)
+                    theCell.CellValue = new CellValue(value.ToString());
+                    if (customStyle == 0)
                     {
-                        theCell.StyleIndex = defaultCellStyle.dateTimeIndex;
-                        theCell.CellValue = new CellValue(((DateTime)dataRow[0]));
+                        theCell.StyleIndex = defaultCellStyle.normalIndex;
                     }
                     else
                     {
-                        theCell.CellValue = new CellValue(dataRow[0].ToString());
-                        theCell.StyleIndex = defaultCellStyle.normalIndex;
+                        theCell.StyleIndex = customStyle;
                     }
-
-                    newrow.Append(theCell);
-                    sheetData.Append(newrow);
                 }
             }
-            return res;
+            catch(Exception e)
+            {
+                exc = e;
+            }
+            return theCell;
         }
-
         //建立一个字体
         private static UInt32Value createFont(Stylesheet styleSheet, string fontName, Nullable<double> fontSize, bool isBold, System.Drawing.Color foreColor)
         {
@@ -471,10 +635,31 @@ namespace Common
             return spreadsheetDocument;
         }
 
-        
+        private static string getShareString(SpreadsheetDocument documet, int index)
+        {
+            string res = null;
+            if (documet != null && documet.WorkbookPart.SharedStringTablePart != null && documet.WorkbookPart.SharedStringTablePart.SharedStringTable != null)
+            {
+                IEnumerable<SharedStringItem> items = documet.WorkbookPart.SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>();
+                if (items.Count() > index)
+                {
+                    res = items.ElementAt(index).Text.InnerText;
+                }
+            }
+            return res;
+        }
+        #endregion
 
+        #region innerclass
         public class DefaultCellStyle
         {
+            public enum ENUM_CellStyle
+            {
+                normal,
+                dateTime,
+                black
+            }
+
             public UInt32 normalIndex { get; set; }
             public UInt32 dateTimeIndex { get; set; }
             public UInt32 blackIndex { get; set; }
