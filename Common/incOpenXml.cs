@@ -106,6 +106,17 @@ namespace Common
             return res;
         }
 
+        public bool RemoveAllRows(string sheetName)
+        {
+            bool res = false;
+            Worksheet worksheet = getWorksheet(sheetName);
+            if (worksheet != null)
+            {
+                worksheet.Elements<SheetData>().First().RemoveAllChildren();
+            }
+            return res;
+        }
+
         //search cell and row and worksheet
         public Cell GetCell(string sheetName, UInt32 rowNumber, UInt32 columnNumber)
         {
@@ -115,16 +126,37 @@ namespace Common
         public string GetCellRealString(string sheetName, UInt32 rowNumber, UInt32 columnNumber)
         {
             Cell abc = GetCell(sheetName, rowNumber, columnNumber);
-            CellValues cellType = abc.DataType;
-            if (cellType == CellValues.SharedString)
+            return GetCellRealString(abc);
+        }
+
+        public string GetCellRealString(Cell cell)
+        {
+            if (cell != null)
             {
-                return getShareString(int.Parse(abc.CellValue.Text));
+                if (cell.DataType != null)
+                {
+                    CellValues cellType = cell.DataType;
+                    if (cellType == CellValues.SharedString)
+                    {
+                        return getShareString(int.Parse(cell.CellValue.Text));
+                    }
+                    else
+                    {
+                        return cell.CellValue.Text;
+                    }
+                }
+                else
+                {
+                    return cell.CellValue.Text;
+                }
+                
             }
             else
             {
-                return abc.CellValue.Text;
+                return null;
             }
         }
+
         public IEnumerable<Row> GetRangeRows(string sheetName, UInt32 startRowIndex, UInt32 endRowIndex)
         {
             IEnumerable<Row> res = null;
@@ -144,9 +176,30 @@ namespace Common
             }
             return res;
         }
+        public uint GetRowIndexFromAColumn(string sheetname ,string str, uint column)
+        {
+            uint res = 0;
+            Worksheet worksheet = getWorksheet(sheetname);
+            SheetData sheetData = getSheetDate(worksheet);
+            IEnumerable<Row> rows = sheetData.Elements<Row>();
+
+            foreach (Row row in rows)
+            {
+                if (row.Elements<Cell>() != null && row.Elements<Cell>().Count() > 0)
+                {
+                    Debug.Print(row.RowIndex);
+                    var Cells = row.Elements<Cell>().Where(x => x.CellReference.Value == GetCellReference(column, row.RowIndex));
+                    if (Cells!=null && Cells.Count()>0 &&GetCellRealString(Cells.First()) == str)
+                    {
+                        res = row.RowIndex;
+                    }
+                }
+            }
+            return res;
+        }
 
         //other funtion
-        public  Worksheet getWorksheet(string sheetname)
+        public Worksheet getWorksheet(string sheetname)
         {
             Worksheet res = null;
             IEnumerable<Sheet> sheets = document.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>().Where(s => s.Name == sheetname);
@@ -159,6 +212,19 @@ namespace Common
                 string relationshipId = sheets.First().Id.Value;
                 WorksheetPart worksheetPart = (WorksheetPart)document.WorkbookPart.GetPartById(relationshipId);
                 res = worksheetPart.Worksheet;
+            }
+            return res;
+        }
+        public SheetData getSheetDate(Worksheet worksheet)
+        {
+            SheetData res = null;
+            if (worksheet != null)
+            {
+                var sds = worksheet.Elements<SheetData>();
+                if (sds != null && sds.Count() > 0)
+                {
+                    res = sds.First();
+                }
             }
             return res;
         }
@@ -184,9 +250,12 @@ namespace Common
         {
             return getShareString(document, index);
         }
+
         #endregion
 
         #region private
+        
+
         private static Row SetOrReplaceRow(SheetData sheetData, UInt32 startRow,UInt32 startColumn, DataRow dataRow,DefaultCellStyle defaultCellStyle)
         {
             Row newRow = new Row();

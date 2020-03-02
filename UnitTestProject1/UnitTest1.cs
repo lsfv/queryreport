@@ -193,8 +193,7 @@ namespace UnitTestProject1
                 string errMsg = "";
                 using (Common.MyExcelFile myexcel = new Common.MyExcelFile(pathtemplate, true, STRFIRST_SHEETNAME, out errMsg))
                 {
-                    uint startRow = 1;
-                    uint endrow = startRow + (UInt32)dataTable.Rows.Count;
+
                     uint writingGuard = 1;
                     //start to set column name.
                     DataTable columnsTable = Common.MyExcelFile.GetColumnsNames(dataTable);
@@ -209,51 +208,64 @@ namespace UnitTestProject1
                             writingGuard++;
                         }
                     }
-                    if (startRow == endrow)
-                    {
-                        DataTable dtt = Common.incUnitTest.GetOneValueDatatable(STRING_DATASTART+STRING_DATAEND);
-                        myexcel.SetOrUpdateCellValue(STRFIRST_SHEETNAME, startRow, 1, dtt.Rows[0]);
-                    }
-                    else
-                    {
-                        DataTable dtt = Common.incUnitTest.GetOneValueDatatable(STRING_DATASTART);
-                        myexcel.SetOrUpdateCellValue(STRFIRST_SHEETNAME, startRow, 1, dtt.Rows[0]);
-                        DataTable dtt2 = Common.incUnitTest.GetOneValueDatatable(STRING_DATAEND);
-                        myexcel.SetOrUpdateCellValue(STRFIRST_SHEETNAME, endrow, 1, dtt2.Rows[0]);
-                    }
+
+                    setGuard(1,1+(UInt32)dataTable.Rows.Count, myexcel);
 
                     //moter
-
                 }
             }
         }
 
+        private static void setGuard(uint startRow, uint endrow,Common.MyExcelFile myexcel)
+        {
+            //uint startRow = 1;
+            //uint endrow = startRow + (UInt32)dataTable.Rows.Count;
+            if (startRow == endrow)
+            {
+                DataTable dtt = Common.incUnitTest.GetOneValueDatatable(STRING_DATASTART + STRING_DATAEND);
+                myexcel.SetOrUpdateCellValue(STRFIRST_SHEETNAME, startRow, 1, dtt.Rows[0]);
+            }
+            else
+            {
+                DataTable dtt = Common.incUnitTest.GetOneValueDatatable(STRING_DATASTART);
+                myexcel.SetOrUpdateCellValue(STRFIRST_SHEETNAME, startRow, 1, dtt.Rows[0]);
+                DataTable dtt2 = Common.incUnitTest.GetOneValueDatatable(STRING_DATAEND);
+                myexcel.SetOrUpdateCellValue(STRFIRST_SHEETNAME, endrow, 1, dtt2.Rows[0]);
+            }
+        }
 
         [TestMethod]
         public void templateTest_update()
         {
-            templateTest_create();
-            //测试删除某行开始,并附加在某行.1.s=e=1,  2.s=1,e=2,  3.s=2,e=3.  4.s=1.e=3 .5.s=2,e=e;
+            //测试删除某行开始,并附加在某行.1.s=e=1,  2.s=1,e=2,  3.s=2,e=3.  4.s=1.e=4 .5.s=2,e=e;
             //删除起始行数据(包含起止).2更新后半段数据为调整后的行索引.3.填充现有数据.4.计算数据的range.并更新到pivotTable.
             //如果没有找到,删除所有数据,调用templateTest_create
-            UInt32 startRowIndex = 2;
-            UInt32 endRowIndex = 2;
-
+           
             string errMsg = "";
             using (Common.MyExcelFile myexcel = new Common.MyExcelFile(pathtemplate,out errMsg))
             {
-                IEnumerable<Row> rows_bottom = myexcel.GetRangeRows(STRFIRST_SHEETNAME, endRowIndex + 1, UInt32.MaxValue);
-                DataTable dataTable = Common.incUnitTest.GetDatatable();
+                UInt32 startRowIndex = myexcel.GetRowIndexFromAColumn(STRFIRST_SHEETNAME,STRING_DATASTART,1);
+                UInt32 endRowIndex = myexcel.GetRowIndexFromAColumn(STRFIRST_SHEETNAME, STRING_DATAEND,1);
+                
+                if (endRowIndex >= startRowIndex && startRowIndex > 0)
+                {
+                    IEnumerable<Row> rows_bottom = myexcel.GetRangeRows(STRFIRST_SHEETNAME, endRowIndex + 1, UInt32.MaxValue);
+                    DataTable dataTable = Common.incUnitTest.GetDatatable_10000Record();
 
-                //reomve pre data;
-                myexcel.RemoveRows(STRFIRST_SHEETNAME, startRowIndex, endRowIndex);
-                //update pre bottom data;
-                int deleteCount = (int)(endRowIndex - startRowIndex+1);
-                int insertCount = dataTable.Rows.Count + 1;
-                int offsetCount = insertCount - deleteCount;
-                updateRowIndexAndCellReference(rows_bottom,offsetCount);
-                //insert new data;
-                insertDataTable(myexcel,dataTable, startRowIndex);
+                    //reomve pre data;
+                    myexcel.RemoveRows(STRFIRST_SHEETNAME, startRowIndex, endRowIndex);
+                    //update pre bottom data;
+                    int deleteCount = (int)(endRowIndex - startRowIndex + 1);
+                    int insertCount = dataTable.Rows.Count + 1;
+                    int offsetCount = insertCount - deleteCount;
+                    updateRowIndexAndCellReference(rows_bottom, offsetCount);
+                    //insert new data;
+                    insertDataTable(myexcel, dataTable, startRowIndex);
+                }
+                else
+                {
+                    myexcel.RemoveAllRows(STRFIRST_SHEETNAME);
+                }
             }
         }
 
@@ -265,6 +277,8 @@ namespace UnitTestProject1
             {
                 myexcel.SetOrReplaceRow(STRFIRST_SHEETNAME, startRowIndex + 1 + (uint)i, 2, dataTable.Rows[i]);
             }
+
+            setGuard(startRowIndex, (uint)startRowIndex  + (uint)dataTable.Rows.Count,myexcel);
         }
 
         private void updateRowIndexAndCellReference(IEnumerable<Row> rows,int offsetIndex)
