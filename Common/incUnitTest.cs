@@ -60,7 +60,7 @@ namespace Common
             newRow = databable_books.NewRow();
             newRow["Product"] = "c++";
             newRow["BookID"] = 1;
-            newRow["Date"] = new DateTime(1922,11,15);
+            newRow["Date"] = new DateTime(1922, 11, 15);
             newRow["Description"] = "我很喜欢";
             databable_books.Rows.Add(newRow);
 
@@ -77,6 +77,27 @@ namespace Common
             newRow["Date"] = new DateTime(1922, 11, 17);
             newRow["Description"] = "good id";
             databable_books.Rows.Add(newRow);
+
+            return databable_books;
+        }
+
+
+        public static DataTable GetDatatable_10000Record()
+        {
+            DataTable databable_books = new DataTable("Books");
+
+            SetupColumm(databable_books);
+
+            for (int i = 0; i < 100; i++)
+            {
+                DataRow newRow;
+                newRow = databable_books.NewRow();
+                newRow["Product"] = "c++"+i.ToString();
+                newRow["BookID"] =i;
+                newRow["Date"] = new DateTime(1922, 11, 15);
+                newRow["Description"] = "我很喜欢" + i.ToString();
+                databable_books.Rows.Add(newRow);
+            }
 
             return databable_books;
         }

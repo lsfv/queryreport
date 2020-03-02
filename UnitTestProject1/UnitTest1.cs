@@ -13,7 +13,26 @@ namespace UnitTestProject1
     public class UnitTest1
     {
         string path = "C:/testfile/myexcelAAA.xlsx";
+        string pathtemplate = "C:/testfile/Template.xlsx";
+
         public const string STRFIRST_SHEETNAME = "Report";
+        public const string STRING_DATASTART = "_DATASTART";
+        public const string STRING_DATAEND = "_DATAEND";
+
+        [TestMethod]
+        public void TestAll()
+        {
+            try
+            {File.Delete(path);}
+            catch
+            { }
+            CreateExcel();
+            LoadFileAndCheck();
+            TestWriteFile();
+            CheckWriteFileResult();
+            UpdateRow();
+        }
+
 
         [TestMethod]
         public void CreateExcel()
@@ -101,8 +120,7 @@ namespace UnitTestProject1
             unzip(path);
         }
 
-        //测试保存的数据和预设样式是否正确,测试2次1.直接测试2. 手工打开文档并保存. 测试原始和经过自动优化后是否都还有正确的数据和样式.
-        //每次都打开看是否10:1,需要人工看是否是粗体.
+        //测试保存的数据
         [TestMethod]
         public void CheckWriteFileResult()
         {
@@ -136,31 +154,136 @@ namespace UnitTestProject1
                 Assert.AreEqual(excelFile.isValid(), true);
 
                 DataTable dataTable = Common.incUnitTest.GetDatatable();
-                excelFile.SetOrUpdateRow(STRFIRST_SHEETNAME, 2, 4, dataTable.Rows[0]);
+                excelFile.SetOrReplaceRow(STRFIRST_SHEETNAME, 2, 4, dataTable.Rows[0]);
 
                 DataTable dataTable2 = Common.incUnitTest.GetDatatable2();
-                excelFile.SetOrUpdateRow(STRFIRST_SHEETNAME, 11, 2, dataTable2.Rows[0]);
+                excelFile.SetOrReplaceRow(STRFIRST_SHEETNAME, 11, 2, dataTable2.Rows[0]);
 
                 DataTable dataTable3 = Common.incUnitTest.GetDatatable2();
-                excelFile.SetOrUpdateRow(STRFIRST_SHEETNAME, 1, 1, dataTable3.Rows[0]);
-                excelFile.SetOrUpdateRow(STRFIRST_SHEETNAME, 2, 2, dataTable3.Rows[0]);
-                excelFile.SetOrUpdateRow(STRFIRST_SHEETNAME, 3, 3, dataTable3.Rows[0]);
-                excelFile.SetOrUpdateRow(STRFIRST_SHEETNAME, 4, 4, dataTable3.Rows[0]);
-                excelFile.SetOrUpdateRow(STRFIRST_SHEETNAME, 5, 5, dataTable3.Rows[0]);
-
-                excelFile.SetOrUpdateRow(STRFIRST_SHEETNAME, 15, 15, dataTable3.Rows[0]);
-
-
-                //todo check rows count is same, new row 's cell cout is datable's columns count.
+                excelFile.SetOrReplaceRow(STRFIRST_SHEETNAME, 1, 1, dataTable3.Rows[0]);
+                excelFile.SetOrReplaceRow(STRFIRST_SHEETNAME, 2, 2, dataTable3.Rows[0]);
+                excelFile.SetOrReplaceRow(STRFIRST_SHEETNAME, 3, 3, dataTable3.Rows[0]);
+                excelFile.SetOrReplaceRow(STRFIRST_SHEETNAME, 4, 4, dataTable3.Rows[0]);
+                excelFile.SetOrReplaceRow(STRFIRST_SHEETNAME, 5, 5, dataTable3.Rows[0]);
+                excelFile.SetOrReplaceRow(STRFIRST_SHEETNAME, 15, 15, dataTable3.Rows[0]);
             }
 
+            //unit test.
+            using (Common.MyExcelFile excelFile = new Common.MyExcelFile(path, out errMSG))
+            {
+                Assert.AreEqual(excelFile.isValid(), true);
+
+                Assert.AreEqual(excelFile.GetCellRealString(STRFIRST_SHEETNAME, 1, 2), "c++");
+                Assert.AreEqual(excelFile.GetCellRealString(STRFIRST_SHEETNAME, 2, 3), "c++");
+                Assert.AreEqual(excelFile.GetCellRealString(STRFIRST_SHEETNAME, 3, 4), "c++");
+                Assert.AreEqual(excelFile.GetCellRealString(STRFIRST_SHEETNAME, 4, 5), "c++");
+                Assert.AreEqual(excelFile.GetCellRealString(STRFIRST_SHEETNAME, 5, 6), "c++");
+                Assert.AreEqual(excelFile.GetCellRealString(STRFIRST_SHEETNAME, 11, 3), "c++");
+                Assert.AreEqual(excelFile.GetCellRealString(STRFIRST_SHEETNAME, 15, 16), "c++");
+            }
         }
 
         [TestMethod]
-        public void UpdateByNewData()
+        public void templateTest_create()
         {
-            
+            DataTable dataTable = Common.incUnitTest.GetDatatable_10000Record();
+            //先加载datatable.再修改cell. 1.null.2no reocrd 3.one record .4 two or more.
+            if (dataTable != null)
+            {
+                string errMsg = "";
+                using (Common.MyExcelFile myexcel = new Common.MyExcelFile(pathtemplate, true, STRFIRST_SHEETNAME, out errMsg))
+                {
+                    uint startRow = 1;
+                    uint endrow = startRow + (UInt32)dataTable.Rows.Count;
+                    uint writingGuard = 1;
+                    //start to set column name.
+                    DataTable columnsTable = Common.MyExcelFile.GetColumnsNames(dataTable);
+                    myexcel.SetOrReplaceRow(STRFIRST_SHEETNAME, writingGuard, 2, columnsTable.Rows[0]);
+                    writingGuard++;
+                    //start to set datatable
+                    if (dataTable.Rows.Count > 0)
+                    {
+                        for (int i = 0; i < dataTable.Rows.Count; i++)
+                        {
+                            myexcel.SetOrReplaceRow(STRFIRST_SHEETNAME, writingGuard, 2, dataTable.Rows[i]);
+                            writingGuard++;
+                        }
+                    }
+                    if (startRow == endrow)
+                    {
+                        DataTable dtt = Common.incUnitTest.GetOneValueDatatable(STRING_DATASTART+STRING_DATAEND);
+                        myexcel.SetOrUpdateCellValue(STRFIRST_SHEETNAME, startRow, 1, dtt.Rows[0]);
+                    }
+                    else
+                    {
+                        DataTable dtt = Common.incUnitTest.GetOneValueDatatable(STRING_DATASTART);
+                        myexcel.SetOrUpdateCellValue(STRFIRST_SHEETNAME, startRow, 1, dtt.Rows[0]);
+                        DataTable dtt2 = Common.incUnitTest.GetOneValueDatatable(STRING_DATAEND);
+                        myexcel.SetOrUpdateCellValue(STRFIRST_SHEETNAME, endrow, 1, dtt2.Rows[0]);
+                    }
+
+                    //moter
+
+                }
+            }
         }
+
+
+        [TestMethod]
+        public void templateTest_update()
+        {
+            templateTest_create();
+            //测试删除某行开始,并附加在某行.1.s=e=1,  2.s=1,e=2,  3.s=2,e=3.  4.s=1.e=3 .5.s=2,e=e;
+            //删除起始行数据(包含起止).2更新后半段数据为调整后的行索引.3.填充现有数据.4.计算数据的range.并更新到pivotTable.
+            //如果没有找到,删除所有数据,调用templateTest_create
+            UInt32 startRowIndex = 2;
+            UInt32 endRowIndex = 2;
+
+            string errMsg = "";
+            using (Common.MyExcelFile myexcel = new Common.MyExcelFile(pathtemplate,out errMsg))
+            {
+                IEnumerable<Row> rows_bottom = myexcel.GetRangeRows(STRFIRST_SHEETNAME, endRowIndex + 1, UInt32.MaxValue);
+                DataTable dataTable = Common.incUnitTest.GetDatatable();
+
+                //reomve pre data;
+                myexcel.RemoveRows(STRFIRST_SHEETNAME, startRowIndex, endRowIndex);
+                //update pre bottom data;
+                int deleteCount = (int)(endRowIndex - startRowIndex+1);
+                int insertCount = dataTable.Rows.Count + 1;
+                int offsetCount = insertCount - deleteCount;
+                updateRowIndexAndCellReference(rows_bottom,offsetCount);
+                //insert new data;
+                insertDataTable(myexcel,dataTable, startRowIndex);
+            }
+        }
+
+        private void insertDataTable(Common.MyExcelFile myexcel,DataTable dataTable, UInt32 startRowIndex)
+        {
+            myexcel.SetOrReplaceRow(STRFIRST_SHEETNAME, startRowIndex, 2, Common.MyExcelFile.GetColumnsNames(dataTable).Rows[0]);
+
+            for (int i = 0; i < dataTable.Rows.Count; i++)
+            {
+                myexcel.SetOrReplaceRow(STRFIRST_SHEETNAME, startRowIndex + 1 + (uint)i, 2, dataTable.Rows[i]);
+            }
+        }
+
+        private void updateRowIndexAndCellReference(IEnumerable<Row> rows,int offsetIndex)
+        {
+            foreach (Row row in rows)
+            {
+                uint preIndex = row.RowIndex;
+                row.RowIndex = (uint)(preIndex + offsetIndex);
+                string preIndexStr = preIndex.ToString();
+                string nowIndexStr = row.RowIndex.ToString();
+                int preIndexStrLength = preIndexStr.Length;
+                var allcells = row.Elements<Cell>();
+                foreach (Cell cell in allcells)
+                {
+                    cell.CellReference = cell.CellReference.Value.Replace(preIndexStr, "") + nowIndexStr;
+                }
+            }
+        }
+
 
         [TestMethod]
         public void tempTest()
@@ -172,18 +295,31 @@ namespace UnitTestProject1
             int i=3;
         }
 
-        [TestMethod]
-        public void unzipExcel()
-        {
-            string filepath = path;
-            unzip(filepath);
-        }
-
         private void unzip(string file)
         {
             string descpath = "C:/testfile/unzip" + DateTime.Now.ToFileTimeUtc();
             Common.ZipFloClass.UncompressFile(descpath, file, true);
         }
 
+        [TestMethod]
+        public void unzipExcel()
+        {
+            string filepath = pathtemplate;
+            unzip(filepath);
+        }
+
+        //[TestMethod]
+        //public void tempTest2()
+        //{
+        //    string errMsg = "";
+        //    using (Common.MyExcelFile myexcel = new Common.MyExcelFile(pathtemplate, out errMsg))
+        //    {
+        //       var data= myexcel.getWorksheet(STRFIRST_SHEETNAME).Elements<SheetData>().First();
+
+        //        var firstorw = data.Elements<Row>().First();
+        //        Row newrow = new Row();
+        //        data.InsertAfter(newrow, firstorw);
+        //    }
+        //}
     }
 }

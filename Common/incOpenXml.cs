@@ -1,17 +1,12 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using DocumentFormat.OpenXml.Validation;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Xml;
 
 
 /// <summary>
@@ -27,7 +22,7 @@ namespace Common
         public DefaultCellStyle defaultCellStyle = new DefaultCellStyle(0,0,0);
 
         #region public function 为什么public 简单包一个静态方法?主要是因为想让主要方法设为static,减低耦合度.而为了使用方便,又用public 包一下,方便使用. 非常好的一个策略.
-        //open file.
+        //open file and create
         public MyExcelFile(string filePath_load,out string errMsg)
         {
             errMsg = "";
@@ -47,7 +42,6 @@ namespace Common
                 errMsg = "file is not exist,or extension is not xlsx.";
             }
         }
-        //create file.
         public MyExcelFile(string filePath_create,bool overWirte,string defaultSheetName,out string myerrmsg)
         {
             myerrmsg = "";
@@ -74,27 +68,104 @@ namespace Common
                 }
             }
         }
+        //new and update cell
         public bool SetOrUpdateCellValue(string sheetName, UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow,UInt32 customStyle=0)
         {
-            SheetData sheetData = getWorksheet(document, sheetName).Elements<SheetData>().First();
+            SheetData sheetData = getWorksheet( sheetName).Elements<SheetData>().First();
             return SetOrUpdateCellValue(sheetData, rowNumber, columnNumber, dataRow,defaultCellStyle,customStyle);
         }
-        public bool SetOrUpdateRow(string sheetName, UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow)
+        //new and update row
+        public Row SetOrReplaceRow(string sheetName, UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow)
         {
-            SheetData sheetData = getWorksheet(document, sheetName).Elements<SheetData>().First();
-            return SetOrUpdateRow(sheetData, rowNumber, columnNumber, dataRow, defaultCellStyle);
+            SheetData sheetData = getWorksheet( sheetName).Elements<SheetData>().First();
+            return SetOrReplaceRow(sheetData, rowNumber, columnNumber, dataRow, defaultCellStyle);
         }
-        public Cell GetCell(string sheetName, UInt32 rowNumber, UInt32 columnNumber)
+        public Row InsertRowAfter(string sheetName,  UInt32 columnNumber, DataRow dataRow, Row guradRow)
         {
-            SheetData sheetData = getWorksheet(document, sheetName).Elements<SheetData>().First();
-            return GetACell(sheetData, rowNumber, columnNumber);
+            //var sheetDatas = getWorksheet(document, sheetName).Elements<SheetData>();
+            //if (sheetDatas != null)
+            //{
+            //    var sheetdata = sheetDatas.First();
+            //}
+            return null;
         }
 
+        //remove row(just delete rows nodes)
+        public bool RemoveRows(string sheetName, UInt32 startRowIndex, UInt32 endRowIndex)
+        {
+            bool res = false;
+            IEnumerable<Row> rows = GetRangeRows(sheetName, startRowIndex, endRowIndex);
+            if (rows != null)
+            {
+                foreach (Row r in rows.ToList())//删除不能用可碟带类型,因为需要当前来movenext.先换成集合把.
+                {
+                    r.Remove();
+                }
+                res = true;
+            }
+            return res;
+        }
+
+        //search cell and row and worksheet
+        public Cell GetCell(string sheetName, UInt32 rowNumber, UInt32 columnNumber)
+        {
+            SheetData sheetData = getWorksheet(sheetName).Elements<SheetData>().First();
+            return GetACell(sheetData, rowNumber, columnNumber);
+        }
+        public string GetCellRealString(string sheetName, UInt32 rowNumber, UInt32 columnNumber)
+        {
+            Cell abc = GetCell(sheetName, rowNumber, columnNumber);
+            CellValues cellType = abc.DataType;
+            if (cellType == CellValues.SharedString)
+            {
+                return getShareString(int.Parse(abc.CellValue.Text));
+            }
+            else
+            {
+                return abc.CellValue.Text;
+            }
+        }
+        public IEnumerable<Row> GetRangeRows(string sheetName, UInt32 startRowIndex, UInt32 endRowIndex)
+        {
+            IEnumerable<Row> res = null;
+            if (endRowIndex >= startRowIndex)
+            {
+                Worksheet worksheet = getWorksheet(sheetName);
+                if (worksheet != null)
+                {
+                    var sheetdates = worksheet.Elements<SheetData>();
+                    if (sheetdates.Count() > 0)
+                    {
+                        var sheetdata = sheetdates.First();
+                        var rows = sheetdata.Elements<Row>().Where(x => x.RowIndex >= startRowIndex && x.RowIndex <= endRowIndex);
+                        res = rows;
+                    }
+                }
+            }
+            return res;
+        }
+
+        //other funtion
+        public  Worksheet getWorksheet(string sheetname)
+        {
+            Worksheet res = null;
+            IEnumerable<Sheet> sheets = document.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>().Where(s => s.Name == sheetname);
+            if (sheets.Count() == 0)
+            {
+                res = null;
+            }
+            else
+            {
+                string relationshipId = sheets.First().Id.Value;
+                WorksheetPart worksheetPart = (WorksheetPart)document.WorkbookPart.GetPartById(relationshipId);
+                res = worksheetPart.Worksheet;
+            }
+            return res;
+        }
         public bool isValid()
         {
             return document != null;
         }
-
         public void SaveAndClose()
         {
             if (document != null)
@@ -102,7 +173,6 @@ namespace Common
                 document.Close();
             }
         }
-
         public void Dispose()
         {
             if(document!=null)
@@ -110,18 +180,15 @@ namespace Common
                 document.Close();
             }
         }
-
         public string getShareString(int index)
         {
             return getShareString(document, index);
         }
-
         #endregion
 
         #region private
-        private static bool SetOrUpdateRow(SheetData sheetData, UInt32 startRow,UInt32 startColumn, DataRow dataRow,DefaultCellStyle defaultCellStyle)
+        private static Row SetOrReplaceRow(SheetData sheetData, UInt32 startRow,UInt32 startColumn, DataRow dataRow,DefaultCellStyle defaultCellStyle)
         {
-            bool res = false;
             Row newRow = new Row();
             newRow.RowIndex = startRow;
             for (UInt32 i = 0; i < dataRow.Table.Columns.Count; i++)
@@ -137,7 +204,7 @@ namespace Common
                 {
                     newCell.StyleIndex = defaultCellStyle.normalIndex;
                     newCell.CellValue = new CellValue(dataRow[(int)i].ToString());
-                    
+
                 }
                 else if (celltype == CellValues.Date)
                 {
@@ -161,15 +228,15 @@ namespace Common
             var biggerrows = sheetData.Elements<Row>().Where(x => x.RowIndex > startRow);
             if (biggerrows.Count()<=0)
             {
-                sheetData.Append(newRow);
+                sheetData.Append(newRow);//todo:装载数据7/10的时间耗费在这里。需要优化！如果是大数据插入，应该创建大量row，再使用一次append或其他插入函数。
             }
             else
             {
                 sheetData.InsertBefore(newRow, biggerrows.First());
             }
-
-            return res;
+            return newRow;
         }
+
         private static bool SetOrUpdateCellValue(SheetData sheetData, UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow, DefaultCellStyle defaultCellStyle, UInt32 customStyle = 0)
         {
             bool res = false;
@@ -264,22 +331,7 @@ namespace Common
             }
             return res;
         }
-        private static Worksheet getWorksheet(SpreadsheetDocument document, string sheetname)
-        {
-            Worksheet res = null;
-            IEnumerable<Sheet> sheets = document.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>().Where(s => s.Name == sheetname);
-            if (sheets.Count() == 0)
-            {
-                res = null;
-            }
-            else
-            {
-                string relationshipId = sheets.First().Id.Value;
-                WorksheetPart worksheetPart = (WorksheetPart)document.WorkbookPart.GetPartById(relationshipId);
-                res = worksheetPart.Worksheet;
-            }
-            return res;
-        }
+        
         private static SpreadsheetDocument openFile(string filepath,out string errMsg,out DefaultCellStyle defaultCellStyle)
         {
             SpreadsheetDocument res = null;
@@ -532,62 +584,6 @@ namespace Common
                 cellStyle.blackIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, BoldFont, null, null);
                 cellStyle.dateTimeIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, defaultFont, null, dateDeafult);
             }
-
-
-            //if (stylepart.Stylesheet.Fills == null)
-            //{
-            //    stylepart.Stylesheet.Fills = new Fills(
-            //    new Fill(new PatternFill() { PatternType = PatternValues.None }),
-            //    new Fill(new PatternFill() { PatternType = PatternValues.Gray125 })
-            //    );
-            //}
-
-            //if (stylepart.Stylesheet.Borders == null)
-            //{
-            //    stylepart.Stylesheet.Borders = new Borders(
-            //    new Border(
-            //    new RightBorder(),
-            //    new TopBorder(),
-            //    new BottomBorder(),
-            //    new DiagonalBorder())
-            //    );
-            //}
-
-            //if (stylepart.Stylesheet.CellFormats == null)
-            //{
-            //    stylepart.Stylesheet.CellFormats = new CellFormats();
-            //}
-
-            //if (stylepart.Stylesheet.NumberingFormats == null)
-            //{
-            //    stylepart.Stylesheet.NumberingFormats = new NumberingFormats();
-            //}
-
-
-            //Stylesheet styleSheet = stylepart.Stylesheet;
-            //var fontIndex = createFont(styleSheet, "Microsoft YaHei", (double)11, false, System.Drawing.Color.Black);
-            //var numberFormatDate_index = new NumberingFormat();
-            //numberFormatDate_index.FormatCode = new StringValue("yyyy-mm-dd");
-            //numberFormatDate_index.NumberFormatId = 240;
-
-            //stylepart.Stylesheet.NumberingFormats.InsertAt(numberFormatDate_index, stylepart.Stylesheet.NumberingFormats.Count());
-
-
-            //var fontStyleIndex = createCellFormat(styleSheet, fontIndex, null, null);
-
-            //var fillIndex = createFill(styleSheet, System.Drawing.Color.White);
-            //var fillRedStyleIndex = createCellFormat(styleSheet, fontIndex, fillIndex, null);
-
-            //var fontBlackIndex = createFont(styleSheet, "Microsoft YaHei", (double)11, true, System.Drawing.Color.Black);
-            //var fontBlackStyleIndex = createCellFormat(styleSheet, fontBlackIndex, null, null);
-
-            //var defaultDateStyleIndex = createCellFormat(styleSheet, fontIndex, null, numberFormatDate_index.NumberFormatId);//时间格式 14:yyyy/mm/dd 
-
-            //titleStyleIndex = fontBlackStyleIndex;
-            //normalIndex = fontStyleIndex;
-            //dateIndex = defaultDateStyleIndex;
-
-            //stylepart.Stylesheet.Save();
         }
         private static SpreadsheetDocument createXlsxExcelFile(string filepath, string firstSheetName, out string errMSG,out DefaultCellStyle defaultCellStyle)
         {
@@ -634,7 +630,6 @@ namespace Common
             }
             return spreadsheetDocument;
         }
-
         private static string getShareString(SpreadsheetDocument documet, int index)
         {
             string res = null;
@@ -647,6 +642,20 @@ namespace Common
                 }
             }
             return res;
+        }
+
+        public static DataTable GetColumnsNames(DataTable dataTable)
+        {
+            DataTable databable_books = new DataTable("ColumnsNames");
+            DataRow newRow = databable_books.NewRow();
+            for (int i = 0; i < dataTable.Columns.Count; i++)
+            {
+                databable_books.Columns.Add("column"+i, Type.GetType("System.String"));
+                
+                newRow["column" + i] = dataTable.Columns[i].ColumnName;
+            }
+            databable_books.Rows.Add(newRow);
+            return databable_books;
         }
         #endregion
 
@@ -673,7 +682,6 @@ namespace Common
         }
         #endregion
     }
-
 
     public static class nouse
     {
