@@ -90,6 +90,9 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.10.1.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.10.1\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Activities" />
     <Reference Include="System.configuration" />
@@ -103,6 +106,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppHelper.cs" />
@@ -119,6 +123,7 @@
     <Compile Include="SENSITIVITYLEVEL.cs" />
     <Compile Include="SOURCEVIEWCOLUMN.cs" />
     <Compile Include="SOURCEVIEW.cs" />
+    <Compile Include="TemplateManager.cs" />
     <Compile Include="USER.cs" />
     <Compile Include="USERGROUP.cs" />
     <Compile Include="WORDFILE.cs" />
@@ -283,6 +288,9 @@
     </Content>
     <Content Include="SchemaDeployment\2016_Create Database.sql" />
     <Content Include="SchemaDeployment\2016_Updates.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
