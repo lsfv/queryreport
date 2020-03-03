@@ -185,8 +185,8 @@ namespace UnitTestProject1
         //    }
         //}
 
-        private int record1 = 0;
-        private int record2 = -1;
+        private int record1 = 5;
+        private int record2 = 8;
 
         [TestMethod]
         public void templateTest()

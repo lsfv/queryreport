@@ -29,7 +29,6 @@ namespace QueryReport
         // Alex 2018.09.21 QueryParams - Begin
         public const string strSessionKeyQueryParams = "__SESSION_REPORT_QueryParams";
         // Alex 2018.09.21 QueryParams - End
-
         #region Event Handlers
 
         protected override void Render(HtmlTextWriter writer)
@@ -271,6 +270,7 @@ namespace QueryReport
                                 Debug.WriteLine("update:" + pivotablePath);
                                 pivotableFileName = System.IO.Path.GetFileName(pivotablePath);
                                 //isSuccess = Common.incOpenXml.UpdataData4XlsxExcel(this.rpdt, "Report", out errMsg, pivotablePath);
+                                isSuccess = CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(this.rpdt, out errMsg, pivotablePath);
                             }
                             else//no template
                             {
@@ -281,6 +281,7 @@ namespace QueryReport
                                     pivotablePath = floder + "/" + myReport.REPORTNAME + ".xlsx";
                                     pivotableFileName = System.IO.Path.GetFileName(pivotablePath);
                                     //isSuccess = Common.incOpenXml.GenerateXlsxExcel(this.rpdt, out errMsg, pivotablePath);
+                                    isSuccess = CUSTOMRP.BLL.TemplateManager.GenerateXlsxExcel(this.rpdt, out errMsg, pivotablePath);
                                 }
                                 else
                                 {

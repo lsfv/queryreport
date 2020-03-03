@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -14,7 +15,7 @@ namespace CUSTOMRP.BLL
         public const string STRING_DATAEND = "_DATAEND";
 
 
-        public static bool GenerateXlsxExcel(DataTable dataTable, out string errMsg, string filePath, string sheetName)
+        public static bool GenerateXlsxExcel(DataTable dataTable, out string errMsg, string filePath)
         {
             bool res = false;
             errMsg = "";
@@ -22,7 +23,7 @@ namespace CUSTOMRP.BLL
             {
                 using (Common.MyExcelFile myexcel = new Common.MyExcelFile(filePath, true, STRFIRST_SHEETNAME, out errMsg))
                 {
-                    myexcel.SetOrReplaceRows(sheetName, 1, 2, dataTable);
+                    myexcel.SetOrReplaceRows(STRFIRST_SHEETNAME, 1, 2, dataTable);
                     if (dataTable != null)
                     {
                         setGuard(1, 1 + (UInt32)dataTable.Rows.Count, myexcel);
@@ -37,7 +38,7 @@ namespace CUSTOMRP.BLL
             return res;
         }
 
-        public static bool UpdataData4XlsxExcel(DataTable dataTable, string sheetName, out string errMsg, string filePath)
+        public static bool UpdataData4XlsxExcel(DataTable dataTable,  out string errMsg, string filePath)
         {
             bool res = false;
             using (Common.MyExcelFile myexcel = new Common.MyExcelFile(filePath, out errMsg))
@@ -74,6 +75,12 @@ namespace CUSTOMRP.BLL
                         setGuard(startRowIndex, startRowIndex, myexcel);
                     }
                     res = true;
+
+                    //update pivotTable
+                    string startRef = Common.MyExcelFile.GetCellReference((uint)2, startRowIndex);
+                    string endRef = Common.MyExcelFile.GetCellReference((uint)2+(uint)dataTable.Columns.Count-1, startRowIndex + (uint)dataTable.Rows.Count);
+                    Debug.Print(startRef + ".ref." + endRef);
+                    myexcel.UpdateAllPivotSource(STRFIRST_SHEETNAME, startRef,endRef);
                 }
                 else
                 {
@@ -88,8 +95,17 @@ namespace CUSTOMRP.BLL
                     {
                         setGuard(1, 1, myexcel);
                     }
+
+                    //update pivotTable
+                    string startRef = Common.MyExcelFile.GetCellReference((uint)2, 1);
+                    string endRef = Common.MyExcelFile.GetCellReference((uint)2 + (uint)dataTable.Columns.Count - 1,  (uint)dataTable.Rows.Count+1);
+                    Debug.Print(startRef + ".ref." + endRef);
+                    myexcel.UpdateAllPivotSource(STRFIRST_SHEETNAME, startRef, endRef);
+
                     res = true;
                 }
+
+                
             }
             return res;
         }

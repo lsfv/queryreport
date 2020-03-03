@@ -272,12 +272,51 @@ namespace Common
         {
             return getShareString(document, index);
         }
+        public bool UpdateAllPivotSource(string SourcesheetName, string firstReference, string lastReference)
+        {
+            return UpdateAllPivotSource(document, SourcesheetName, firstReference, lastReference);
+        }
+        public static bool UpdateAllPivotSource(SpreadsheetDocument document, string SourcesheetName, string firstReference, string lastReference)
+        {
+            bool res = false;
+            try
+            {
+                var pivottableCashes = document.WorkbookPart.PivotTableCacheDefinitionParts;
+                foreach (PivotTableCacheDefinitionPart pivottablecachePart in pivottableCashes)
+                {
+                    pivottablecachePart.PivotCacheDefinition.CacheSource.RemoveAllChildren();
+                    pivottablecachePart.PivotCacheDefinition.CacheSource.Append(new WorksheetSource()
+                    {
+                        Sheet = SourcesheetName,
+                        Reference = new StringValue(firstReference + ":" + lastReference)
+                    });
+                }
+                res = true;
+            }
+            catch
+            {
+                res = false;
+            }
+            return res;
+        }
+        public static string GetCellReference(UInt32 colIndex, UInt32 rowIndex)
+        {
+            UInt32 dividend = colIndex;
+            string columnName = String.Empty;
+            UInt32 modifier;
 
+            while (dividend > 0)
+            {
+                modifier = (dividend - 1) % 26;
+                columnName = Convert.ToChar(65 + modifier).ToString() + columnName;
+                dividend = (UInt32)((dividend - modifier) / 26);
+            }
+
+            return columnName + rowIndex.ToString();
+        }
         #endregion
 
         #region private
-        
-
         private static Row SetOrReplaceRow(SheetData sheetData, UInt32 startRow,UInt32 startColumn, DataRow dataRow,DefaultCellStyle defaultCellStyle)
         {
             Row newRow = new Row();
@@ -327,7 +366,6 @@ namespace Common
             }
             return newRow;
         }
-
         private static bool SetOrUpdateCellValue(SheetData sheetData, UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow, DefaultCellStyle defaultCellStyle, UInt32 customStyle = 0)
         {
             bool res = false;
@@ -422,7 +460,6 @@ namespace Common
             }
             return res;
         }
-        
         private static SpreadsheetDocument openFile(string filepath,out string errMsg,out DefaultCellStyle defaultCellStyle)
         {
             SpreadsheetDocument res = null;
@@ -458,21 +495,7 @@ namespace Common
                 errMsg = e.Message;//todo:learn try catch.
             }
         }
-        private static string GetCellReference(UInt32 colIndex,UInt32 rowIndex)
-        {
-            UInt32 dividend = colIndex;
-            string columnName = String.Empty;
-            UInt32 modifier;
-
-            while (dividend > 0)
-            {
-                modifier = (dividend - 1) % 26;
-                columnName = Convert.ToChar(65 + modifier).ToString() + columnName;
-                dividend = (UInt32)((dividend - modifier) / 26);
-            }
-
-            return columnName+rowIndex.ToString();
-        }
+        
         private static CellValues GetValueType(Type type)
         {
             List<Type> number = new List<Type> { typeof(Double), typeof(Decimal), typeof(Int32), typeof(int), typeof(Int16), typeof(Int64) };
@@ -734,7 +757,6 @@ namespace Common
             }
             return res;
         }
-
         public static DataTable GetColumnsNames(DataTable dataTable)
         {
             DataTable databable_books = new DataTable("ColumnsNames");

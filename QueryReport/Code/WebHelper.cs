@@ -34,6 +34,7 @@ namespace QueryReport.Code
         public static CUSTOMRP.BLL.SOURCEVIEWCOLUMN bllSOURCEVIEWCOLUMN = new CUSTOMRP.BLL.SOURCEVIEWCOLUMN();
         public static CUSTOMRP.BLL.QUERYPARAMS bllQUERYPARAMS = new CUSTOMRP.BLL.QUERYPARAMS();
         public static CUSTOMRP.BLL.WORDFILE bllWordFile = new CUSTOMRP.BLL.WORDFILE();
+        
 
         /// <summary>
         /// 
