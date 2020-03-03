@@ -249,27 +249,21 @@ namespace QueryReport
                 }
                 else if (container.Format == 0)
                 {
-                    //1.处理不同的Report type.因为只有excel文件格式才需要处理多种Report type如,pivotable，所以看起来好像只有这里分支了.
                     if (myReport.IsPivoTable)
                     {
                         //get datatable 2.check wheater it has pivotable 3. generate new excel or load pivotable and reload data.4.download file
                         if (this.rpdt != null)
                         {
-                            string pivotablePath =null;//null:there is no templte!.
-                            CUSTOMRP.Model.WORDFILE file = WebHelper.bllWordFile.GetModelByReportID(me.ID, myReport.ID);
-                            if(file!=null)
-                            {
-                                pivotablePath = Server.MapPath("~/"+AppNum.STR_EXCELTEMPLATEPATH)+"/"+file.WordFileName;
-                            }
+                            string pivotablePath =null;//key value
+                            CUSTOMRP.Model.WORDFILE pivotableTemplate = WebHelper.bllWordFile.GetModelByReportID(me.ID, myReport.ID);
+                            pivotablePath = pivotableTemplate==null?null: Server.MapPath("~/"+AppNum.STR_EXCELTEMPLATEPATH)+"/"+pivotableTemplate.WordFileName;
 
                             string pivotableFileName = "";
                             bool isSuccess = false;
                             string errMsg = null;
-                            if (!string.IsNullOrEmpty(pivotablePath) && File.Exists(pivotablePath))//has pivotable template already.
+                            if (!string.IsNullOrEmpty(pivotablePath) && File.Exists(pivotablePath))//has template
                             {
-                                Debug.WriteLine("update:" + pivotablePath);
                                 pivotableFileName = System.IO.Path.GetFileName(pivotablePath);
-                                //isSuccess = Common.incOpenXml.UpdataData4XlsxExcel(this.rpdt, "Report", out errMsg, pivotablePath);
                                 isSuccess = CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(this.rpdt, out errMsg, pivotablePath);
                             }
                             else//no template
@@ -280,7 +274,6 @@ namespace QueryReport
                                 {
                                     pivotablePath = floder + "/" + myReport.REPORTNAME + ".xlsx";
                                     pivotableFileName = System.IO.Path.GetFileName(pivotablePath);
-                                    //isSuccess = Common.incOpenXml.GenerateXlsxExcel(this.rpdt, out errMsg, pivotablePath);
                                     isSuccess = CUSTOMRP.BLL.TemplateManager.GenerateXlsxExcel(this.rpdt, out errMsg, pivotablePath);
                                 }
                                 else
