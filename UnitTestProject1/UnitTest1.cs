@@ -183,43 +183,9 @@ namespace UnitTestProject1
             }
         }
 
-        [TestMethod]
-        public void templateTest_create()
+
+        private static void setGuard(uint startRow, uint endrow, Common.MyExcelFile myexcel)
         {
-            DataTable dataTable = Common.incUnitTest.GetDatatable_10000Record();
-            //先加载datatable.再修改cell. 1.null.2no reocrd 3.one record .4 two or more.
-            if (dataTable != null)
-            {
-                string errMsg = "";
-                using (Common.MyExcelFile myexcel = new Common.MyExcelFile(pathtemplate, true, STRFIRST_SHEETNAME, out errMsg))
-                {
-
-                    uint writingGuard = 1;
-                    //start to set column name.
-                    DataTable columnsTable = Common.MyExcelFile.GetColumnsNames(dataTable);
-                    myexcel.SetOrReplaceRow(STRFIRST_SHEETNAME, writingGuard, 2, columnsTable.Rows[0]);
-                    writingGuard++;
-                    //start to set datatable
-                    if (dataTable.Rows.Count > 0)
-                    {
-                        for (int i = 0; i < dataTable.Rows.Count; i++)
-                        {
-                            myexcel.SetOrReplaceRow(STRFIRST_SHEETNAME, writingGuard, 2, dataTable.Rows[i]);
-                            writingGuard++;
-                        }
-                    }
-
-                    setGuard(1,1+(UInt32)dataTable.Rows.Count, myexcel);
-
-                    //moter
-                }
-            }
-        }
-
-        private static void setGuard(uint startRow, uint endrow,Common.MyExcelFile myexcel)
-        {
-            //uint startRow = 1;
-            //uint endrow = startRow + (UInt32)dataTable.Rows.Count;
             if (startRow == endrow)
             {
                 DataTable dtt = Common.incUnitTest.GetOneValueDatatable(STRING_DATASTART + STRING_DATAEND);
@@ -235,6 +201,31 @@ namespace UnitTestProject1
         }
 
         [TestMethod]
+        public void templateTest_create()
+        {
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+            //先加载datatable.再修改cell. 1.null.2no reocrd 3.one record .4 two or more.
+            if (dataTable != null)
+            {
+                string errMsg = "";
+                using (Common.MyExcelFile myexcel = new Common.MyExcelFile(pathtemplate, true, STRFIRST_SHEETNAME, out errMsg))
+                {
+                    myexcel.SetOrReplaceRows(STRFIRST_SHEETNAME, 1, 2, dataTable);
+                    if (dataTable != null)
+                    {
+                        setGuard(1, 1 + (UInt32)dataTable.Rows.Count, myexcel);
+                    }
+                    else
+                    {
+                        setGuard(1, 1, myexcel);
+                    }
+                }
+            }
+        }
+
+        
+
+        [TestMethod]
         public void templateTest_update()
         {
             //测试删除某行开始,并附加在某行.1.s=e=1,  2.s=1,e=2,  3.s=2,e=3.  4.s=1.e=4 .5.s=2,e=e;
@@ -246,25 +237,51 @@ namespace UnitTestProject1
             {
                 UInt32 startRowIndex = myexcel.GetRowIndexFromAColumn(STRFIRST_SHEETNAME,STRING_DATASTART,1);
                 UInt32 endRowIndex = myexcel.GetRowIndexFromAColumn(STRFIRST_SHEETNAME, STRING_DATAEND,1);
-                
+
+                if (startRowIndex ==0 &&  endRowIndex == 0)
+                {
+                    startRowIndex = myexcel.GetRowIndexFromAColumn(STRFIRST_SHEETNAME, STRING_DATASTART+ STRING_DATAEND, 1);
+                    endRowIndex = startRowIndex;
+                }
+
+                DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(1);
+
                 if (endRowIndex >= startRowIndex && startRowIndex > 0)
                 {
                     IEnumerable<Row> rows_bottom = myexcel.GetRangeRows(STRFIRST_SHEETNAME, endRowIndex + 1, UInt32.MaxValue);
-                    DataTable dataTable = Common.incUnitTest.GetDatatable_10000Record();
+                    
 
                     //reomve pre data;
                     myexcel.RemoveRows(STRFIRST_SHEETNAME, startRowIndex, endRowIndex);
                     //update pre bottom data;
                     int deleteCount = (int)(endRowIndex - startRowIndex + 1);
-                    int insertCount = dataTable.Rows.Count + 1;
+                    int insertCount = dataTable==null?1: dataTable.Rows.Count + 1;
                     int offsetCount = insertCount - deleteCount;
                     updateRowIndexAndCellReference(rows_bottom, offsetCount);
                     //insert new data;
-                    insertDataTable(myexcel, dataTable, startRowIndex);
+                    myexcel.SetOrReplaceRows(STRFIRST_SHEETNAME, startRowIndex, 2, dataTable);
+                    if (dataTable != null)
+                    {
+                        setGuard(startRowIndex, startRowIndex + (UInt32)dataTable.Rows.Count, myexcel);
+                    }
+                    else
+                    {
+                        setGuard(startRowIndex, startRowIndex, myexcel);
+                    }
                 }
                 else
                 {
                     myexcel.RemoveAllRows(STRFIRST_SHEETNAME);
+
+                    myexcel.SetOrReplaceRows(STRFIRST_SHEETNAME, 1, 2, dataTable);
+                    if (dataTable != null)
+                    {
+                        setGuard(1, 1 + (UInt32)dataTable.Rows.Count, myexcel);
+                    }
+                    else
+                    {
+                        setGuard(1, 1, myexcel);
+                    }
                 }
             }
         }

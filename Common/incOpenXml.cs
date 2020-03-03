@@ -90,6 +90,31 @@ namespace Common
             return null;
         }
 
+        //new and uupdate rows with table
+        public bool SetOrReplaceRows(string sheetName, UInt32 rowNumber, UInt32 columnNumber, DataTable dataTable)
+        {
+            bool res = false;
+            if (dataTable != null)
+            {
+                uint writingGuard = rowNumber;
+                //start to set column name.
+                DataTable columnsTable = Common.MyExcelFile.GetColumnsNames(dataTable);
+                SetOrReplaceRow(sheetName, writingGuard, columnNumber, columnsTable.Rows[0]);
+                writingGuard++;
+                //start to set datatable
+                if (dataTable.Rows.Count > 0)
+                {
+                    for (int i = 0; i < dataTable.Rows.Count; i++)
+                    {
+                        SetOrReplaceRow(sheetName, writingGuard, columnNumber, dataTable.Rows[i]);
+                        writingGuard++;
+                    }
+                }
+            }
+
+            return res;
+        }
+
         //remove row(just delete rows nodes)
         public bool RemoveRows(string sheetName, UInt32 startRowIndex, UInt32 endRowIndex)
         {
@@ -105,7 +130,6 @@ namespace Common
             }
             return res;
         }
-
         public bool RemoveAllRows(string sheetName)
         {
             bool res = false;
@@ -128,7 +152,6 @@ namespace Common
             Cell abc = GetCell(sheetName, rowNumber, columnNumber);
             return GetCellRealString(abc);
         }
-
         public string GetCellRealString(Cell cell)
         {
             if (cell != null)
@@ -147,7 +170,7 @@ namespace Common
                 }
                 else
                 {
-                    return cell.CellValue.Text;
+                    return cell.CellValue==null?"":cell.CellValue.Text;
                 }
                 
             }
@@ -156,7 +179,6 @@ namespace Common
                 return null;
             }
         }
-
         public IEnumerable<Row> GetRangeRows(string sheetName, UInt32 startRowIndex, UInt32 endRowIndex)
         {
             IEnumerable<Row> res = null;

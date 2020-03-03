@@ -81,6 +81,33 @@ namespace Common
             return databable_books;
         }
 
+        public static DataTable GetDatatableCustomCount(int count)
+        {
+            if (count >= 0)
+            {
+                DataTable databable_books = new DataTable("Books");
+
+                SetupColumm(databable_books);
+
+                for (int i = 0; i < count; i++)
+                {
+                    DataRow newRow;
+                    newRow = databable_books.NewRow();
+                    newRow["Product"] = "book" + (i + 1).ToString();
+                    newRow["BookID"] = i + 1;
+                    newRow["Date"] = DateTime.Now;
+                    newRow["Description"] = "我很喜欢" + (i + 1).ToString();
+                    databable_books.Rows.Add(newRow);
+                }
+
+                return databable_books;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
 
         public static DataTable GetDatatable_10000Record()
         {
