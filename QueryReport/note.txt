@@ -24,7 +24,8 @@ _end
 
 
 v3
-1.column name :display
-2.file name .shorter.
-3.todo  excel is default check.  page:Administation - Query Maintenance
+2.file name .shorter.  ok.   SaveFile.cs
+3.todo  excel is default check.  page:Administation - Query Maintenance ok.
+
+1.column name :display  
 4.todo all columns is checked when new. page:Administation - Query Maintenance

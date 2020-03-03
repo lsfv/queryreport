@@ -19,8 +19,6 @@ namespace QueryReport.Admin
         private const string strSessionViewNew_myView = "__SESSION_VIEWNEW_MYVIEW";
         private const string strSessionViewNew_myColumns = "__SESSION_VIEWNEW_MYCOLUMNS";
         private const string strSessionViewNew_dbViewList = "__SESSION_VIEWNEW_DBVIEWLIST";
-
-        //v1.8.2 Ben 2018.02.22 - Add to store actual columns name from DB
         private const string strSessionViewNew_strAllColumns = "__SESSION_VIEWNEW_STRALLCOLUMNS";
 
         private CUSTOMRP.Model.SOURCEVIEW myView = null;
@@ -109,6 +107,7 @@ namespace QueryReport.Admin
             {
                 this.FillddlTblViewName();
                 this.FillddlLevel();
+                this.cbExcel.Checked = true;
 
                 if (myView != null)
                 {
