@@ -102,7 +102,6 @@ namespace Common
                     }
                 }
             }
-
             return res;
         }
 
@@ -325,12 +324,18 @@ namespace Common
                 {
                     newCell.StyleIndex = defaultCellStyle.normalIndex;
                     newCell.CellValue = new CellValue(dataRow[(int)i].ToString());
-
                 }
                 else if (celltype == CellValues.Date)
                 {
                     newCell.StyleIndex = defaultCellStyle.dateTimeIndex;
-                    newCell.CellValue = new CellValue(((DateTime)dataRow[(int)i]));
+                    if (dataRow[(int)i].ToString()=="")
+                    {
+                        newCell.CellValue = new CellValue("");
+                    }
+                    else
+                    {
+                        newCell.CellValue = new CellValue(((DateTime)dataRow[(int)i]));
+                    }
                 }
                 else
                 {
@@ -524,7 +529,15 @@ namespace Common
                 if (theCellValue == CellValues.Date)
                 {
                     theCell.StyleIndex = defaultCellStyle.dateTimeIndex;
-                    theCell.CellValue = new CellValue(((DateTime)value));
+                    if (value.ToString() != "")
+                    {
+                        theCell.CellValue = new CellValue(((DateTime)value));
+                    }
+                    else
+                    {
+                        theCell.CellValue = new CellValue("");
+                    }
+                    
                 }
                 else
                 {
@@ -734,7 +747,8 @@ namespace Common
             {
                 spreadsheetDocument = null;
                 defaultCellStyle = null;
-                errMSG = e.Message;
+                errMSG = e.ToString();
+                throw e;
             }
             return spreadsheetDocument;
         }
