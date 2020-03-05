@@ -239,8 +239,8 @@ namespace QueryReport
 
         protected void btnRun_Click(object sender, EventArgs e)
         {
-            //try
-            //{
+            try
+            {
                 this.rpdt = getReportDatatable();
 
                 if (container.Format == 1)
@@ -388,18 +388,17 @@ namespace QueryReport
                         fontPath, 11, 1, iTextSharp.text.BaseColor.BLACK,//正文字体、大小、样式、颜色
                         rptFooter, subcountLabel, sortonCols, isAscending, seq, hideRows, pdfGridLines);
                 }
-            //}
-            //catch (System.Threading.ThreadAbortException ex)
-            //{
-            //    CUSTOMRP.BLL.AppHelper.LogException(ex, me.ID, myReport.ID, myReport.REPORTNAME); // myReport.REPORTNAME
-            //    this.lblJavascript.Text = WebHelper.GetAlertJS(ex.Message);
-            //}
-            //catch (Exception ex)
-            //{
-            //    CUSTOMRP.BLL.AppHelper.LogException(ex, me.ID, myReport.ID, myReport.REPORTNAME); // myReport.REPORTNAME
-            //    this.lblJavascript.Text = WebHelper.GetAlertJS(ex.ToString());
-            //    throw ex;
-            //}
+            }
+            catch (System.Threading.ThreadAbortException ex)
+            {
+               CUSTOMRP.BLL.AppHelper.LogException(ex, me.ID, myReport.ID, myReport.REPORTNAME); // myReport.REPORTNAME
+                this.lblJavascript.Text = WebHelper.GetAlertJS(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                CUSTOMRP.BLL.AppHelper.LogException(ex, me.ID, myReport.ID, myReport.REPORTNAME); // myReport.REPORTNAME
+                this.lblJavascript.Text = WebHelper.GetAlertJS(ex.ToString());
+            }
         }
 
         public void btnBack_Click(object sender, EventArgs e)

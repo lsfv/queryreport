@@ -81,6 +81,13 @@ namespace QueryReport.Admin
             }
             else
             {
+                if (!IsPostBack)
+                {
+                    Session.Remove(strSessionViewNew_myView);
+                    Session.Remove(strSessionViewNew_myColumns);
+                    Session.Remove(strSessionViewNew_strAllColumns);
+                }
+
                 if (me.checkUserGroupRight(CUSTOMRP.Model.APPModuleID.usergroupright_query, "Add", me.LoginID) == false)
                 {
                     Common.JScript.AlertAndRedirect(AppNum.ErrorMsg.accesserror, "ViewList.aspx");
@@ -88,6 +95,7 @@ namespace QueryReport.Admin
                 }
             }
 
+            //?????
             //v1.8.2 Ben 2018.02.22 - Add to store actual columns name from DB - Begin
             if (!IsPostBack)
             {
