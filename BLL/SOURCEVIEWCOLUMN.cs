@@ -15,6 +15,7 @@ namespace CUSTOMRP.BLL
         private readonly CUSTOMRP.DAL.SOURCEVIEWCOLUMN dal = new DAL.SOURCEVIEWCOLUMN();
         private readonly CUSTOMRP.DAL.DATABASE dalDB = new DAL.DATABASE();
         private readonly CUSTOMRP.DAL.SOURCEVIEW dalSV = new DAL.SOURCEVIEW();
+        private readonly CUSTOMRP.BLL.COMMON bllCommon = new BLL.COMMON();
 
         #region BasicMethod
 
@@ -332,5 +333,20 @@ namespace CUSTOMRP.BLL
         }
 
         #endregion BasicMethod
+
+        #region extendregion
+        public Dictionary<string, string> getDisplayName(int sourceViewID)
+        {
+            string sql = "SELECT [COLUMNNAME],case ([DISPLAYNAME]) when '' then [COLUMNNAME] WHEN NULL THEN [COLUMNNAME]  else [DISPLAYNAME] end as FinalDisplayname FROM [SOURCEVIEWCOLUMN] where SVID = "+sourceViewID;
+            
+            DataTable dt= bllCommon.query(1,sql);
+            Dictionary<string, string> keyValues_display = new Dictionary<string, string>();
+            foreach (DataRow dataRow in dt.Rows)
+            {
+                keyValues_display[dataRow[0].ToString()] = dataRow[1].ToString();
+            }
+            return keyValues_display;
+        }
+        #endregion
     }
 }

@@ -254,6 +254,7 @@ namespace QueryReport
                         //get datatable 2.check wheater it has pivotable 3. generate new excel or load pivotable and reload data.4.download file
                         if (this.rpdt != null)
                         {
+                            UpdateColumnDisplayName(this.rpdt,myReport.SVID);
                             string pivotablePath =null;//key value
                             CUSTOMRP.Model.WORDFILE pivotableTemplate = WebHelper.bllWordFile.GetModelByReportID(me.ID, myReport.ID);
                             pivotablePath = pivotableTemplate==null?null: Server.MapPath("~/"+AppNum.STR_EXCELTEMPLATEPATH)+"/"+pivotableTemplate.WordFileName;
@@ -401,6 +402,8 @@ namespace QueryReport
             }
         }
 
+        
+
         public void btnBack_Click(object sender, EventArgs e)
         {
             Response.Redirect("rplist.aspx", true);
@@ -409,6 +412,18 @@ namespace QueryReport
         #endregion
 
         #region Private Methods
+        private void UpdateColumnDisplayName(DataTable rpdt,int sourceViewID)
+        {
+            Dictionary<string, string> keyValues_displayname = WebHelper.bllSOURCEVIEWCOLUMN.getDisplayName(sourceViewID);
+            foreach (DataColumn dataColumn in rpdt.Columns)
+            {
+                if (keyValues_displayname.Keys.Contains(dataColumn.ColumnName))
+                {
+                    dataColumn.ColumnName = keyValues_displayname[dataColumn.ColumnName];
+                }
+            }
+        }
+
         private  DataTable getReportDatatable()
         {
             string strSqlColumn, strSqlPlus, strSqlCriteria, strSqlSortOn;
