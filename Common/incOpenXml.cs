@@ -88,11 +88,11 @@ namespace Common
             if (dataTable != null)
             {
                 uint writingGuard = rowNumber;
-                //start to set column name.
+                //start to set cell value with column name.
                 DataTable columnsTable = Common.MyExcelFile.GetColumnsNames(dataTable);
                 SetOrReplaceRow(sheetName, writingGuard, columnNumber, columnsTable.Rows[0]);
                 writingGuard++;
-                //start to set datatable
+                //start to set cell value with datatable.
                 if (dataTable.Rows.Count > 0)
                 {
                     for (int i = 0; i < dataTable.Rows.Count; i++)

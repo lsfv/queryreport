@@ -55,7 +55,7 @@ namespace CUSTOMRP.BLL
                 if (endRowIndex >= startRowIndex && startRowIndex > 0)
                 {
                     IEnumerable<Row> rows_bottom = myexcel.GetRangeRows(STRFIRST_SHEETNAME, endRowIndex + 1, UInt32.MaxValue);
-
+                    //keep data's format style first.
 
                     //reomve pre data;
                     myexcel.RemoveRows(STRFIRST_SHEETNAME, startRowIndex, endRowIndex);
@@ -110,6 +110,7 @@ namespace CUSTOMRP.BLL
             return res;
         }
 
+
         public static void setGuard(uint startRow, uint endrow, Common.MyExcelFile myexcel)
         {
             if (startRow == endrow)
@@ -126,6 +127,8 @@ namespace CUSTOMRP.BLL
             }
         }
 
+
+        //行变化行号后，需要修改row和cell的行号。
         private static void updateRowIndexAndCellReference(IEnumerable<Row> rows, int offsetIndex)
         {
             foreach (Row row in rows)
@@ -142,6 +145,9 @@ namespace CUSTOMRP.BLL
                 }
             }
         }
+
+
+        //并没有使用，如果性能不行，再考虑使用。
         private static void insertDataTable(Common.MyExcelFile myexcel, DataTable dataTable, UInt32 startRowIndex,string sheetName)
         {
             myexcel.SetOrReplaceRow(sheetName, startRowIndex, 2, Common.MyExcelFile.GetColumnsNames(dataTable).Rows[0]);

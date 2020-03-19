@@ -11,7 +11,7 @@ _end
 1.无模板 前后加上标记符.
 2.有模板,无标记, 前后加上标记符. 更新透视表的数据范围.
 3.有模板,有标记,删除标记中间数据,下移行为插入行,并插入数据,修改插入行直,查入数据,重复. 更新透视表的数据范围.
- (加标记,得到标记的string 值)
+ (加标记,得到标记的string值)
 
 
 
@@ -29,3 +29,7 @@ v3
 
 1.column name :display  
 4.todo all columns is checked when new. page:Administation - Query Maintenance
+
+
+v4.
+保留style:2hang .
