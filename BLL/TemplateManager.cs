@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Spreadsheet;
+﻿using DocumentFormat.OpenXml;
+using DocumentFormat.OpenXml.Spreadsheet;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -46,16 +47,28 @@ namespace CUSTOMRP.BLL
                 UInt32 startRowIndex = myexcel.GetRowIndexFromAColumn(STRFIRST_SHEETNAME, STRING_DATASTART, 1);
                 UInt32 endRowIndex = myexcel.GetRowIndexFromAColumn(STRFIRST_SHEETNAME, STRING_DATAEND, 1);
 
-                if (startRowIndex == 0 && endRowIndex == 0)
+                if (startRowIndex == 0 && endRowIndex == 0)// no data .just has column name.
                 {
                     startRowIndex = myexcel.GetRowIndexFromAColumn(STRFIRST_SHEETNAME, STRING_DATASTART + STRING_DATAEND, 1);
                     endRowIndex = startRowIndex;
                 }
 
-                if (endRowIndex >= startRowIndex && startRowIndex > 0)
+                if (endRowIndex >= startRowIndex && startRowIndex > 0)//it is a right sheet,and has data.
                 {
+                    //get data's format style first.
+                    Dictionary<string, UInt32Value> titleStyles = null;
+                    var titleRows = myexcel.GetRangeRows(STRFIRST_SHEETNAME, startRowIndex, startRowIndex);
+                    if (titleRows != null && titleRows.Count() > 0)
+                    {
+                        titleStyles = Common.MyExcelFile.getRowStyles(titleRows.First());
+                    }
+                    foreach (string key in titleStyles.Keys)
+                    {
+                        Debug.WriteLine(key + "." + titleStyles[int.Parse(key)]);
+                    }
+                    
+
                     IEnumerable<Row> rows_bottom = myexcel.GetRangeRows(STRFIRST_SHEETNAME, endRowIndex + 1, UInt32.MaxValue);
-                    //keep data's format style first.
 
                     //reomve pre data;
                     myexcel.RemoveRows(STRFIRST_SHEETNAME, startRowIndex, endRowIndex);
@@ -82,7 +95,7 @@ namespace CUSTOMRP.BLL
                     Debug.Print(startRef + ".ref." + endRef);
                     myexcel.UpdateAllPivotSource(STRFIRST_SHEETNAME, startRef,endRef);
                 }
-                else
+                else//it is a error format.
                 {
                     myexcel.RemoveAllRows(STRFIRST_SHEETNAME);
 
@@ -110,6 +123,7 @@ namespace CUSTOMRP.BLL
             return res;
         }
 
+        
 
         public static void setGuard(uint startRow, uint endrow, Common.MyExcelFile myexcel)
         {
@@ -145,6 +159,8 @@ namespace CUSTOMRP.BLL
                 }
             }
         }
+
+        
 
 
         //并没有使用，如果性能不行，再考虑使用。

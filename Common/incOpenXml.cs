@@ -304,10 +304,49 @@ namespace Common
 
             return columnName + rowIndex.ToString();
         }
+        public static Dictionary<string, UInt32Value> getRowStyles(Row theRow)
+        {
+            Dictionary<string, UInt32Value> styles = new Dictionary<string, UInt32Value>();
+            if (theRow != null)
+            {
+                var cells = theRow.Elements<Cell>();
+                foreach (Cell cell in cells)
+                {
+                    styles.Add(cell.CellReference, cell.StyleIndex);
+                }
+            }
+            return styles;
+        }
+
         #endregion
 
         #region private
+
+
+
         private static Row SetOrReplaceRow(SheetData sheetData, UInt32 startRow,UInt32 startColumn, DataRow dataRow,DefaultCellStyle defaultCellStyle)
+        {
+            Row newRow = CreateRow(startRow, startColumn, dataRow, defaultCellStyle);
+            //是否存在row,1.存在,删除.2.现在是否存在大于row,存在,在前插入.不存在.直接附加.
+            var rows = sheetData.Elements<Row>().Where(x => x.RowIndex == startRow);
+            if (rows.Count() > 0)
+            {
+                sheetData.RemoveChild(rows.First());
+            }
+
+            var biggerrows = sheetData.Elements<Row>().Where(x => x.RowIndex > startRow);
+            if (biggerrows.Count() <= 0)
+            {
+                sheetData.Append(newRow);//todo:装载数据7/10的时间耗费在这里。需要优化！如果是大数据插入，应该创建大量row，再使用一次append或其他插入函数。
+            }
+            else
+            {
+                sheetData.InsertBefore(newRow, biggerrows.First());
+            }
+            return newRow;
+        }
+
+        private static Row CreateRow(uint startRow, uint startColumn, DataRow dataRow, DefaultCellStyle defaultCellStyle,IList<uint> allStyles=null)
         {
             Row newRow = new Row();
             newRow.RowIndex = startRow;
@@ -328,7 +367,7 @@ namespace Common
                 else if (celltype == CellValues.Date)
                 {
                     newCell.StyleIndex = defaultCellStyle.dateTimeIndex;
-                    if (dataRow[(int)i].ToString()=="")
+                    if (dataRow[(int)i].ToString() == "")
                     {
                         newCell.CellValue = new CellValue("");
                     }
@@ -342,26 +381,18 @@ namespace Common
                     newCell.StyleIndex = defaultCellStyle.normalIndex;
                     newCell.CellValue = new CellValue(dataRow[(int)i].ToString());
                 }
+
+                //if there is custom style,we need overwirte styleid
+                if (allStyles != null && allStyles.Count - 1 >= i)
+                {
+                    newCell.StyleIndex = allStyles[(int)i];
+                }
                 newRow.Append(newCell);
             }
-            //是否存在row,1.存在,删除.2.现在是否存在大于row,存在,在前插入.不存在.直接附加.
-            var rows = sheetData.Elements<Row>().Where(x => x.RowIndex == startRow);
-            if (rows.Count()>0)
-            {
-                sheetData.RemoveChild(rows.First());
-            }
 
-            var biggerrows = sheetData.Elements<Row>().Where(x => x.RowIndex > startRow);
-            if (biggerrows.Count()<=0)
-            {
-                sheetData.Append(newRow);//todo:装载数据7/10的时间耗费在这里。需要优化！如果是大数据插入，应该创建大量row，再使用一次append或其他插入函数。
-            }
-            else
-            {
-                sheetData.InsertBefore(newRow, biggerrows.First());
-            }
             return newRow;
         }
+
         private static bool SetOrUpdateCellValue(SheetData sheetData, UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow, DefaultCellStyle defaultCellStyle, UInt32 customStyle = 0)
         {
             bool res = false;
