@@ -249,7 +249,7 @@ namespace QueryReport
                 }
                 else if (container.Format == 0)
                 {
-                    if (myReport.IsPivoTable)
+                    if (myReport.IsPivoTable) 
                     {
                         //get datatable 2.check wheater it has pivotable 3. generate new excel or load pivotable and reload data.4.download file
                         if (this.rpdt != null)
