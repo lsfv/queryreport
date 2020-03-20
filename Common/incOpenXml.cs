@@ -21,7 +21,7 @@ namespace Common
         private SpreadsheetDocument document = null;
         public DefaultCellStyle defaultCellStyle = new DefaultCellStyle(0,0,0);
 
-        #region public function 为什么public 简单包一个静态方法?主要是因为想让实际方法设为static,减低耦合度,避免后期维护改的逻辑混乱.但又为了使用方便,用public 包一下, 非常好的一个策略.
+        #region public function :为什么public 简单包一个静态方法?主要是因为想避免后期维护改的逻辑混乱,让实际方法设为static,每个方法尽量独立的，减低耦合度,但又为了使用方便,用public 包一下, 非常好的一个策略.
         //open file and create
         public MyExcelFile(string filePath_load,out string errMsg)
         {
@@ -75,14 +75,14 @@ namespace Common
             return SetOrUpdateCellValue(sheetData, rowNumber, columnNumber, dataRow,defaultCellStyle,customStyle);
         }
         //new and update row
-        public Row SetOrReplaceRow(string sheetName, UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow)
+        public Row SetOrReplaceRow(string sheetName, UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow,Dictionary<string,uint> rowStyle=null)
         {
             SheetData sheetData = getWorksheet( sheetName).Elements<SheetData>().First();
-            return SetOrReplaceRow(sheetData, rowNumber, columnNumber, dataRow, defaultCellStyle);
+            return SetOrReplaceRow(sheetData, rowNumber, columnNumber, dataRow, defaultCellStyle, rowStyle);
         }
 
         //new and uupdate rows with table
-        public bool SetOrReplaceRows(string sheetName, UInt32 rowNumber, UInt32 columnNumber, DataTable dataTable)
+        public bool SetOrReplaceRows(string sheetName, UInt32 rowNumber, UInt32 columnNumber, DataTable dataTable,Dictionary<UInt32,Dictionary<string,UInt32>> rowsSytles)
         {
             bool res = false;
             if (dataTable != null)
@@ -90,14 +90,29 @@ namespace Common
                 uint writingGuard = rowNumber;
                 //start to set cell value with column name.
                 DataTable columnsTable = Common.MyExcelFile.GetColumnsNames(dataTable);
-                SetOrReplaceRow(sheetName, writingGuard, columnNumber, columnsTable.Rows[0]);
+                if (rowsSytles != null && rowsSytles.Keys.Contains(writingGuard))
+                {
+                    SetOrReplaceRow(sheetName, writingGuard, columnNumber, columnsTable.Rows[0], rowsSytles[writingGuard]);
+                }
+                else
+                {
+                    SetOrReplaceRow(sheetName, writingGuard, columnNumber, columnsTable.Rows[0],null);
+                }
+                
                 writingGuard++;
                 //start to set cell value with datatable.
                 if (dataTable.Rows.Count > 0)
                 {
                     for (int i = 0; i < dataTable.Rows.Count; i++)
                     {
-                        SetOrReplaceRow(sheetName, writingGuard, columnNumber, dataTable.Rows[i]);
+                        if (rowsSytles != null && rowsSytles.Keys.Contains(writingGuard))
+                        {
+                            SetOrReplaceRow(sheetName, writingGuard, columnNumber, columnsTable.Rows[i], rowsSytles[writingGuard]);
+                        }
+                        else
+                        {
+                            SetOrReplaceRow(sheetName, writingGuard, columnNumber, columnsTable.Rows[i], null);
+                        }
                         writingGuard++;
                     }
                 }
@@ -304,9 +319,9 @@ namespace Common
 
             return columnName + rowIndex.ToString();
         }
-        public static Dictionary<string, UInt32Value> getRowStyles(Row theRow)
+        public static Dictionary<string, uint> getRowStyles(Row theRow)
         {
-            Dictionary<string, UInt32Value> styles = new Dictionary<string, UInt32Value>();
+            Dictionary<string, uint> styles = new Dictionary<string, uint>();
             if (theRow != null)
             {
                 var cells = theRow.Elements<Cell>();
@@ -317,16 +332,28 @@ namespace Common
             }
             return styles;
         }
-
+        public static void updateRowIndexAndCellReference(IEnumerable<Row> rows, int offsetIndex)//行变化行号后，需要修改row和cell的行号。
+        {
+            foreach (Row row in rows)
+            {
+                uint preIndex = row.RowIndex;
+                row.RowIndex = (uint)(preIndex + offsetIndex);
+                string preIndexStr = preIndex.ToString();
+                string nowIndexStr = row.RowIndex.ToString();
+                int preIndexStrLength = preIndexStr.Length;
+                var allcells = row.Elements<Cell>();
+                foreach (Cell cell in allcells)
+                {
+                    cell.CellReference = cell.CellReference.Value.Replace(preIndexStr, "") + nowIndexStr;
+                }
+            }
+        }
         #endregion
 
         #region private
-
-
-
-        private static Row SetOrReplaceRow(SheetData sheetData, UInt32 startRow,UInt32 startColumn, DataRow dataRow,DefaultCellStyle defaultCellStyle)
+        private static Row SetOrReplaceRow(SheetData sheetData, UInt32 startRow,UInt32 startColumn, DataRow dataRow,DefaultCellStyle defaultCellStyle,Dictionary<string,UInt32> rowStyle=null)
         {
-            Row newRow = CreateRow(startRow, startColumn, dataRow, defaultCellStyle);
+            Row newRow = CreateRow(startRow, startColumn, dataRow, defaultCellStyle,rowStyle);
             //是否存在row,1.存在,删除.2.现在是否存在大于row,存在,在前插入.不存在.直接附加.
             var rows = sheetData.Elements<Row>().Where(x => x.RowIndex == startRow);
             if (rows.Count() > 0)
@@ -345,54 +372,30 @@ namespace Common
             }
             return newRow;
         }
-
-        private static Row CreateRow(uint startRow, uint startColumn, DataRow dataRow, DefaultCellStyle defaultCellStyle,IList<uint> allStyles=null)
+        private static Row CreateRow(uint startRow, uint startColumn, DataRow dataRow, DefaultCellStyle defaultCellStyle,Dictionary<string,UInt32> rowStyle=null)
         {
             Row newRow = new Row();
             newRow.RowIndex = startRow;
+            Exception errormsg;
             for (UInt32 i = 0; i < dataRow.Table.Columns.Count; i++)
             {
-                Cell newCell = new Cell();
-                newCell.CellReference = GetCellReference(startColumn + i, startRow);
-
-                CellValues celltype = GetValueType(dataRow.Table.Columns[(int)i].DataType);
-
-                newCell.DataType = new EnumValue<CellValues>(celltype);
-
-                if (celltype == CellValues.Number)
+                Cell newCell = null;
+                string cellref = GetCellReference(startColumn + i, startRow);
+                Type cellType = dataRow.Table.Columns[(int)i].DataType;
+                object cellValue = dataRow[(int)i];
+                if (rowStyle != null && rowStyle.Keys.Contains(cellref))
                 {
-                    newCell.StyleIndex = defaultCellStyle.normalIndex;
-                    newCell.CellValue = new CellValue(dataRow[(int)i].ToString());
-                }
-                else if (celltype == CellValues.Date)
-                {
-                    newCell.StyleIndex = defaultCellStyle.dateTimeIndex;
-                    if (dataRow[(int)i].ToString() == "")
-                    {
-                        newCell.CellValue = new CellValue("");
-                    }
-                    else
-                    {
-                        newCell.CellValue = new CellValue(((DateTime)dataRow[(int)i]));
-                    }
+                    newCell = createCell(cellref, cellType, cellValue, defaultCellStyle, out errormsg, rowStyle[cellref]);
                 }
                 else
                 {
-                    newCell.StyleIndex = defaultCellStyle.normalIndex;
-                    newCell.CellValue = new CellValue(dataRow[(int)i].ToString());
-                }
-
-                //if there is custom style,we need overwirte styleid
-                if (allStyles != null && allStyles.Count - 1 >= i)
-                {
-                    newCell.StyleIndex = allStyles[(int)i];
+                    newCell = createCell(cellref, cellType, cellValue, defaultCellStyle, out errormsg);
                 }
                 newRow.Append(newCell);
             }
 
             return newRow;
         }
-
         private static bool SetOrUpdateCellValue(SheetData sheetData, UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow, DefaultCellStyle defaultCellStyle, UInt32 customStyle = 0)
         {
             bool res = false;
@@ -525,7 +528,6 @@ namespace Common
                 throw e;
             }
         }
-        
         private static CellValues GetValueType(Type type)
         {
             List<Type> number = new List<Type> { typeof(Double), typeof(Decimal), typeof(Int32), typeof(int), typeof(Int16), typeof(Int64) };
@@ -544,7 +546,6 @@ namespace Common
                 return CellValues.String;
             }
         }
-        //todo:还是需要去掉customStyle.因为可以修改成员变量的值来达到目的.更简化.
         private static Cell createCell(string reference,Type type,object value,DefaultCellStyle defaultCellStyle,out Exception exc,UInt32 customStyle=0)
         {
             Cell theCell = null;
@@ -652,16 +653,6 @@ namespace Common
             }
             CellFormat cellFormat = new CellFormat();
             cellFormat.BorderId = 0;
-            //if (borderid == null)
-            //{
-            //    cellFormat.BorderId = 0;
-            //    cellFormat.ApplyBorder = true;
-            //}
-            //else
-            //{
-            //    cellFormat.BorderId = borderid;
-            //    cellFormat.ApplyBorder = true;
-            //}
             if (fontIndex != null)
             {
                 cellFormat.ApplyFont = true;
@@ -735,6 +726,7 @@ namespace Common
                 cellStyle.normalIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, defaultFont, null, null);
                 cellStyle.blackIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, BoldFont, null, null);
                 cellStyle.dateTimeIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, defaultFont, null, dateDeafult);
+                workbookpart.WorkbookStylesPart.Stylesheet.Save();
             }
         }
         private static SpreadsheetDocument createXlsxExcelFile(string filepath, string firstSheetName, out string errMSG,out DefaultCellStyle defaultCellStyle)

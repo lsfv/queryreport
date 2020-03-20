@@ -214,7 +214,7 @@ namespace UnitTestProject1
         {
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(record1);
             string errmsg;
-            //CUSTOMRP.BLL.TemplateManager.GenerateXlsxExcel(dataTable, out errmsg,pathtemplate, CUSTOMRP.BLL.TemplateManager.STRFIRST_SHEETNAME);
+           CUSTOMRP.BLL.TemplateManager.GenerateXlsxExcel(dataTable, out errmsg,pathtemplate);
         }
 
         //pre :0 ,1,2,1000.
@@ -224,7 +224,8 @@ namespace UnitTestProject1
         {
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(record2);
             string errmsg;
-           // CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(dataTable, CUSTOMRP.BLL.TemplateManager.STRFIRST_SHEETNAME, out errmsg, pathtemplate);
+            CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(dataTable, out errmsg, pathtemplate);
+            //CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(dataTable, CUSTOMRP.BLL.TemplateManager.STRFIRST_SHEETNAME, out errmsg, pathtemplate);
         }
 
     
@@ -237,17 +238,30 @@ namespace UnitTestProject1
             var res = fruits.Where(x => x == "applea").FirstOrDefault();
         }
 
+
         private void unzip(string file)
         {
             string descpath = "C:/testfile/unzip" + DateTime.Now.ToFileTimeUtc();
             Common.ZipFloClass.UncompressFile(descpath, file, true);
         }
 
+
         [TestMethod]
         public void unzipExcel()
         {
             string filepath = pathtemplate;
             unzip(filepath);
+        }
+
+
+        [TestMethod]
+        public void temp_dictonary()
+        {
+            Dictionary<int, string> books = new Dictionary<int, string>() ;
+
+            string booksname = books[1];
+            int a = 3;
+
         }
     }
 }
