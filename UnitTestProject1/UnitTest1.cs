@@ -186,7 +186,7 @@ namespace UnitTestProject1
         //}
 
         private int record1 = 5;
-        private int record2 = 8;
+        private int record2 = 15;
 
         [TestMethod]
         public void templateTest()
@@ -257,11 +257,44 @@ namespace UnitTestProject1
         [TestMethod]
         public void temp_dictonary()
         {
-            Dictionary<int, string> books = new Dictionary<int, string>() ;
 
-            string booksname = books[1];
-            int a = 3;
+            string refa= "123";
+ 
 
+            Debug.Print("left:"+RemoveLastNumber(refa));
         }
+
+        private string RemoveLastNumber(string str)
+        {
+            while (true)
+            {
+                if (string.IsNullOrWhiteSpace(str) || str.Last<char>() >= 'A')
+                {
+                    break;
+                }
+                else
+                {
+                    str = str.Remove(str.Length - 1);
+                }
+            }
+            return str;
+        }
+
+
+        public static string GetCellReference_Columnname(UInt32 colIndex)
+        {
+            UInt32 dividend = colIndex;
+            string columnName = String.Empty;
+            UInt32 modifier;
+
+            while (dividend > 0)
+            {
+                modifier = (dividend - 1) % 26;
+                columnName = Convert.ToChar(65 + modifier).ToString() + columnName;
+                dividend = (UInt32)((dividend - modifier) / 26);
+            }
+            return columnName;
+        }
+
     }
 }

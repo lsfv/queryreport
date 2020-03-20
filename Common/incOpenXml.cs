@@ -107,11 +107,11 @@ namespace Common
                     {
                         if (rowsSytles != null && rowsSytles.Keys.Contains(writingGuard))
                         {
-                            SetOrReplaceRow(sheetName, writingGuard, columnNumber, columnsTable.Rows[i], rowsSytles[writingGuard]);
+                            SetOrReplaceRow(sheetName, writingGuard, columnNumber, dataTable.Rows[i], rowsSytles[writingGuard]);
                         }
                         else
                         {
-                            SetOrReplaceRow(sheetName, writingGuard, columnNumber, columnsTable.Rows[i], null);
+                            SetOrReplaceRow(sheetName, writingGuard, columnNumber, dataTable.Rows[i], null);
                         }
                         writingGuard++;
                     }
@@ -184,6 +184,18 @@ namespace Common
                 return null;
             }
         }
+
+        public Row GetRow(string sheetName, UInt32 rowIndex)
+        {
+            Row row = null;
+            IEnumerable<Row> rows = GetRangeRows(sheetName, rowIndex, rowIndex);
+            if (rows != null && rows.Count() == 1)
+            {
+                row = rows.First();
+            }
+            return row;
+        }
+
         public IEnumerable<Row> GetRangeRows(string sheetName, UInt32 startRowIndex, UInt32 endRowIndex)
         {
             IEnumerable<Row> res = null;
@@ -319,7 +331,8 @@ namespace Common
 
             return columnName + rowIndex.ToString();
         }
-        public static Dictionary<string, uint> getRowStyles(Row theRow)
+
+        public static Dictionary<string, uint> getRowStyles(Row theRow,uint newRowIndex)
         {
             Dictionary<string, uint> styles = new Dictionary<string, uint>();
             if (theRow != null)
@@ -327,11 +340,18 @@ namespace Common
                 var cells = theRow.Elements<Cell>();
                 foreach (Cell cell in cells)
                 {
-                    styles.Add(cell.CellReference, cell.StyleIndex);
+                    if (!string.IsNullOrWhiteSpace(cell.CellReference) && cell.StyleIndex != null)
+                    {
+                        string newReference = cell.CellReference;//todo need new refence. replace with new number,
+                        newReference = Common.MyExcelFile.RemoveLastNumber(newReference);
+                        newReference += newRowIndex;
+                        styles.Add(newReference, cell.StyleIndex);
+                    }
                 }
             }
             return styles;
         }
+
         public static void updateRowIndexAndCellReference(IEnumerable<Row> rows, int offsetIndex)//行变化行号后，需要修改row和cell的行号。
         {
             foreach (Row row in rows)
@@ -348,6 +368,23 @@ namespace Common
                 }
             }
         }
+
+        public static string RemoveLastNumber(string str)
+        {
+            while (true)
+            {
+                if (string.IsNullOrWhiteSpace(str) || str.Last<char>() >= 'A')
+                {
+                    break;
+                }
+                else
+                {
+                    str = str.Remove(str.Length - 1);
+                }
+            }
+            return str;
+        }
+
         #endregion
 
         #region private
@@ -372,6 +409,7 @@ namespace Common
             }
             return newRow;
         }
+
         private static Row CreateRow(uint startRow, uint startColumn, DataRow dataRow, DefaultCellStyle defaultCellStyle,Dictionary<string,UInt32> rowStyle=null)
         {
             Row newRow = new Row();

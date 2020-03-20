@@ -39,6 +39,79 @@ namespace CUSTOMRP.BLL
             return res;
         }
 
+        //todo remove columen.
+        private static Dictionary<uint, Dictionary<string, uint>> GetTableDataStyles(Common.MyExcelFile myexcel,uint startRowIndex, uint lastRow,uint newDataRowCount)
+        {
+            //get style list.  add right styles on each env.
+            Dictionary<uint, Dictionary<string, uint>> tableStyle = new Dictionary<uint, Dictionary<string, uint>>();
+            Dictionary<string, uint> titleStyles = null;
+            Dictionary<string, uint> firstStyles = null;
+            Dictionary<string, uint> datastyle = null;
+            Dictionary<string, uint> endStyles = null;
+
+            if (startRowIndex <= 0 || myexcel.GetRow(STRFIRST_SHEETNAME, startRowIndex)==null)
+            {
+                return null;
+            }
+
+            var titleRow = myexcel.GetRow(STRFIRST_SHEETNAME, startRowIndex);
+            titleStyles = Common.MyExcelFile.getRowStyles(titleRow,startRowIndex);
+
+
+            
+            if (newDataRowCount == 0)
+            {
+                tableStyle.Add(startRowIndex, titleStyles);
+            }
+            else if (newDataRowCount == 1 && firstStyles != null)
+            {
+                if (firstStyles != null)
+                {
+                    tableStyle.Add(startRowIndex + 1, firstStyles);
+                }
+            }
+            else if (newDataRowCount == 2)
+            {
+                if (firstStyles != null)
+                {
+                    tableStyle.Add(startRowIndex + 1, firstStyles);
+                }
+                if (endStyles != null)
+                {
+                    tableStyle.Add(startRowIndex + 2, firstStyles);
+                }
+            }
+            else if (newDataRowCount >= 3)
+            {
+                if (firstStyles != null)
+                {
+                    tableStyle.Add(startRowIndex + 1, firstStyles);
+                }
+                if (endStyles != null)
+                {
+                    tableStyle.Add(startRowIndex + newDataRowCount, endStyles);
+                }
+            }
+           
+
+            ////data row
+            //if (lastRow - startRowIndex > 1)
+            //{
+            //    var datarow = myexcel.GetRow(STRFIRST_SHEETNAME, startRowIndex + 1);
+            //    if (datarow != null)
+            //    {
+            //        for (int i = 0; i < newDataRowCount-1; i++)
+            //        {
+            //            Dictionary<string, uint> titleStyles = Common.MyExcelFile.getRowStyles(datarow, (uint)(startRowIndex+i+1));
+            //            tableStyle.Add((uint)(startRowIndex + i + 1), titleStyles);
+            //        }
+            //    }
+            //}
+
+
+            return tableStyle;
+        }
+
 
         public static bool UpdataData4XlsxExcel(DataTable dataTable,  out string errMsg, string filePath)
         {
@@ -56,23 +129,8 @@ namespace CUSTOMRP.BLL
 
                 if (endRowIndex >= startRowIndex && startRowIndex > 0)//it is a right sheet,and has data.
                 {
-                    //get data's format style first.
-                    Dictionary<uint, Dictionary<string, uint>> tableStyle = new Dictionary<uint, Dictionary<string, uint>>();
-
-                    var titleRows = myexcel.GetRangeRows(STRFIRST_SHEETNAME, startRowIndex, startRowIndex);
-                    if (titleRows != null && titleRows.Count() > 0)
-                    {
-                        Dictionary<string, uint> titleStyles = Common.MyExcelFile.getRowStyles(titleRows.First());
-                        tableStyle.Add(startRowIndex,titleStyles);
-                    }
-                    foreach (string key in tableStyle[startRowIndex].Keys)
-                    {
-                        Debug.WriteLine("list title sytle:"+key + "." + tableStyle[startRowIndex][key]);
-                    }
-                    
-
+                    Dictionary<uint, Dictionary<string, uint>> tableStyle = GetTableDataStyles(myexcel,startRowIndex,endRowIndex,(UInt32)dataTable.Rows.Count);
                     IEnumerable<Row> rows_bottom = myexcel.GetRangeRows(STRFIRST_SHEETNAME, endRowIndex + 1, UInt32.MaxValue);
-
                     //reomve pre data;
                     myexcel.RemoveRows(STRFIRST_SHEETNAME, startRowIndex, endRowIndex);
                     //update pre bottom data;
