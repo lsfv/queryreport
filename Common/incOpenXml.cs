@@ -11,7 +11,8 @@ using System.Linq;
 
 /// <summary>
 /// 其于OpenXml SDK写的帮助类
-/// linson.20200226
+/// linson.20200226,此类一个缺点就是没有插入row的方法,因为考虑到插入需要修改后续所有行,
+/// 如果提供,可能会滥用,所以只提供replaceRow和removeRow,这样逼迫使用者预先移动一大块,再进行整体插入,提高效率
 /// </summary>
 
 namespace Common
@@ -155,11 +156,6 @@ namespace Common
             SheetData sheetData = getWorksheet(sheetName).Elements<SheetData>().First();
             return GetACell(sheetData, rowNumber, columnNumber);
         }
-        public string GetCellRealString(string sheetName, UInt32 rowNumber, UInt32 columnNumber)
-        {
-            Cell abc = GetCell(sheetName, rowNumber, columnNumber);
-            return GetCellRealString(abc);
-        }
         public string GetCellRealString(Cell cell)
         {
             if (cell != null)
@@ -186,6 +182,11 @@ namespace Common
             {
                 return null;
             }
+        }
+        public string GetCellRealString(string sheetName, UInt32 rowNumber, UInt32 columnNumber)
+        {
+            Cell abc = GetCell(sheetName, rowNumber, columnNumber);
+            return GetCellRealString(abc);
         }
 
         public Row GetRow(string sheetName, UInt32 rowIndex)
@@ -295,6 +296,8 @@ namespace Common
         {
             return UpdateAllPivotSource(document, SourcesheetName, firstReference, lastReference);
         }
+
+
         public static bool UpdateAllPivotSource(SpreadsheetDocument document, string SourcesheetName, string firstReference, string lastReference)
         {
             bool res = false;
@@ -333,7 +336,6 @@ namespace Common
 
             return columnName + rowIndex.ToString();
         }
-
         public static Dictionary<string, uint> getRowStyles(Row theRow,uint newRowIndex)
         {
             Dictionary<string, uint> styles = new Dictionary<string, uint>();
@@ -353,7 +355,6 @@ namespace Common
             }
             return styles;
         }
-
         public static void updateRowIndexAndCellReference(IEnumerable<Row> rows, int offsetIndex)//行变化行号后，需要修改row和cell的行号。
         {
             foreach (Row row in rows)
@@ -370,7 +371,6 @@ namespace Common
                 }
             }
         }
-
         public static string RemoveLastNumber(string str)
         {
             while (true)
@@ -388,6 +388,8 @@ namespace Common
         }
 
         #endregion
+
+
 
         #region private
         private static Row SetOrReplaceRow(SheetData sheetData, UInt32 startRow,UInt32 startColumn, DataRow dataRow,DefaultCellStyle defaultCellStyle,Dictionary<string,UInt32> rowStyle=null)
