@@ -42,6 +42,7 @@ namespace Common
                 errMsg = "file is not exist,or extension is not xlsx.";
             }
         }
+
         public MyExcelFile(string filePath_create,bool overWirte,string defaultSheetName,out string myerrmsg)
         {
             myerrmsg = "";
@@ -68,12 +69,14 @@ namespace Common
                 }
             }
         }
+
         //new and update cell
         public bool SetOrUpdateCellValue(string sheetName, UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow,UInt32 customStyle=0)
         {
             SheetData sheetData = getWorksheet( sheetName).Elements<SheetData>().First();
             return SetOrUpdateCellValue(sheetData, rowNumber, columnNumber, dataRow,defaultCellStyle,customStyle);
         }
+
         //new and update row
         public Row SetOrReplaceRow(string sheetName, UInt32 rowNumber, UInt32 columnNumber, DataRow dataRow,Dictionary<string,uint> rowStyle=null)
         {
@@ -195,7 +198,6 @@ namespace Common
             }
             return row;
         }
-
         public IEnumerable<Row> GetRangeRows(string sheetName, UInt32 startRowIndex, UInt32 endRowIndex)
         {
             IEnumerable<Row> res = null;
@@ -862,6 +864,7 @@ namespace Common
                 blackIndex = _blackIndex;
             }
         }
+
         #endregion
     }
 }

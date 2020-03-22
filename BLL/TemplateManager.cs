@@ -15,7 +15,9 @@ namespace CUSTOMRP.BLL
         public const string STRING_DATASTART = "_DATASTART";
         public const string STRING_DATAEND = "_DATAEND";
 
-        public static bool GenerateXlsxExcel(DataTable dataTable, out string errMsg, string filePath)
+
+
+        public static bool GenerateXlsxExcel(DataTable dataTable, out string errMsg, string filePath, ReportArgument reportArgument)
         {
             bool res = false;
             errMsg = "";
@@ -23,92 +25,89 @@ namespace CUSTOMRP.BLL
             {
                 using (Common.MyExcelFile myexcel = new Common.MyExcelFile(filePath, true, STRFIRST_SHEETNAME, out errMsg))
                 {
-                    myexcel.SetOrReplaceRows(STRFIRST_SHEETNAME, 1, 2, dataTable,null); 
-                    if (dataTable != null)
-                    {
-                        setGuard(1, 1 + (UInt32)dataTable.Rows.Count, myexcel);
-                    }
-                    else
-                    {
-                        setGuard(1, 1, myexcel);
-                    }
+                    InsertData(STRFIRST_SHEETNAME, dataTable, myexcel, 1, null, reportArgument);
                     res = true;
                 }
             }
             return res;
         }
 
-        public static bool UpdataData4XlsxExcel(DataTable dataTable,  out string errMsg, string filePath)
+
+
+        public static bool UpdataData4XlsxExcel(DataTable dataTable, out string errMsg, string filePath, ReportArgument reportArgument)
         {
-            bool res = false;
+            //0. find range of data  1.remove pre date 2. reset range for ready to insert data  3.put newdata.
+            bool res = true;
             using (Common.MyExcelFile myexcel = new Common.MyExcelFile(filePath, out errMsg))
             {
-                UInt32 startRowIndex = myexcel.GetRowIndexFromAColumn(STRFIRST_SHEETNAME, STRING_DATASTART, 1);
-                UInt32 endRowIndex = myexcel.GetRowIndexFromAColumn(STRFIRST_SHEETNAME, STRING_DATAEND, 1);
+                uint startRowIndex, endRowIndex;
+                FindDataRange(myexcel, out startRowIndex, out endRowIndex);
 
-                if (startRowIndex == 0 && endRowIndex == 0)// no data .just has column name.
+                if (endRowIndex >= startRowIndex && startRowIndex > 0)//when it  has  'data_start' and 'data_end'
                 {
-                    startRowIndex = myexcel.GetRowIndexFromAColumn(STRFIRST_SHEETNAME, STRING_DATASTART + STRING_DATAEND, 1);
-                    endRowIndex = startRowIndex;
-                }
-
-                if (endRowIndex >= startRowIndex && startRowIndex > 0)//it is a right sheet,and has data.
-                {
-                    Dictionary<uint, Dictionary<string, uint>> tableStyle = GetTableDataStyles(myexcel,startRowIndex,endRowIndex,(UInt32)dataTable.Rows.Count);
+                    //get pre styles of data.
+                    Dictionary<uint, Dictionary<string, uint>> tableStyle = GetTableDataStyles(myexcel, startRowIndex, endRowIndex, (UInt32)dataTable.Rows.Count);
                     IEnumerable<Row> rows_bottom = myexcel.GetRangeRows(STRFIRST_SHEETNAME, endRowIndex + 1, UInt32.MaxValue);
+
                     //reomve pre data;
                     myexcel.RemoveRows(STRFIRST_SHEETNAME, startRowIndex, endRowIndex);
-                    //update pre bottom data;
+
+                    //reset range for inserting data
                     int deleteCount = (int)(endRowIndex - startRowIndex + 1);
                     int insertCount = dataTable == null ? 1 : dataTable.Rows.Count + 1;
                     int offsetCount = insertCount - deleteCount;
                     Common.MyExcelFile.updateRowIndexAndCellReference(rows_bottom, offsetCount);
+
                     //insert new data;
-                    myexcel.SetOrReplaceRows(STRFIRST_SHEETNAME, startRowIndex, 2, dataTable,tableStyle);
-                    if (dataTable != null)
-                    {
-                        setGuard(startRowIndex, startRowIndex + (UInt32)dataTable.Rows.Count, myexcel);
-                    }
-                    else
-                    {
-                        setGuard(startRowIndex, startRowIndex, myexcel);
-                    }
-                    res = true;
+                    InsertData(STRFIRST_SHEETNAME, dataTable, myexcel, startRowIndex, tableStyle, reportArgument);
 
                     //update pivotTable
                     string startRef = Common.MyExcelFile.GetCellReference((uint)2, startRowIndex);
-                    string endRef = Common.MyExcelFile.GetCellReference((uint)2+(uint)dataTable.Columns.Count-1, startRowIndex + (uint)dataTable.Rows.Count);
-                    Debug.Print(startRef + ".ref." + endRef);
-                    myexcel.UpdateAllPivotSource(STRFIRST_SHEETNAME, startRef,endRef);
+                    string endRef = Common.MyExcelFile.GetCellReference((uint)2 + (uint)dataTable.Columns.Count - 1, startRowIndex + (uint)dataTable.Rows.Count);
+                    myexcel.UpdateAllPivotSource(STRFIRST_SHEETNAME, startRef, endRef);
                 }
-                else//it is a error format.
+                else//when it does't has  'data_start' and 'data_end'
                 {
                     myexcel.RemoveAllRows(STRFIRST_SHEETNAME);
-                    myexcel.SetOrReplaceRows(STRFIRST_SHEETNAME, 1, 2, dataTable,null);
-                    if (dataTable != null)
-                    {
-                        setGuard(1, 1 + (UInt32)dataTable.Rows.Count, myexcel);
-                    }
-                    else
-                    {
-                        setGuard(1, 1, myexcel);
-                    }
+                    InsertData(STRFIRST_SHEETNAME, dataTable, myexcel, 1, null, null);
 
                     //update pivotTable
                     string startRef = Common.MyExcelFile.GetCellReference((uint)2, 1);
-                    string endRef = Common.MyExcelFile.GetCellReference((uint)2 + (uint)dataTable.Columns.Count - 1,  (uint)dataTable.Rows.Count+1);
-                    Debug.Print(startRef + ".ref." + endRef);
+                    string endRef = Common.MyExcelFile.GetCellReference((uint)2 + (uint)dataTable.Columns.Count - 1, (uint)dataTable.Rows.Count + 1);
                     myexcel.UpdateAllPivotSource(STRFIRST_SHEETNAME, startRef, endRef);
-
-                    res = true;
                 }
 
-                
             }
             return res;
         }
 
         #region private
+
+        private static void InsertData(string sheetname, DataTable dataTable, Common.MyExcelFile myexcel, uint startRowIndex, Dictionary<uint, Dictionary<string, uint>> tableStyle, ReportArgument reportArgument)
+        {
+            myexcel.SetOrReplaceRows(sheetname, startRowIndex, 2, dataTable, tableStyle);
+            if (dataTable != null)
+            {
+                setGuard(startRowIndex, startRowIndex + (UInt32)dataTable.Rows.Count, myexcel);
+            }
+            else
+            {
+                setGuard(startRowIndex, startRowIndex, myexcel);
+            }
+        }
+
+        private static void FindDataRange(Common.MyExcelFile myexcel, out uint startRowIndex, out uint endRowIndex)
+        {
+            startRowIndex = myexcel.GetRowIndexFromAColumn(STRFIRST_SHEETNAME, STRING_DATASTART, 1);
+            endRowIndex = myexcel.GetRowIndexFromAColumn(STRFIRST_SHEETNAME, STRING_DATAEND, 1);
+            if (startRowIndex == 0 && endRowIndex == 0)
+            {
+                startRowIndex = myexcel.GetRowIndexFromAColumn(STRFIRST_SHEETNAME, STRING_DATASTART + STRING_DATAEND, 1);
+                endRowIndex = startRowIndex;
+            }
+        }
+
+
         private static void setGuard(uint startRow, uint endrow, Common.MyExcelFile myexcel)
         {
             if (startRow == endrow)
@@ -143,22 +142,13 @@ namespace CUSTOMRP.BLL
             }
             return tableStyle;
         }
-
-
-
-        ////并没有使用，如果性能不行，再考虑使用。
-        //private static void insertDataTable(Common.MyExcelFile myexcel, DataTable dataTable, UInt32 startRowIndex,string sheetName)
-        //{
-        //    myexcel.SetOrReplaceRow(sheetName, startRowIndex, 2, Common.MyExcelFile.GetColumnsNames(dataTable).Rows[0]);
-
-        //    for (int i = 0; i < dataTable.Rows.Count; i++)
-        //    {
-        //        myexcel.SetOrReplaceRow(sheetName, startRowIndex + 1 + (uint)i, 2, dataTable.Rows[i]);
-        //    }
-
-        //    setGuard(startRowIndex, (uint)startRowIndex + (uint)dataTable.Rows.Count, myexcel);
-        //}
-
         #endregion
+
+
+        //inner class
+        public class ReportArgument
+        {
+            IList<int> columnsIndex_total;
+        }
     }
 }
