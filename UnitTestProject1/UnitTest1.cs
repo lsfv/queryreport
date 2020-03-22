@@ -219,6 +219,7 @@ namespace UnitTestProject1
 
         //pre :0 ,1,2,1000.
         //update->null ,0,1,2, 1000.
+        //todo 1. format style.   2.total   3.pic  4.group.
         [TestMethod]
         public void templateTest_update()
         {

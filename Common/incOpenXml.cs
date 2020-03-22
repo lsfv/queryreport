@@ -342,7 +342,7 @@ namespace Common
                 {
                     if (!string.IsNullOrWhiteSpace(cell.CellReference) && cell.StyleIndex != null)
                     {
-                        string newReference = cell.CellReference;//todo need new refence. replace with new number,
+                        string newReference = cell.CellReference;
                         newReference = Common.MyExcelFile.RemoveLastNumber(newReference);
                         newReference += newRowIndex;
                         styles.Add(newReference, cell.StyleIndex);

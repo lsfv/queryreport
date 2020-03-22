@@ -14,7 +14,7 @@
     <RootNamespace>QueryReport</RootNamespace>
     <AssemblyName>QueryReport</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <UseIISExpress>false</UseIISExpress>
+    <UseIISExpress>true</UseIISExpress>
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -1029,7 +1029,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>44377</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:8090</IISUrl>
+          <IISUrl>http://localhost:44377/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

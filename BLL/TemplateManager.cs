@@ -15,7 +15,6 @@ namespace CUSTOMRP.BLL
         public const string STRING_DATASTART = "_DATASTART";
         public const string STRING_DATAEND = "_DATAEND";
 
-
         public static bool GenerateXlsxExcel(DataTable dataTable, out string errMsg, string filePath)
         {
             bool res = false;
@@ -38,80 +37,6 @@ namespace CUSTOMRP.BLL
             }
             return res;
         }
-
-        //todo remove columen.
-        private static Dictionary<uint, Dictionary<string, uint>> GetTableDataStyles(Common.MyExcelFile myexcel,uint startRowIndex, uint lastRow,uint newDataRowCount)
-        {
-            //get style list.  add right styles on each env.
-            Dictionary<uint, Dictionary<string, uint>> tableStyle = new Dictionary<uint, Dictionary<string, uint>>();
-            Dictionary<string, uint> titleStyles = null;
-            Dictionary<string, uint> firstStyles = null;
-            Dictionary<string, uint> datastyle = null;
-            Dictionary<string, uint> endStyles = null;
-
-            if (startRowIndex <= 0 || myexcel.GetRow(STRFIRST_SHEETNAME, startRowIndex)==null)
-            {
-                return null;
-            }
-
-            var titleRow = myexcel.GetRow(STRFIRST_SHEETNAME, startRowIndex);
-            titleStyles = Common.MyExcelFile.getRowStyles(titleRow,startRowIndex);
-
-
-            
-            if (newDataRowCount == 0)
-            {
-                tableStyle.Add(startRowIndex, titleStyles);
-            }
-            else if (newDataRowCount == 1 && firstStyles != null)
-            {
-                if (firstStyles != null)
-                {
-                    tableStyle.Add(startRowIndex + 1, firstStyles);
-                }
-            }
-            else if (newDataRowCount == 2)
-            {
-                if (firstStyles != null)
-                {
-                    tableStyle.Add(startRowIndex + 1, firstStyles);
-                }
-                if (endStyles != null)
-                {
-                    tableStyle.Add(startRowIndex + 2, firstStyles);
-                }
-            }
-            else if (newDataRowCount >= 3)
-            {
-                if (firstStyles != null)
-                {
-                    tableStyle.Add(startRowIndex + 1, firstStyles);
-                }
-                if (endStyles != null)
-                {
-                    tableStyle.Add(startRowIndex + newDataRowCount, endStyles);
-                }
-            }
-           
-
-            ////data row
-            //if (lastRow - startRowIndex > 1)
-            //{
-            //    var datarow = myexcel.GetRow(STRFIRST_SHEETNAME, startRowIndex + 1);
-            //    if (datarow != null)
-            //    {
-            //        for (int i = 0; i < newDataRowCount-1; i++)
-            //        {
-            //            Dictionary<string, uint> titleStyles = Common.MyExcelFile.getRowStyles(datarow, (uint)(startRowIndex+i+1));
-            //            tableStyle.Add((uint)(startRowIndex + i + 1), titleStyles);
-            //        }
-            //    }
-            //}
-
-
-            return tableStyle;
-        }
-
 
         public static bool UpdataData4XlsxExcel(DataTable dataTable,  out string errMsg, string filePath)
         {
@@ -183,8 +108,8 @@ namespace CUSTOMRP.BLL
             return res;
         }
 
-
-        public static void setGuard(uint startRow, uint endrow, Common.MyExcelFile myexcel)
+        #region private
+        private static void setGuard(uint startRow, uint endrow, Common.MyExcelFile myexcel)
         {
             if (startRow == endrow)
             {
@@ -201,6 +126,25 @@ namespace CUSTOMRP.BLL
         }
 
 
+        //todo remove colume
+        private static Dictionary<uint, Dictionary<string, uint>> GetTableDataStyles(Common.MyExcelFile myexcel, uint startRowIndex, uint lastRow, uint newDataRowCount)
+        {
+            //
+            Dictionary<uint, Dictionary<string, uint>> tableStyle = new Dictionary<uint, Dictionary<string, uint>>();
+
+            if (startRowIndex >= 0)
+            {
+                Row titleRow = myexcel.GetRow(STRFIRST_SHEETNAME, startRowIndex);
+                if (titleRow != null)
+                {
+                    Dictionary<string, uint> titleStyles = Common.MyExcelFile.getRowStyles(titleRow, startRowIndex);
+                    tableStyle.Add(startRowIndex, titleStyles);
+                }
+            }
+            return tableStyle;
+        }
+
+
 
         ////并没有使用，如果性能不行，再考虑使用。
         //private static void insertDataTable(Common.MyExcelFile myexcel, DataTable dataTable, UInt32 startRowIndex,string sheetName)
@@ -214,6 +158,7 @@ namespace CUSTOMRP.BLL
 
         //    setGuard(startRowIndex, (uint)startRowIndex + (uint)dataTable.Rows.Count, myexcel);
         //}
-        
+
+        #endregion
     }
 }
