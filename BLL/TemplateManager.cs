@@ -235,7 +235,7 @@ namespace CUSTOMRP.BLL
                     {
                         int columnIndex = reportArgument.columnsIndex_total[i];
                         string tempTotal = GetTotal(reportBaseArgument.dataTable, columnIndex);
-                        DataTable table = Common.MyExcelFile.GetDatatableSingleValue(tempTotal);//todo need  reconstrct.
+                        DataTable table = Common.MyExcelFile.GetDatatableSingleValue(tempTotal);//todo need  reconstrct,data tabie is too heigh, use string?
                         myExcelFile.SetOrUpdateCellValue(reportBaseArgument.writingSheetName, reportBaseArgument.writingRowIndex, (uint)columnIndex + 1 + 1, table.Rows[0], myExcelFile.defaultCellStyle.blackIndex);
                     }
 
@@ -248,7 +248,7 @@ namespace CUSTOMRP.BLL
                     {
                         totolFlag = "Total:" + totolFlag;
                     }
-                    DataTable table2 = Common.MyExcelFile.GetDatatableSingleValue(totolFlag);//todo need  reconstrct.
+                    DataTable table2 = Common.MyExcelFile.GetDatatableSingleValue(totolFlag);//todo need  reconstrct,data tabie is too heigh, use string?
                     myExcelFile.SetOrUpdateCellValue(reportBaseArgument.writingSheetName, reportBaseArgument.writingRowIndex, (uint)2, table2.Rows[0], myExcelFile.defaultCellStyle.blackIndex);
 
 
