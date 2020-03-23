@@ -265,7 +265,13 @@ namespace QueryReport
                             if (!string.IsNullOrEmpty(pivotablePath) && File.Exists(pivotablePath))//has template
                             {
                                 pivotableFileName = System.IO.Path.GetFileName(pivotablePath);
-                                isSuccess = CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(this.rpdt, out errMsg, pivotablePath);
+
+                                List<string> subTotals = container.sumColumn.Select(x => x.ColumnName).ToList();
+                                List<int> subTotalIndexs = WebHelper.getColumnIndexByColumnName(subTotals, this.rpdt.Columns);
+                                CUSTOMRP.BLL.TemplateManager.ReportArgument reportArgument = new CUSTOMRP.BLL.TemplateManager.ReportArgument();
+                                reportArgument.columnsIndex_total = subTotalIndexs;
+
+                                isSuccess = CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(this.rpdt, out errMsg, pivotablePath, reportArgument);
                             }
                             else//no template
                             {
@@ -275,7 +281,13 @@ namespace QueryReport
                                 {
                                     pivotablePath = floder + "/" + myReport.REPORTNAME + ".xlsx";
                                     pivotableFileName = System.IO.Path.GetFileName(pivotablePath);
-                                    isSuccess = CUSTOMRP.BLL.TemplateManager.GenerateXlsxExcel(this.rpdt, out errMsg, pivotablePath);
+
+                                    List<string> subTotals= container.sumColumn.Select(x => x.ColumnName).ToList();
+                                    List<int> subTotalIndexs = WebHelper.getColumnIndexByColumnName(subTotals, this.rpdt.Columns);
+                                    CUSTOMRP.BLL.TemplateManager.ReportArgument reportArgument = new CUSTOMRP.BLL.TemplateManager.ReportArgument();
+                                    reportArgument.columnsIndex_total = subTotalIndexs;
+
+                                    isSuccess = CUSTOMRP.BLL.TemplateManager.GenerateXlsxExcel(this.rpdt, out errMsg, pivotablePath, reportArgument);
                                 }
                                 else
                                 {
@@ -326,7 +338,6 @@ namespace QueryReport
                         //v1.2.0 Kim 2016.12.08 replace criteria str from sql str to readable text
                         //v1.8.8 Alex 2018.10.05
                         XSSFWorkbook XSSFworkbook = NPOIHelper.GetWorkbookFromDt(rpdt, container.ReportTitle, container.ExtendedFields.Split(','), rptHeader, rpcr,
-                            //container.contentColumn.ToDictionary(x => !String.IsNullOrEmpty(x.Formula) ? x.DisplayName : x.ColumnName, y => y.DisplayName),
                             myReport.ReportColumns.Where(x => x.ColumnFunc == REPORTCOLUMN.ColumnFuncs.Content).ToDictionary(x => x.ColumnType == CUSTOMRP.Model.REPORTCOLUMN.ColumnTypes.Normal ? x.COLUMNNAME : x.DisplayName, y => y.DisplayName),
                             container.avgColumn.Select(x => x.ColumnName).ToList(), container.sumColumn.Select(x => x.ColumnName).ToList(), container.groupColumn.Select(x => x.ColumnName).ToList(),
                             container.grouptotalColumn.Select(x => x.ColumnName).ToList(), container.groupavgColumn.Select(x => x.ColumnName).ToList(), container.groupcountColumn.Select(x => x.ColumnName).ToList(), container.rpcountColumn.Select(x => x.ColumnName).ToList(),

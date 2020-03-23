@@ -128,6 +128,24 @@ namespace QueryReport.Code
         }
 
 
+        public static List<int> getColumnIndexByColumnName(IList<string> ColumnName, DataColumnCollection Columns)
+        {
+            List<int> Result = new List<int>();
+            for (int i = 0; i < ColumnName.Count; i++)
+            {
+                foreach (DataColumn dc in Columns)
+                {
+                    if (ColumnName[i] == dc.ColumnName)
+                    {
+                        Result.Add(dc.Ordinal);
+                        break;
+                    }
+                }
+            }
+            return Result;
+        }
+
+
         public static string GetAlertJS(string msg)
         {
             if (msg == null) { msg = ""; }

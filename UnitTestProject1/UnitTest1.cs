@@ -214,7 +214,11 @@ namespace UnitTestProject1
         {
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(record1);
             string errmsg;
-           CUSTOMRP.BLL.TemplateManager.GenerateXlsxExcel(dataTable, out errmsg,pathtemplate,null);
+            CUSTOMRP.BLL.TemplateManager.ReportArgument reportArgument = new CUSTOMRP.BLL.TemplateManager.ReportArgument();
+            reportArgument.columnsIndex_total = new List<int>();
+            reportArgument.columnsIndex_total.Add(0);
+            reportArgument.columnsIndex_total.Add(3);
+            CUSTOMRP.BLL.TemplateManager.GenerateXlsxExcel(dataTable, out errmsg,pathtemplate, reportArgument);
         }
 
         //pre :0 ,1,2,1000.
@@ -225,7 +229,11 @@ namespace UnitTestProject1
         {
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(record2);
             string errmsg;
-            CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(dataTable, out errmsg, pathtemplate,null);
+            CUSTOMRP.BLL.TemplateManager.ReportArgument reportArgument = new CUSTOMRP.BLL.TemplateManager.ReportArgument();
+            reportArgument.columnsIndex_total = new List<int>();
+            reportArgument.columnsIndex_total.Add(0);
+            reportArgument.columnsIndex_total.Add(3);
+            CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(dataTable, out errmsg, pathtemplate, reportArgument);
             //CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(dataTable, CUSTOMRP.BLL.TemplateManager.STRFIRST_SHEETNAME, out errmsg, pathtemplate);
         }
 

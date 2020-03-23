@@ -387,6 +387,16 @@ namespace Common
             return str;
         }
 
+        public static DataTable GetDatatableSingleValue(string value)
+        {
+            DataTable databable_books = new DataTable("SingleValue");
+            databable_books.Columns.Add("value", Type.GetType("System.String"));
+            DataRow newRow;
+            newRow = databable_books.NewRow();
+            newRow["value"] = value;
+            databable_books.Rows.Add(newRow);
+            return databable_books;
+        }
         #endregion
 
 

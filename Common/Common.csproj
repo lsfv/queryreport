@@ -152,7 +152,7 @@
     <Compile Include="IncCommon.cs" />
     <Compile Include="IncFile.cs" />
     <Compile Include="IncJs.cs" />
-    <Compile Include="incOpenXml.cs" />
+    <Compile Include="MyExcelFile.cs" />
     <Compile Include="IncPDF.cs" />
     <Compile Include="incUnitTest.cs" />
     <Compile Include="IncUpFile.cs" />
