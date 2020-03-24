@@ -50,7 +50,8 @@ namespace CUSTOMRP.BLL
                     //get pre styles of data.
                     Dictionary<uint, Dictionary<string, uint>> tableStyle = GetTableDataStyles(myexcel, startRowIndex, endRowIndex, (UInt32)dataTable.Rows.Count);
                     IEnumerable<Row> rows_bottom = myexcel.GetRangeRows(STRFIRST_SHEETNAME, endRowIndex + 1, UInt32.MaxValue);
-                    
+
+                   
 
                     //reomve pre data;
                     myexcel.RemoveRows(STRFIRST_SHEETNAME, startRowIndex, endRowIndex);

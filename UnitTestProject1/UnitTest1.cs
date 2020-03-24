@@ -267,10 +267,9 @@ namespace UnitTestProject1
         public void temp_dictonary()
         {
 
-            string refa= "123";
- 
-
-            Debug.Print("left:"+RemoveLastNumber(refa));
+            Row row = new Row();
+            row.ToString();
+            
         }
 
         private string RemoveLastNumber(string str)
