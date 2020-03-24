@@ -164,6 +164,7 @@
     <Content Include="Admin\UserNew.aspx" />
     <Content Include="Admin\ViewList.aspx" />
     <Content Include="Admin\ViewNew.aspx" />
+    <Content Include="Admin\ViewNew2.aspx" />
     <Content Include="Assets\fonts\bootstrap\glyphicons-halflings-regular.svg" />
     <Content Include="Assets\fonts\fontawesome-webfont.svg" />
     <Content Include="Assets\fonts\montserrat-bold-webfont.svg" />
@@ -794,6 +795,13 @@
     </Compile>
     <Compile Include="Admin\ViewNew.aspx.designer.cs">
       <DependentUpon>ViewNew.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\ViewNew2.aspx.cs">
+      <DependentUpon>ViewNew2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\ViewNew2.aspx.designer.cs">
+      <DependentUpon>ViewNew2.aspx</DependentUpon>
     </Compile>
     <Compile Include="Code\AppNum.cs" />
     <Compile Include="Code\AppHelper.cs" />

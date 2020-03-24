@@ -4,7 +4,8 @@
         TABLE[data-ctrlname=gvFields] { margin-bottom:0; }
     </style>
     <script type="text/javascript">
-        function saveColData() {
+        function saveColData()
+        {
             var result = false;
             var tbl = jQuery("TABLE[data-ctrlname=gvFields]");
             var i, tr;

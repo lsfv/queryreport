@@ -145,30 +145,23 @@
     <script src="../assets/javascripts/demo.js" type="text/javascript"></script><%--加载颜色的选择和菜单--%>
     <!-- / common-->
     <script src="../assets/javascripts/plugins/common/moment.min.js" type="text/javascript"></script>
-
     <!-- / modernizr 帮助模块，js程序运行的时候它会在html元素上添加一批CSS的class名称，这些class名称标记当前浏览器支持哪些特性和不支持哪些特性 -->
     <script src="../assets/javascripts/plugins/modernizr/modernizr.min.js" type="text/javascript"></script>
     <script src="../assets/javascripts/plugins/retina/retina.js" type="text/javascript"></script><!-- / retina 视网膜-->
     <script src="../assets/javascripts/plugins/bootbox/bootbox.min.js" type="text/javascript"></script><!-- 模态窗口 -->
     <script src="../assets/javascripts/plugins/slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>
     <script src="../assets/javascripts/plugins/timeago/jquery.timeago.js" type="text/javascript"></script><!--  时间转换 “2分钟之前”或“4天前 -->
-
-
     <script src="../assets/javascripts/plugins/select2/select2.js" type="text/javascript"></script><!--  下拉框美化 -->
     <script src="../assets/javascripts/plugins/input_mask/bootstrap-inputmask.min.js" type="text/javascript"></script><!--  输入框限制 -->
     <script src="../assets/javascripts/plugins/bootstrap_maxlength/bootstrap-maxlength.min.js" type="text/javascript"></script><!-- 文本字数限制提示 -->
     <script src="../assets/javascripts/plugins/charCount/charCount.js" type="text/javascript"></script><!-- 文本字数限制提示 -->
-
     <script src="../assets/javascripts/plugins/bootstrap_switch/bootstrapSwitch.min.js" type="text/javascript"></script><!--  类似cs程序的开关按钮 -->
-
     <script src="../assets/javascripts/plugins/typeahead/typeahead.js" type="text/javascript"></script><!--  自动输入 -->
     <script src="../assets/javascripts/plugins/pwstrength/pwstrength.js" type="text/javascript"></script><!--  密码强度评估 -->
     <script src="../assets/javascripts/plugins/datatables/jquery.dataTables.min.js" type="text/javascript"></script><!--  表格插件 -->
     <script src="../assets/javascripts/plugins/datatables/jquery.dataTables.columnFilter.js" type="text/javascript"></script><!--  表格插件 -->
     <script src="../assets/javascripts/plugins/datatables/dataTables.overrides.js" type="text/javascript"></script><!--  表格插件 -->
-
     <script src="../assets/javascripts/plugins/bootstrap_daterangepicker/bootstrap-daterangepicker.js" type="text/javascript"></script>
-    <%--<script src="../assets/javascripts/plugins/bootstrap_colorpicker/bootstrap-colorpicker.min.js" type="text/javascript"></script>--%>
     <script src="../assets/javascripts/plugins/bootstrap_colorpicker/bootstrap-colorpicker2.min.js" type="text/javascript"></script>
     <script src="../assets/javascripts/plugins/bootstrap_colorpicker/bootstrap-colorpicker-plus.min.js" type="text/javascript"></script>
     <script src="../assets/javascripts/plugins/bootstrap_datetimepicker/bootstrap-datetimepicker.js" type="text/javascript"></script>
@@ -196,169 +189,4 @@
         }
     </script>
 </body>
-    <%-- <script src="../assets/javascripts/plugins/mention/mention.min.js" type="text/javascript"></script> 不知道做什么的。好像是给各种不同的控件添加一些信息--%>
-    <%-- <script src="../assets/javascripts/plugins/fileinput/bootstrap-fileinput.js" type="text/javascript"></script> <!--  文件长传 -->--%>
-    <%--<script src="../assets/javascripts/plugins/fullcalendar/fullcalendar.min.js" type="text/javascript"></script><!-- 大日历 -->--%>
-    <%--    <script src="../assets/javascripts/plugins/autosize/jquery.autosize-min.js" type="text/javascript"></script><!--  自曾长文本输入框 -->--%>
-    <%--    <script src="../assets/javascripts/plugins/common/wysihtml5.min.js" type="text/javascript"></script>
-    <script src="../assets/javascripts/plugins/common/bootstrap-wysihtml5.js" type="text/javascript"></script>编辑器--%>
-    <%--    <!-- / START - page related files and scripts [optional] excanvas：生成静态统计图，flot：绘图库 ，有需要的地方单独加载吧。-->
-    <script src="../assets/javascripts/plugins/flot/excanvas.js" type="text/javascript"></script>
-    <script src="../assets/javascripts/plugins/flot/flot.min.js" type="text/javascript"></script>
-    <script src="../assets/javascripts/plugins/flot/flot.resize.js" type="text/javascript"></script>--%>
-    
-
-
-    <%--显示
-    MESSENGER
-    替换alert()消息和其他用户交互通知。
-    JQUERY.TOCIFY.JS
-    可以用Bootstrap或jQueryUI主题的Jquery表格组件。
-    BOOTSTRAP-PROMPTS
-    实现替换alert(), prompt(),confirm()通知的Bootstrap组件。
-    SUBNAV FOR BOOTSTRAP 2
-    一个展示如何在Bootstrap导航菜单中实现SubNavs的例子。
-    JQUERY-BOOTSTRAP-SCRIPTING
-    基于BootStrap实现的JQuery对话框插件。
-    BOOTSTRAP-LIGHTBOX
-    Bootstrap遮罩层（lightbox）对话框实现。
-    MENTION.JS
-    轻量级的实现类似微博@username功能的输入感知插件。
-    PINES NOTIFY
-    Bootstrap或jQuery UI适用的JavaScript通知。
-    ACC-WIZARD
-    基于Bootstrap的“手风琴”排版向导。
-    JQUERY-BOOTSTRAP-PAGINATION
-    一个简单但功能全面的分页组件，基于jQuery，同时支持Bootstrap。
-    BANGBANG TAG INPUT
-    标签（tags）输入提示的JQuery插件。
-    TOCIFY
-    Bootstrap风格的jQuery表格。
-    SORICH87/BOOTSTRAP-TOUR
-    快速构建产品介绍的Bootstrap提示框（类似软件启动时的“每日一问”）。
-    BOOTSTRAP-TAGS
-    顾名思义，Bootstrap标签（tags）功能的实现。
-    BOOTSTRAP ARROWS
-    基于Bootstrap实现各种箭头图标。
-    BOOTSTRAP-MODAL
-    Bootstrap消息提示对话框的扩展。
-    PILLBOX FUEL UX
-    胶囊盒效果，经常用于tags显示与控制。
-    DATAGRID FUEL UX
-    一个可以编辑、搜索、排序的表格组件，非常大方漂亮（Fuel UX的其他扩展也很不错）。
-    BOOTMETRO
-    Windows8的Metro效果实现。
-    BOOTSTRAP TOUR
-    另一款实现网站介绍（“每日一问”等）的Bootstrap提示框。
-    JQUERY-SLIMSCROLL
-    局部带透明滚动条DIV的效果。
-    BOOTSTRAP-PROGRESSBAR
-    多种颜色的Bootstrap进度条（貌似新版Bootstrap已实现此功能）。
-    BOOTSTRAP HTML5 VIDEO PLAYER
-    基于Bootstrap UI的HTML5视频播放器插件。
-    BOOTPAG
-    动态分页功能实现。
-    BOOTSTRAP-IMAGE-GALLERY
-    Bootstrap模态对话框扩展，可用于图片展示站。
-    TABLECLOTH.JS
-    表格扩展，可以进行改变主题、排序等操作。
-    PAGEDOWN-BOOTSTRAP
-    一个简单的即时显示编辑框。
-    MENU DROPDOWN ON HOVER PLUGIN
-    自动展开菜单的下拉菜单实现，可以很好地适应移动设备。
-    CSS3 MICROSOFT MODERN BUTTONS
-    又一款Win8的Metro样式实现。
-    LIGHTBOX
-    遮罩层扩展，可用于图片展示或登录框。
-    D3 BOOTSTRAP POPOVERS
-    BootStrap实现的圆点，可用来表述数值大小。
-    TWITTER BOOTSTRAP NOTIFICATIONS, FROM NIJIKO YONSKAI
-    提示框扩展。
-    BOOTBOX.JS – ALERT, CONFIRM AND FLEXIBLE DIALOGS FOR TWITTER’S BOOTSTRAP FRAMEWORK
-    Bootbox.js是一个小巧的JavaScript库，允许你生成一个程序化的对话框.
-
-     表单
-
-    BOOTSTRAP-ACKNOWLEDGEINPUTS
-    带验证提示的输入框改进。
-    TREE.JS
-    出自FUEL UX的树形列表组件。
-    WIZARD.JS
-    出自FUEL UX的step by step导航条。
-    MAGICSUGGEST
-    具有联想功能的输入框，可用于搜索提示。
-    BOOTSTRAP-DUALLISTBOX
-    Bootstrap实现的双重列表框组件（左右栏内容移动），适用于移动设备。
-    JQUERY-SIMPLECOLORPICKER
-    jQuery颜色选择（吸管）功能。
-    TWBOOTSTRAPJQVALPOPOVER
-    Bootstrap提示框实现Jquery验证提示
-    BOOTSTRAP-WYSIHTML5-RAILS
-    一款基于Bootstrap的“所见即所得”在线编辑器。
-    MY-BOOTSTRAP-DATETIMEPICKER
-    漂亮的日期/时间选择组件
-    GOOGLE FONT SELECT
-    基于Google Font API的文字选择下拉框
-    BOOTSTRAP-DATETIMEPICKER
-    又一款不错的日期选择组件
-    BOOTSTRAP-MULTISELECT
-    基于JQuery的多选下拉菜单组件
-    JQRANGESLIDER
-    范围滑动选择的jQuery插件
-    JASNY BOOTSTRAP
-    Bootstrap扩展，增强了很多功能，如输入框、表单、图标等，值得一看。
-    JQUERY-ADDRESSPICKER
-    地址选择输入框（支持google maps）。
-    JQUERY FILE UPLOAD DEMO
-    JQuery文件上传组件，支持多文件选取和进度条。
-    BOOTSTRAP CONTEXTMENU
-    基于BootStrap实现的右键菜单。
-    SELECTBOXIT
-    BootStrap下拉菜单美化改进
-    SPINNER – FUEL UX
-    数字输入框
-    SEARCH FUEL UX
-    搜索框
-    BOOTSTRAP-WYSIHTML5
-    支持HTML5的“所见即所得”在线编辑器
-    SELECTBOX FORM HELPER
-    下拉菜单增强美化
-    TYPEAHEAD EXTENSION
-    支持json数据回调的下拉菜单增强
-    FINE UPLOADER
-    一款界面友好的上传组件。
-    X-EDITABLE
-    点击链接即可编辑的编辑组件（结合ajax实现页面无刷新）。
-    JQBOOTSTRAPVALIDATION
-    BootStrap可用的JQuery验证插件。
-    PRETTYCHECKABLE
-    美化默认的单选和多选选择框。
-    CHOSEN-LESS-BOOTSTRAP
-    美化选择组件，如下拉菜单，输入框等。
-    BOOTSTRAP AJAX
-    基于Ajax的快速输入框
-    BOOTSTRAP TOGGLE BUTTONS
-    ON/OFF切换，类似IOS上的UI风格
-
-     输入
-
-    TIMEPICKER
-    界面很新颖的时间选择组件
-    COMBOBOX FUEL UX
-    FUEL UX出品的美化下拉菜单
-    TIMEZONE FORM HELPERS
-    时区选择下拉菜单
-    LANGUAGES FORM HELPER
-    语言选择下拉菜单
-    PHONE FORM HELPER
-    手机号码输入框
-    COUNTRIES FORM HELPER
-    国家选择下拉菜单
-    DATE RANGE PICKER
-    日期段选择组件
-    DATEPICKER FOR BOOTSTRAP
-    日期选择组件
-    COLORPICKER FOR BOOTSTRAP
-    又一款颜色选择器（吸管），效果很棒--%>
-
 </html>
