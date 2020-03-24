@@ -215,9 +215,11 @@ namespace UnitTestProject1
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(record1);
             string errmsg;
             CUSTOMRP.BLL.TemplateManager.ReportArgument reportArgument = new CUSTOMRP.BLL.TemplateManager.ReportArgument();
-            reportArgument.columnsIndex_total = new List<int>();
-            reportArgument.columnsIndex_total.Add(0);
-            reportArgument.columnsIndex_total.Add(3);
+
+            List<int> indexs= new List<int>();
+            indexs.Add(0);
+            indexs.Add(3);
+            CUSTOMRP.BLL.TemplateManager.ReportArgument_ReportStatistics_total reportStatistics = new CUSTOMRP.BLL.TemplateManager.ReportArgument_ReportStatistics_total(indexs);
             CUSTOMRP.BLL.TemplateManager.GenerateXlsxExcel(dataTable, out errmsg,pathtemplate, reportArgument);
         }
 
@@ -230,9 +232,10 @@ namespace UnitTestProject1
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(record2);
             string errmsg;
             CUSTOMRP.BLL.TemplateManager.ReportArgument reportArgument = new CUSTOMRP.BLL.TemplateManager.ReportArgument();
-            reportArgument.columnsIndex_total = new List<int>();
-            reportArgument.columnsIndex_total.Add(0);
-            reportArgument.columnsIndex_total.Add(3);
+            CUSTOMRP.BLL.TemplateManager.ReportArgument_ReportStatistics reportStatistics = new CUSTOMRP.BLL.TemplateManager.ReportArgument_ReportStatistics();
+            reportStatistics.columnsIndex = new List<int>();
+            reportStatistics.columnsIndex.Add(0);
+            reportStatistics.columnsIndex.Add(3);
             CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(dataTable, out errmsg, pathtemplate, reportArgument);
             //CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(dataTable, CUSTOMRP.BLL.TemplateManager.STRFIRST_SHEETNAME, out errmsg, pathtemplate);
         }

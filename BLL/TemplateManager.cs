@@ -192,88 +192,43 @@ namespace CUSTOMRP.BLL
 
         public class ReportArgument
         {
-            public IList<int> columnsIndex_total;
+            public ReportArgument_ReportStatistics Statistics_total;
         }
 
-        public abstract class FillReport
+        public abstract class ReportArgument_ReportStatistics
         {
-            protected Common.MyExcelFile myExcelFile;
-            protected ReportBaseArgument reportBaseArgument;
-            protected ReportArgument reportArgument;
-            
-            public FillReport(Common.MyExcelFile file, ReportArgument argument, ReportBaseArgument BaseArgument)
-            {
-                myExcelFile = file;
-                reportArgument = argument;
-                reportBaseArgument = BaseArgument;
-            }
-
-            public abstract Common.MyExcelFile FillSomeData();
+            public string name;
+            public IList<int> columnsIndex;
         }
 
-        public class FillReport_Table : FillReport
+        public class ReportArgument_ReportStatistics_total:ReportArgument_ReportStatistics
         {
-            public FillReport_Table(MyExcelFile file, ReportArgument argument, ReportBaseArgument BaseArgument) : base(file, argument, BaseArgument)
-            {}
-
-            public override MyExcelFile FillSomeData()
+            private ReportArgument_ReportStatistics_total() { }
+            public ReportArgument_ReportStatistics_total(IList<int>  indexs)
             {
-                myExcelFile.SetOrReplaceRows(reportBaseArgument.writingSheetName,reportBaseArgument.writingRowIndex, 2, reportBaseArgument.dataTable, reportBaseArgument.tableStyle);
-                reportBaseArgument.writingRowIndex += (uint)reportBaseArgument.dataTable.Rows.Count+1;
-                return myExcelFile;
+                name = "Total";
+                columnsIndex = indexs;
             }
         }
 
-        public class FillReport_subTotal : FillReport
+        public class ReportArgument_ReportStatistics_Avg : ReportArgument_ReportStatistics
         {
-            public FillReport_subTotal(MyExcelFile file, ReportArgument argument, ReportBaseArgument BaseArgument) : base(file, argument, BaseArgument)
-            {}
-
-            public override MyExcelFile FillSomeData()
+            private ReportArgument_ReportStatistics_Avg() { }
+            public ReportArgument_ReportStatistics_Avg(IList<int> indexs)
             {
-                if (reportArgument != null && reportArgument.columnsIndex_total != null)
-                {
-                    reportBaseArgument.writingRowIndex++;//space
-                    for (int i = 0; i < reportArgument.columnsIndex_total.Count; i++)
-                    {
-                        int columnIndex = reportArgument.columnsIndex_total[i];
-                        string tempTotal = GetTotal(reportBaseArgument.dataTable, columnIndex);
-                        DataTable table = Common.MyExcelFile.GetDatatableSingleValue(tempTotal);//todo need  reconstrct,data tabie is too heigh, use string?
-                        myExcelFile.SetOrUpdateCellValue(reportBaseArgument.writingSheetName, reportBaseArgument.writingRowIndex, (uint)columnIndex + 1 + 1, table.Rows[0], myExcelFile.defaultCellStyle.blackIndex);
-                    }
-
-                    string totolFlag = myExcelFile.GetCellRealString(STRFIRST_SHEETNAME, reportBaseArgument.writingRowIndex, 2);
-                    if (string.IsNullOrWhiteSpace(totolFlag))
-                    {
-                        totolFlag = "Total";
-                    }
-                    else
-                    {
-                        totolFlag = "Total:" + totolFlag;
-                    }
-                    DataTable table2 = Common.MyExcelFile.GetDatatableSingleValue(totolFlag);//todo need  reconstrct,data tabie is too heigh, use string?
-                    myExcelFile.SetOrUpdateCellValue(reportBaseArgument.writingSheetName, reportBaseArgument.writingRowIndex, (uint)2, table2.Rows[0], myExcelFile.defaultCellStyle.blackIndex);
-
-
-                    reportBaseArgument.writingRowIndex++;
-                }
-                return myExcelFile;
+                name = "AVG";
+                columnsIndex = indexs;
             }
+        }
 
-            public static string GetTotal(DataTable table, int columnIndex)
+        public class ReportArgument_ReportStatistics_count : ReportArgument_ReportStatistics
+        {
+            private ReportArgument_ReportStatistics_count() { }
+            public ReportArgument_ReportStatistics_count(IList<int> indexs)
             {
-                decimal resd = 0;
-                try
-                {
-                    foreach (DataRow row in table.Rows)
-                    {
-                        resd +=decimal.Parse(row[columnIndex].ToString());
-                    }
-                }
-                catch { }
-                return resd.ToString();
+                name = "count";
+                columnsIndex = indexs;
             }
-
         }
         #endregion
     }

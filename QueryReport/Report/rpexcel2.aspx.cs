@@ -269,7 +269,9 @@ namespace QueryReport
                                 List<string> subTotals = container.sumColumn.Select(x => x.ColumnName).ToList();
                                 List<int> subTotalIndexs = WebHelper.getColumnIndexByColumnName(subTotals, this.rpdt.Columns);
                                 CUSTOMRP.BLL.TemplateManager.ReportArgument reportArgument = new CUSTOMRP.BLL.TemplateManager.ReportArgument();
-                                reportArgument.columnsIndex_total = subTotalIndexs;
+                                reportArgument.Statistics_total = new CUSTOMRP.BLL.TemplateManager.ReportArgument_ReportStatistics();
+                                reportArgument.Statistics_total.columnsIndex = subTotalIndexs;
+                                reportArgument.Statistics_total.name = "Total";
 
                                 isSuccess = CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(this.rpdt, out errMsg, pivotablePath, reportArgument);
                             }
