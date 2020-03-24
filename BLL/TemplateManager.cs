@@ -38,7 +38,7 @@ namespace CUSTOMRP.BLL
 
         public static bool UpdataData4XlsxExcel(DataTable dataTable, out string errMsg, string filePath, ReportArgument reportArgument)
         {
-            //0. find range of data  1.remove pre date 2. reset range for ready to insert data  3.put newdata.
+            //0. find range of data  1.remove pre date and bottom 2.insert data 3 append pre bottom 4.update pivotalbe.
             bool res = true;
             using (Common.MyExcelFile myexcel = new Common.MyExcelFile(filePath, out errMsg))
             {
@@ -49,26 +49,28 @@ namespace CUSTOMRP.BLL
                 {
                     //get pre styles of data.
                     Dictionary<uint, Dictionary<string, uint>> tableStyle = GetTableDataStyles(myexcel, startRowIndex, endRowIndex, (UInt32)dataTable.Rows.Count);
+                    //get pre buttom rows and save.
                     IEnumerable<Row> rows_bottom = myexcel.GetRangeRows(STRFIRST_SHEETNAME, endRowIndex + 1, UInt32.MaxValue);
-
-                   
-
-                    //reomve pre data;
-                    myexcel.RemoveRows(STRFIRST_SHEETNAME, startRowIndex, endRowIndex);
-
-                    //reset range for inserting data
-                    int deleteCount = (int)(endRowIndex - startRowIndex + 1);
-                    int insertCount = dataTable == null ? 1 : dataTable.Rows.Count + 1;
-                    int offsetCount = insertCount - deleteCount;
-                    if (reportArgument.columnsIndex_total != null)//todo it is  bad,because of hardcode.
+                    List<string> bottomRows = new List<string>();
+                    foreach (Row row in rows_bottom)
                     {
-                        offsetCount += 2;
+                        bottomRows.Add(row.OuterXml);
                     }
-                    Common.MyExcelFile.updateRowIndexAndCellReference(rows_bottom, offsetCount);
+                   
+                    //reomve all rows begin from data
+                    myexcel.RemoveRows(STRFIRST_SHEETNAME, startRowIndex, UInt32.MaxValue);
 
                     //insert new data;
                     ReportBaseArgument baseArgument = new ReportBaseArgument(startRowIndex, STRFIRST_SHEETNAME, dataTable, tableStyle);
                     InsertDataWithReprtArgument(myexcel,reportArgument,baseArgument);
+
+                    //append pre bottom
+                    foreach (string strRow in bottomRows)
+                    {
+                        Row newRow = new Row(strRow);
+                        myexcel.AppendRowAndupdateRowReference(STRFIRST_SHEETNAME, newRow, baseArgument.writingRowIndex, null);
+                        baseArgument.writingRowIndex++;
+                    }
 
                     //update pivotTable
                     string startRef = Common.MyExcelFile.GetCellReference((uint)2, startRowIndex);

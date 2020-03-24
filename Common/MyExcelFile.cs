@@ -84,6 +84,13 @@ namespace Common
             SheetData sheetData = getWorksheet( sheetName).Elements<SheetData>().First();
             return SetOrReplaceRow(sheetData, rowNumber, columnNumber, dataRow, defaultCellStyle, rowStyle);
         }
+        public Row AppendRowAndupdateRowReference(string sheetName, Row newRow,  uint newRowIndex,  Dictionary<string, uint> rowStyle = null)
+        {
+            SheetData sheetData = getWorksheet(sheetName).Elements<SheetData>().First();
+            updateRowIndexAndCellReferenceToNewIndex(newRow, newRowIndex);
+            sheetData.Append(newRow);//todo:装载数据7/10的时间耗费在这里。需要优化！如果是大数据插入，应该创建大量row，再使用一次append或其他插入函数。
+            return newRow;
+        }
 
         //new and uupdate rows with table
         public bool SetOrReplaceRows(string sheetName, UInt32 rowNumber, UInt32 columnNumber, DataTable dataTable,Dictionary<UInt32,Dictionary<string,UInt32>> rowsSytles)
@@ -355,6 +362,7 @@ namespace Common
             }
             return styles;
         }
+
         public static void updateRowIndexAndCellReference(IEnumerable<Row> rows, int offsetIndex)//行变化行号后，需要修改row和cell的行号。
         {
             foreach (Row row in rows)
@@ -371,6 +379,21 @@ namespace Common
                 }
             }
         }
+
+        public static void updateRowIndexAndCellReferenceToNewIndex(Row row, uint newIndex)
+        {
+            uint preIndex = row.RowIndex;
+            row.RowIndex = newIndex;
+            string preIndexStr = preIndex.ToString();
+            string nowIndexStr = row.RowIndex.ToString();
+            int preIndexStrLength = preIndexStr.Length;
+            var allcells = row.Elements<Cell>();
+            foreach (Cell cell in allcells)
+            {
+                cell.CellReference = cell.CellReference.Value.Replace(preIndexStr, "") + nowIndexStr;
+            }
+        }
+
         public static string RemoveLastNumber(string str)
         {
             while (true)
