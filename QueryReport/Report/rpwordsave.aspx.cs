@@ -363,19 +363,11 @@ namespace QueryReport
             {
                 // This is normal for Server.Transfer()
             }
-#if DEBUG
             catch (Exception ex)
             {
                 Debug.WriteLine(ex);
                 throw;
             }
-#else
-            catch (Exception ex)
-            {
-                Common.JScript.AlertAndRedirect("tEST", "rplist.aspx"); //++
-                Response.End();
-            }
-#endif
         }
 
         public void btnBack_Click(object sender, EventArgs e)

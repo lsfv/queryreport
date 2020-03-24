@@ -17,14 +17,14 @@ using System.Linq;
 
 namespace Common
 {
-    public class MyExcelFile :IDisposable
+    public class incOpenXml :IDisposable
     {
         private SpreadsheetDocument document = null;
         public DefaultCellStyle defaultCellStyle = new DefaultCellStyle(0,0,0);
 
         #region public function :为什么public 简单包一个静态方法?主要是因为想避免后期维护改的逻辑混乱,让实际方法设为static,每个方法尽量独立的，减低耦合度,但又为了使用方便,用public 包一下, 非常好的一个策略.
         //open file and create
-        public MyExcelFile(string filePath_load,out string errMsg)
+        public incOpenXml(string filePath_load,out string errMsg)
         {
             errMsg = "";
             if (File.Exists(filePath_load) && Path.GetExtension(filePath_load)==".xlsx")
@@ -44,7 +44,7 @@ namespace Common
             }
         }
 
-        public MyExcelFile(string filePath_create,bool overWirte,string defaultSheetName,out string myerrmsg)
+        public incOpenXml(string filePath_create,bool overWirte,string defaultSheetName,out string myerrmsg)
         {
             myerrmsg = "";
             if (Path.GetExtension(filePath_create) != ".xlsx")
@@ -100,7 +100,7 @@ namespace Common
             {
                 uint writingGuard = rowNumber;
                 //start to set cell value with column name.
-                DataTable columnsTable = Common.MyExcelFile.GetColumnsNames(dataTable);
+                DataTable columnsTable = Common.incOpenXml.GetColumnsNames(dataTable);
                 if (rowsSytles != null && rowsSytles.Keys.Contains(writingGuard))
                 {
                     SetOrReplaceRow(sheetName, writingGuard, columnNumber, columnsTable.Rows[0], rowsSytles[writingGuard]);
@@ -354,7 +354,7 @@ namespace Common
                     if (!string.IsNullOrWhiteSpace(cell.CellReference) && cell.StyleIndex != null)
                     {
                         string newReference = cell.CellReference;
-                        newReference = Common.MyExcelFile.RemoveLastNumber(newReference);
+                        newReference = Common.incOpenXml.RemoveLastNumber(newReference);
                         newReference += newRowIndex;
                         styles.Add(newReference, cell.StyleIndex);
                     }
@@ -554,7 +554,7 @@ namespace Common
         {
             Cell res = null;
             var rows = sheetData.Elements<Row>().Where(x => x.RowIndex == rowNumber);
-            if (rows != null)
+            if (rows != null && rows.Count()>0)
             {
                 var row = rows.First();
                 var cells = row.Elements<Cell>().Where(x => x.CellReference == GetCellReference(columnNumber, rowNumber));

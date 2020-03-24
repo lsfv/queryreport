@@ -207,20 +207,33 @@ namespace UnitTestProject1
             }
         }
 
-
         //null:nothing .0:空数据，只有字段名，start .end 在一起  1: two records. 2 :three records. 1000:1001 records
         [TestMethod]
         public void templateTest_create()
         {
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(record1);
             string errmsg;
-            CUSTOMRP.BLL.TemplateManager.ReportArgument reportArgument = new CUSTOMRP.BLL.TemplateManager.ReportArgument();
+            CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisticInfo reportStatisticInfo = new CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisticInfo();
 
-            List<int> indexs= new List<int>();
-            indexs.Add(0);
-            indexs.Add(3);
-            CUSTOMRP.BLL.TemplateManager.ReportArgument_ReportStatistics_total reportStatistics = new CUSTOMRP.BLL.TemplateManager.ReportArgument_ReportStatistics_total(indexs);
-            CUSTOMRP.BLL.TemplateManager.GenerateXlsxExcel(dataTable, out errmsg,pathtemplate, reportArgument);
+            List<int> TotalIndex= new List<int>();
+            TotalIndex.Add(15);
+            reportStatisticInfo.Statistics_total = new CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisitc_Total(TotalIndex);
+
+            CUSTOMRP.BLL.ExcelGeneraterHelper.GenerateXlsxExcel(dataTable, out errmsg,pathtemplate, reportStatisticInfo);
+        }
+
+        //null:nothing .0:空数据，只有字段名，start .end 在一起  1: two records. 2 :three records. 1000:1001 records
+        [TestMethod]
+        public void templateTest_create2()
+        {
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(record1);
+            string errmsg;
+            CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisticInfo reportStatisticInfo = new CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisticInfo();
+
+            List<int> indexs = new List<int>();
+            reportStatisticInfo.Statistics_total = new CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisitc_Total(indexs);
+
+            CUSTOMRP.BLL.ExcelGeneraterHelper.GenerateXlsxExcel(dataTable, out errmsg, pathtemplate, reportStatisticInfo);
         }
 
         //pre :0 ,1,2,1000.
@@ -231,13 +244,14 @@ namespace UnitTestProject1
         {
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(record2);
             string errmsg;
-            CUSTOMRP.BLL.TemplateManager.ReportArgument reportArgument = new CUSTOMRP.BLL.TemplateManager.ReportArgument();
-            CUSTOMRP.BLL.TemplateManager.ReportArgument_ReportStatistics reportStatistics = new CUSTOMRP.BLL.TemplateManager.ReportArgument_ReportStatistics();
-            reportStatistics.columnsIndex = new List<int>();
-            reportStatistics.columnsIndex.Add(0);
-            reportStatistics.columnsIndex.Add(3);
-            CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(dataTable, out errmsg, pathtemplate, reportArgument);
-            //CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(dataTable, CUSTOMRP.BLL.TemplateManager.STRFIRST_SHEETNAME, out errmsg, pathtemplate);
+            CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisticInfo reportArgument = new CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisticInfo();
+
+            List<int> indexs = new List<int>();
+            indexs.Add(0);
+            indexs.Add(3);
+            reportArgument.Statistics_total = new CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisitc_Total(indexs);
+
+            CUSTOMRP.BLL.ExcelGeneraterHelper.UpdataData4XlsxExcel(dataTable, out errmsg, pathtemplate, reportArgument);
         }
 
     

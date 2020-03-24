@@ -268,12 +268,11 @@ namespace QueryReport
 
                                 List<string> subTotals = container.sumColumn.Select(x => x.ColumnName).ToList();
                                 List<int> subTotalIndexs = WebHelper.getColumnIndexByColumnName(subTotals, this.rpdt.Columns);
-                                CUSTOMRP.BLL.TemplateManager.ReportArgument reportArgument = new CUSTOMRP.BLL.TemplateManager.ReportArgument();
-                                reportArgument.Statistics_total = new CUSTOMRP.BLL.TemplateManager.ReportArgument_ReportStatistics();
-                                reportArgument.Statistics_total.columnsIndex = subTotalIndexs;
-                                reportArgument.Statistics_total.name = "Total";
+                                CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisticInfo reportArgument = new CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisticInfo();
+                                reportArgument.Statistics_total = new CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisitc_Total(subTotalIndexs);
 
-                                isSuccess = CUSTOMRP.BLL.TemplateManager.UpdataData4XlsxExcel(this.rpdt, out errMsg, pivotablePath, reportArgument);
+
+                                isSuccess = CUSTOMRP.BLL.ExcelGeneraterHelper.UpdataData4XlsxExcel(this.rpdt, out errMsg, pivotablePath, reportArgument);
                             }
                             else//no template
                             {
@@ -286,10 +285,10 @@ namespace QueryReport
 
                                     List<string> subTotals= container.sumColumn.Select(x => x.ColumnName).ToList();
                                     List<int> subTotalIndexs = WebHelper.getColumnIndexByColumnName(subTotals, this.rpdt.Columns);
-                                    CUSTOMRP.BLL.TemplateManager.ReportArgument reportArgument = new CUSTOMRP.BLL.TemplateManager.ReportArgument();
-                                    reportArgument.columnsIndex_total = subTotalIndexs;
+                                    CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisticInfo reportArgument = new CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisticInfo();
+                                    reportArgument.Statistics_total = new CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisitc_Total(subTotalIndexs);
 
-                                    isSuccess = CUSTOMRP.BLL.TemplateManager.GenerateXlsxExcel(this.rpdt, out errMsg, pivotablePath, reportArgument);
+                                    isSuccess = CUSTOMRP.BLL.ExcelGeneraterHelper.GenerateXlsxExcel(this.rpdt, out errMsg, pivotablePath, reportArgument);
                                 }
                                 else
                                 {
@@ -407,11 +406,13 @@ namespace QueryReport
             {
                CUSTOMRP.BLL.AppHelper.LogException(ex, me.ID, myReport.ID, myReport.REPORTNAME); // myReport.REPORTNAME
                 this.lblJavascript.Text = WebHelper.GetAlertJS(ex.Message);
+                throw ex;
             }
             catch (Exception ex)
             {
                 CUSTOMRP.BLL.AppHelper.LogException(ex, me.ID, myReport.ID, myReport.REPORTNAME); // myReport.REPORTNAME
                 this.lblJavascript.Text = WebHelper.GetAlertJS(ex.ToString());
+                throw ex;
             }
         }
 

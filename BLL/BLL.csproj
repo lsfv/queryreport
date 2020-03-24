@@ -123,8 +123,8 @@
     <Compile Include="SENSITIVITYLEVEL.cs" />
     <Compile Include="SOURCEVIEWCOLUMN.cs" />
     <Compile Include="SOURCEVIEW.cs" />
-    <Compile Include="TemplateManager.cs" />
-    <Compile Include="TemplateManager_FillReport.cs" />
+    <Compile Include="ExcelGeneraterHelper.cs" />
+    <Compile Include="ExcelGeneraterHelper_FillReport.cs" />
     <Compile Include="USER.cs" />
     <Compile Include="USERGROUP.cs" />
     <Compile Include="WORDFILE.cs" />
