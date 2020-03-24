@@ -75,7 +75,7 @@ namespace CUSTOMRP.BLL
                         }
 
                         //update pivotTable
-                        //todo 不能添加group信息.否则透视表就无用了. 
+                        //todo 不能添加group信息.否则透视表就无用了. 个性的数据还是透视表或其他，那里只是传输数据。
                         string startRef = Common.incOpenXml.GetCellReference((uint)2, startRowIndex);
                         string endRef = Common.incOpenXml.GetCellReference((uint)2 + (uint)excelReportInfo.dataTable.Columns.Count - 1, startRowIndex + (uint)excelReportInfo.dataTable.Rows.Count);
                         myexcel.UpdateAllPivotSource(excelReportInfo.sheetName, startRef, endRef);
