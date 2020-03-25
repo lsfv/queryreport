@@ -75,7 +75,7 @@ namespace CUSTOMRP.BLL
                         }
 
                         //update pivotTable
-                        //todo 不能添加group信息.否则透视表就无用了. 个性的数据还是透视表或其他，那里只是传输数据。
+                        //todo 不能添加group信息.否则透视表就无用了. 个性的数据还是透视表或其他，那里只是传输数据。 total 也不好做.时间格式会覆盖,处理特性太多,不好维护.
                         string startRef = Common.incOpenXml.GetCellReference((uint)2, startRowIndex);
                         string endRef = Common.incOpenXml.GetCellReference((uint)2 + (uint)excelReportInfo.dataTable.Columns.Count - 1, startRowIndex + (uint)excelReportInfo.dataTable.Rows.Count);
                         myexcel.UpdateAllPivotSource(excelReportInfo.sheetName, startRef, endRef);
@@ -160,6 +160,7 @@ namespace CUSTOMRP.BLL
         }
 
         //现在只获得了表头的样式,本意是根据现有样式,来推导完成整个新表格的样式.应该是不可能了,因为中间包含很多统计信息,无法在excel自定义信息了,所以无法推导.
+        //todo mycode is rubbish. hardcode ,badcode.
         private static Dictionary<uint, Dictionary<string, uint>> GetTableDataStyles(Common.incOpenXml myexcel, uint startRowIndex, uint lastRow, uint newDataRowCount,string sheetName)
         {
             Dictionary<uint, Dictionary<string, uint>> tableStyle = new Dictionary<uint, Dictionary<string, uint>>();
@@ -172,6 +173,23 @@ namespace CUSTOMRP.BLL
                     Dictionary<string, uint> titleStyles = Common.incOpenXml.getRowStyles(titleRow, startRowIndex);
                     tableStyle.Add(startRowIndex, titleStyles);
                 }
+
+                //Row TotalRow = myexcel.GetRow(sheetName, lastRow);
+                //bool isTotalRow = false;
+                //IEnumerable<Cell> allcells= TotalRow.Elements<Cell>();
+                //foreach (Cell cell in allcells)
+                //{
+                //    if (myexcel.GetCellRealString(cell).ToLower().Contains("total"))
+                //    {
+                //        isTotalRow = true;
+                //        break;
+                //    }
+                //}
+                //if (isTotalRow)
+                //{
+                //    Dictionary<string, uint> totalStyles = Common.incOpenXml.getRowStyles(TotalRow, startRowIndex+newDataRowCount+2);
+                //    tableStyle.Add(startRowIndex + newDataRowCount + 2, totalStyles);//badcode 2 is hardcode.
+                //}
             }
             return tableStyle;
         }

@@ -202,6 +202,90 @@ namespace UnitTestProject1
             CUSTOMRP.BLL.ExcelGeneraterHelper.GenerateXlsxExcel(path, reportInfo);
         }
 
+        //two right columns
+        [TestMethod]
+        public void TotalTest5()
+        {
+            //1.zero record. 2. one record. 3. a error record 4. a over index record.
+            DataTable dataTable1 = Common.incUnitTest.GetDatatableCustomCount(15);
+            List<int> columns = new List<int>();
+            columns.Add(0);
+            columns.Add(3);
+            CUSTOMRP.BLL.StatisticColumns totalColumns = new CUSTOMRP.BLL.StatisticColumns(CUSTOMRP.BLL.Enum_StatisitcType.Total, columns);
+            CUSTOMRP.BLL.ExcelReportInfo reportInfo = new CUSTOMRP.BLL.ExcelReportInfo(dataTable1, 1, null, totalColumns, null, null, null, null, null);
+            string path = "C:/testfile/TemplateTotal5.xlsx";
+            CUSTOMRP.BLL.ExcelGeneraterHelper.GenerateXlsxExcel(path, reportInfo);
+        }
+
+
+       
+        [TestMethod]
+        public void TotalTest2_update1()
+        {
+            //update 1.zero record. 2. one record. 3. a error record 4. a over index record.
+            DataTable dataTable1 = Common.incUnitTest.GetDatatableCustomCount(4);
+            List<int> columns = new List<int>();
+            CUSTOMRP.BLL.StatisticColumns totalColumns = new CUSTOMRP.BLL.StatisticColumns(CUSTOMRP.BLL.Enum_StatisitcType.Total, columns);
+            CUSTOMRP.BLL.ExcelReportInfo reportInfo = new CUSTOMRP.BLL.ExcelReportInfo(dataTable1, 1, null, totalColumns, null, null, null, null, null);
+            string path = "C:/testfile/TemplateTotal2.xlsx";
+            CUSTOMRP.BLL.ExcelGeneraterHelper.UpdataData4XlsxExcel(path, reportInfo);
+        }
+
+        [TestMethod]
+        public void TotalTest2_update2()
+        {
+            //update 1.zero record. 2. one record. 3. a error record 4. a over index record.
+            DataTable dataTable1 = Common.incUnitTest.GetDatatableCustomCount(4);
+            List<int> columns = new List<int>();
+            columns.Add(0);
+            CUSTOMRP.BLL.StatisticColumns totalColumns = new CUSTOMRP.BLL.StatisticColumns(CUSTOMRP.BLL.Enum_StatisitcType.Total, columns);
+            CUSTOMRP.BLL.ExcelReportInfo reportInfo = new CUSTOMRP.BLL.ExcelReportInfo(dataTable1, 1, null, totalColumns, null, null, null, null, null);
+            string path = "C:/testfile/TemplateTotal2.xlsx";
+            CUSTOMRP.BLL.ExcelGeneraterHelper.UpdataData4XlsxExcel(path, reportInfo);
+        }
+
+        [TestMethod]
+        public void TotalTest2_update3()
+        {
+            //update 1.zero record. 2. one record. 3. a error record 4. a over index record.
+            DataTable dataTable1 = Common.incUnitTest.GetDatatableCustomCount(4);
+            List<int> columns = new List<int>();
+            columns.Add(0);
+            columns.Add(1);
+            CUSTOMRP.BLL.StatisticColumns totalColumns = new CUSTOMRP.BLL.StatisticColumns(CUSTOMRP.BLL.Enum_StatisitcType.Total, columns);
+            CUSTOMRP.BLL.ExcelReportInfo reportInfo = new CUSTOMRP.BLL.ExcelReportInfo(dataTable1, 1, null, totalColumns, null, null, null, null, null);
+            string path = "C:/testfile/TemplateTotal2.xlsx";
+            CUSTOMRP.BLL.ExcelGeneraterHelper.UpdataData4XlsxExcel(path, reportInfo);
+        }
+
+        [TestMethod]
+        public void TotalTest2_update4()
+        {
+            //update 1.zero record. 2. one record. 3. a error record 4. a over index record.
+            DataTable dataTable1 = Common.incUnitTest.GetDatatableCustomCount(4);
+            List<int> columns = new List<int>();
+            columns.Add(0);
+            columns.Add(10);
+            CUSTOMRP.BLL.StatisticColumns totalColumns = new CUSTOMRP.BLL.StatisticColumns(CUSTOMRP.BLL.Enum_StatisitcType.Total, columns);
+            CUSTOMRP.BLL.ExcelReportInfo reportInfo = new CUSTOMRP.BLL.ExcelReportInfo(dataTable1, 1, null, totalColumns, null, null, null, null, null);
+            string path = "C:/testfile/TemplateTotal2.xlsx";
+            CUSTOMRP.BLL.ExcelGeneraterHelper.UpdataData4XlsxExcel(path, reportInfo);
+        }
+
+        [TestMethod]
+        public void TotalTest2_update5()
+        {
+            //update 1.zero record. 2. one record. 3. a error record 4. a over index record.
+            DataTable dataTable1 = Common.incUnitTest.GetDatatableCustomCount(4);
+            List<int> columns = new List<int>();
+            columns.Add(0);
+            columns.Add(3);
+            CUSTOMRP.BLL.StatisticColumns totalColumns = new CUSTOMRP.BLL.StatisticColumns(CUSTOMRP.BLL.Enum_StatisitcType.Total, columns);
+            CUSTOMRP.BLL.ExcelReportInfo reportInfo = new CUSTOMRP.BLL.ExcelReportInfo(dataTable1, 1, null, totalColumns, null, null, null, null, null);
+            string path = "C:/testfile/TemplateTotal2.xlsx";
+            CUSTOMRP.BLL.ExcelGeneraterHelper.UpdataData4XlsxExcel(path, reportInfo);
+        }
+
         #region old
         ////null:nothing .0:空数据，只有字段名，start .end 在一起  1: two records. 2 :three records. 1000:1001 records
         //[TestMethod]
