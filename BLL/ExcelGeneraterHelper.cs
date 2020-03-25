@@ -94,7 +94,6 @@ namespace CUSTOMRP.BLL
                     }
                     res = true;
                 }
-
             }
             return res;
         }
