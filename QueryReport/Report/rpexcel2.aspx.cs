@@ -261,8 +261,9 @@ namespace QueryReport
 
                                 List<string> subTotals = container.sumColumn.Select(x => x.ColumnName).ToList();
                                 List<int> subTotalIndexs = WebHelper.getColumnIndexByColumnName(subTotals, this.rpdt.Columns);
-
-                                //isSuccess = CUSTOMRP.BLL.ExcelGeneraterHelper.UpdataData4XlsxExcel(this.rpdt, out errMsg, pivotablePath, reportArgument);
+                                CUSTOMRP.BLL.StatisticColumns totolColumn = new CUSTOMRP.BLL.StatisticColumns(CUSTOMRP.BLL.Enum_StatisitcType.Total, subTotalIndexs);
+                                CUSTOMRP.BLL.ExcelReportInfo excelReportInfo = new CUSTOMRP.BLL.ExcelReportInfo(this.rpdt, 1, null, totolColumn, null, null, null, null, null);
+                                isSuccess = CUSTOMRP.BLL.ExcelGeneraterHelper.UpdataData4XlsxExcel( pivotablePath, excelReportInfo);
                             }
                             else//no template
                             {
@@ -275,10 +276,9 @@ namespace QueryReport
 
                                     List<string> subTotals= container.sumColumn.Select(x => x.ColumnName).ToList();
                                     List<int> subTotalIndexs = WebHelper.getColumnIndexByColumnName(subTotals, this.rpdt.Columns);
-                                    //CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisticInfo reportArgument = new CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisticInfo();
-                                    //reportArgument.Statistics_total = new CUSTOMRP.BLL.ExcelGeneraterHelper.ReportStatisitc_Total(subTotalIndexs);
-
-                                    //isSuccess = CUSTOMRP.BLL.ExcelGeneraterHelper.GenerateXlsxExcel(this.rpdt, out errMsg, pivotablePath, reportArgument);
+                                    CUSTOMRP.BLL.StatisticColumns totolColumn = new CUSTOMRP.BLL.StatisticColumns(CUSTOMRP.BLL.Enum_StatisitcType.Total, subTotalIndexs);
+                                    CUSTOMRP.BLL.ExcelReportInfo excelReportInfo = new CUSTOMRP.BLL.ExcelReportInfo(this.rpdt, 1, null, totolColumn, null, null, null, null, null);
+                                    isSuccess = CUSTOMRP.BLL.ExcelGeneraterHelper.GenerateXlsxExcel(pivotablePath, excelReportInfo);
                                 }
                                 else
                                 {

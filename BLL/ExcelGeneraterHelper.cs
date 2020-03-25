@@ -126,8 +126,8 @@ namespace CUSTOMRP.BLL
             InsertSpecialPart_Table fillReport_Table = new InsertSpecialPart_Table(excelReportInfo,file);
             list.Add(fillReport_Table);
 
-            //StatisticFuntion_subTotal fillReport_SubTotal = new StatisticFuntion_subTotal(file, argument, baseArgument);
-            //list.Add(fillReport_SubTotal);
+            InsertSpecialPart_reportTotal fillReport_SubTotal = new InsertSpecialPart_reportTotal(excelReportInfo, file);
+            list.Add(fillReport_SubTotal);
             return list;
         }
 
@@ -215,7 +215,7 @@ namespace CUSTOMRP.BLL
 
     public enum Enum_StatisitcType
     {
-        reportTotal,
+        Total,//reprotTotal
         reportAVG,
         reportCount,
         groupTotal,

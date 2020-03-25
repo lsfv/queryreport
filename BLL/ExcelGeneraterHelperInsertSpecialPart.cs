@@ -32,4 +32,59 @@ namespace CUSTOMRP.BLL
             return myExcelFile;
         }
     }
+
+
+    public class InsertSpecialPart_reportTotal : InsertSpecialPart
+    {
+        public InsertSpecialPart_reportTotal(ExcelReportInfo Info, incOpenXml file) : base(Info, file)
+        {
+        }
+
+        public override incOpenXml FillSomeData()
+        {
+            if (excelReportInfo!=null && excelReportInfo.dataTable!=null && excelReportInfo.sheetName!=null && excelReportInfo.statistic_reportTotal!=null && excelReportInfo.statistic_reportTotal.columnsIndex!=null && excelReportInfo.statistic_reportTotal.columnsIndex.Count>0)
+            {
+                excelReportInfo.writingRowIndex++;//space
+                for (int i = 0; i < excelReportInfo.statistic_reportTotal.columnsIndex.Count; i++)
+                {
+                    int columnIndex = excelReportInfo.statistic_reportTotal.columnsIndex[i];
+                    string tempTotal = GetTotal(excelReportInfo.dataTable, columnIndex);
+                    DataTable table = Common.incOpenXml.GetDatatableSingleValue(tempTotal);//todo need  reconstrct,data tabie is too heigh, use string?
+                    myExcelFile.SetOrUpdateCellValue(excelReportInfo.sheetName, excelReportInfo.writingRowIndex, (uint)columnIndex + 1 + 1, table.Rows[0], myExcelFile.defaultCellStyle.blackIndex);
+                }
+
+                string FirstColumn = myExcelFile.GetCellRealString(excelReportInfo.sheetName, excelReportInfo.writingRowIndex, 2);
+                if (string.IsNullOrWhiteSpace(FirstColumn))
+                {
+                    FirstColumn = excelReportInfo.statistic_reportTotal.statisitcType.ToString();
+                }
+                else
+                {
+                    FirstColumn = excelReportInfo.statistic_reportTotal.statisitcType.ToString() + ":" + FirstColumn;
+                }
+
+                DataTable table2 = Common.incOpenXml.GetDatatableSingleValue(FirstColumn);//todo need  reconstrct,data tabie is too heigh, use string?
+                myExcelFile.SetOrUpdateCellValue(excelReportInfo.sheetName, excelReportInfo.writingRowIndex, (uint)2, table2.Rows[0], myExcelFile.defaultCellStyle.blackIndex);
+
+
+                excelReportInfo.writingRowIndex++;
+            }
+            return myExcelFile;
+        }
+
+        public string GetTotal(DataTable table, int columnIndex)
+        {
+            decimal resd = 0;
+            try
+            {
+                foreach (DataRow row in table.Rows)
+                {
+                    resd += decimal.Parse(row[columnIndex].ToString());
+                }
+            }
+            catch { }
+            return resd.ToString();
+        }
+
+    }
 }
