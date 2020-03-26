@@ -10,6 +10,11 @@ using System.Text;
 
 namespace CUSTOMRP.BLL
 {
+    //核心就是插入数据和插入统计行。所以1。新建就是从第一行开始。2。修改从标记行开始。
+    //普通的插入表格，普通的插入统计行。插入之前可能需要保存一些格式信息。
+    //根据之前的格式信息，生成一个全sheet格式表:tablestyle.并把它运用到sheet中。
+    //把tablestyle运用到sheet中。
+    //因此整体这样的流程是清晰的，变化的可能是如何得到tableStyle.这样可以先不考虑细节和各种方案。
     public abstract class ExcelGeneraterHelper
     {
         public readonly static string STRING_DATASTART = "_DATASTART";
@@ -25,6 +30,8 @@ namespace CUSTOMRP.BLL
             {
                 using (Common.incOpenXml myexcel = new Common.incOpenXml(filePath, true, excelReportInfo.sheetName, out errMsg))
                 {
+                    excelReportInfo.startRowIndex = 1;
+                    excelReportInfo.writingRowIndex = 1;
                     res= InsertDataToReprt(myexcel, excelReportInfo);
                 }
             }
@@ -75,7 +82,6 @@ namespace CUSTOMRP.BLL
                         }
 
                         //update pivotTable
-                        //todo 不能添加group信息.否则透视表就无用了. 个性的数据还是透视表或其他，那里只是传输数据。 total 也不好做.时间格式会覆盖,处理特性太多,不好维护.
                         string startRef = Common.incOpenXml.GetCellReference((uint)2, startRowIndex);
                         string endRef = Common.incOpenXml.GetCellReference((uint)2 + (uint)excelReportInfo.dataTable.Columns.Count - 1, startRowIndex + (uint)excelReportInfo.dataTable.Rows.Count);
                         myexcel.UpdateAllPivotSource(excelReportInfo.sheetName, startRef, endRef);
