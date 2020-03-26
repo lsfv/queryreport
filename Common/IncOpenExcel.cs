@@ -54,14 +54,43 @@ namespace Common
         #endregion
 
         #region row
-        public bool CreateOrUpdateRowAt(string sheetName, DataRow dataRow, uint rowNo, uint columnNo, Dictionary<int, uint> rowStyle=null)
+        public bool CreateOrUpdateRowsAt(string sheetName, DataTable dataTable, uint rowNo, uint columnNo, Dictionary<int, Dictionary<int, uint>> rowsEachColumnStyle = null)
+        {
+            bool res = false;
+            Worksheet worksheet = getWorksheet(sheetName);
+            SheetData sheetData = worksheet == null ? null : worksheet.Elements<SheetData>().First();
+            if (sheetData != null)
+            {
+                if (dataTable != null)
+                {
+                    int failcount = 0;
+                    for(int i=0;i<dataTable.Rows.Count;i++)
+                    {
+                        bool tempres = false;
+                        if (rowsEachColumnStyle != null && rowsEachColumnStyle.Keys.Contains(i))
+                        {
+                            tempres = IncOpenExcel.CreateOrUpdateRowAt(sheetData, dataTable.Rows[i], rowNo+(uint)i, columnNo, defaultCellStyle, rowsEachColumnStyle[i]);
+                        }
+                        else
+                        {
+                            tempres = IncOpenExcel.CreateOrUpdateRowAt(sheetData, dataTable.Rows[i], rowNo+ (uint)i, columnNo, defaultCellStyle,null);
+                        }
+                        if (!tempres) { failcount++; }
+                    }
+                    if (failcount == 0) { res = true; }
+                }
+            }
+            return res;
+        }
+
+        public bool CreateOrUpdateRowAt(string sheetName, DataRow dataRow, uint rowNo, uint columnNo, Dictionary<int, uint> eachColumnStyle = null)
         {
             bool res = false;
             Worksheet worksheet = getWorksheet(sheetName);
             SheetData sheetData = worksheet == null?null: worksheet.Elements<SheetData>().First();
             if (sheetData != null)
             {
-                res=IncOpenExcel.CreateOrUpdateRowAt(sheetData, dataRow, rowNo, columnNo, defaultCellStyle, rowStyle);
+                res=IncOpenExcel.CreateOrUpdateRowAt(sheetData, dataRow, rowNo, columnNo, defaultCellStyle, eachColumnStyle);
             }
             return res;
         }
@@ -118,6 +147,7 @@ namespace Common
         #endregion
         #endregion 
 
+
         #region private
         #region file
         private static SpreadsheetDocument CreateFile(string newFilePath, string firstSheetName, out DefaultCellStyle defaultCellStyle)
@@ -167,13 +197,13 @@ namespace Common
         #endregion
 
         #region row
-        private static bool CreateOrUpdateRowAt(SheetData sheetData, DataRow dataRow, uint rowNo, uint columnNo, DefaultCellStyle defaultCellStyle, Dictionary<int, uint> rowStyle)
+        private static bool CreateOrUpdateRowAt(SheetData sheetData, DataRow dataRow, uint rowNo, uint columnNo, DefaultCellStyle defaultCellStyle, Dictionary<int, uint> eachColumnStyle)
         {
             bool res = false;
             //create row and cell. append or insert.
             if (sheetData != null && rowNo > 0 && columnNo > 0 && defaultCellStyle != null)
             {
-                Row newRow = CreateRow(rowNo);
+                Row newRow = CreateRow(rowNo,columnNo,dataRow,defaultCellStyle, eachColumnStyle);
                 //是否存在row,1.存在,删除.2.现在是否存在大于row,存在,在前插入.不存在.直接附加.
                 var rows = sheetData.Elements<Row>().Where(x => x.RowIndex == rowNo);
                 if (rows.Count() > 0)
@@ -200,26 +230,32 @@ namespace Common
         }
 
         //Dictionary<int, uint> 表格列的索引(from zero)和样式编号
-        private static Row CreateRow(uint rowNo, uint columnNo, DataRow dataRow, DefaultCellStyle defaultCellStyle, Dictionary<int, uint> rowStyle = null)
+        private static Row CreateRow(uint rowNo, uint columnNo, DataRow dataRow, DefaultCellStyle defaultCellStyle, Dictionary<int, uint> eachColumnStyle = null)
         {
             Row newRow = new Row();
             newRow.RowIndex = rowNo;
 
-            for (uint i = 0; i < dataRow.Table.Columns.Count; i++)
+            if (dataRow != null)
             {
-                Cell newCell = null;
-                string cellref = GetCellReference( rowNo,columnNo+i);
-                Type cellType = dataRow.Table.Columns[(int)i].DataType;
-                object cellValue = dataRow[(int)i];
-                if (rowStyle != null && rowStyle.Keys.Contains((int)i))
+                for (uint i = 0; i < dataRow.Table.Columns.Count; i++)
                 {
-                    newCell = createCell(cellref, cellType, cellValue, defaultCellStyle,  rowStyle[(int)i]);
+                    Cell newCell = null;
+                    string cellref = GetCellReference(rowNo, columnNo + i);
+                    Type cellType = dataRow.Table.Columns[(int)i].DataType;
+                    object cellValue = dataRow[(int)i];
+                    if (eachColumnStyle != null && eachColumnStyle.Keys.Contains((int)i))
+                    {
+                        newCell = createCell(cellref, cellType, cellValue, defaultCellStyle, eachColumnStyle[(int)i]);
+                    }
+                    else
+                    {
+                        newCell = createCell(cellref, cellType, cellValue, defaultCellStyle);
+                    }
+                    if (newCell != null)
+                    {
+                        newRow.Append(newCell);
+                    }
                 }
-                else
-                {
-                    newCell = createCell(cellref, cellType, cellValue, defaultCellStyle);
-                }
-                newRow.Append(newCell);
             }
 
             return newRow;
@@ -240,7 +276,6 @@ namespace Common
 
                 if (theCellValue == CellValues.Date)
                 {
-                    theCell.StyleIndex = defaultCellStyle.dateTimeIndex;
                     if (value.ToString() != "")
                     {
                         theCell.CellValue = new CellValue(((DateTime)value));
@@ -248,6 +283,14 @@ namespace Common
                     else
                     {
                         theCell.CellValue = new CellValue("");
+                    }
+                    if (customStyle == 0)
+                    {
+                        theCell.StyleIndex = defaultCellStyle.dateTimeIndex;
+                    }
+                    else
+                    {
+                        theCell.StyleIndex = customStyle;
                     }
                 }
                 else
