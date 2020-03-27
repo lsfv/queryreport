@@ -19,81 +19,80 @@ namespace Common
         private SpreadsheetDocument document = null;
         private DefaultCellStyle defaultCellStyle = null;
 
-        public bool IsRight()
+
+        #region public
+        #region file
+        public bool IsValidate()
         {
             return document == null ? false : true;
         }
-        #region public
-        #region file
         public IncOpenExcel(string newFilePath, string sheetName)
         {
-            if (!string.IsNullOrWhiteSpace(newFilePath))
-            {
-                if (Path.GetExtension(newFilePath) == ".xlsx")
-                {
-                    if (File.Exists(newFilePath))
-                    {
-                        File.Delete(newFilePath);
-                        document = CreateFile(newFilePath, sheetName, out defaultCellStyle);
-                    }
-                    else
-                    {
-                        document = CreateFile(newFilePath, sheetName, out defaultCellStyle);
-                    }
-                }
-                else
-                {
-                    throw new Exception(error_filetype);
-                }
-            }
-            else
+            if (string.IsNullOrWhiteSpace(newFilePath))
             {
                 throw new Exception(error_empty);
             }
+            if (Path.GetExtension(newFilePath) != ".xlsx")
+            {
+                throw new Exception(error_filetype);
+            }
+            if (File.Exists(newFilePath))
+            {
+                File.Delete(newFilePath);
+            }
+            document = CreateFile(newFilePath, sheetName, out defaultCellStyle);
         }
         #endregion
 
         #region row
         public bool CreateOrUpdateRowsAt(string sheetName, DataTable dataTable, uint rowNo, uint columnNo, Dictionary<int, Dictionary<int, uint>> rowsEachColumnStyle = null)
         {
-            bool res = false;
-            Worksheet worksheet = getWorksheet(sheetName);
-            SheetData sheetData = worksheet == null ? null : worksheet.Elements<SheetData>().First();
-            if (sheetData != null)
+            SheetData sheetData = GetSheetData(sheetName);
+            if (sheetData != null && dataTable != null)
             {
-                if (dataTable != null)
+                DataTable columnsTable = GetColumnsNames(dataTable);
+
+                Dictionary<int, uint> titleStyle = rowsEachColumnStyle == null ? null : rowsEachColumnStyle.Keys.Contains(-1) == true ? rowsEachColumnStyle[-1] : null;
+                IncOpenExcel.CreateOrUpdateRowAt(sheetData, columnsTable.Rows[0], rowNo, columnNo, defaultCellStyle, titleStyle);
+
+                for (int i = 0; i < dataTable.Rows.Count; i++)
                 {
-                    int failcount = 0;
-                    for(int i=0;i<dataTable.Rows.Count;i++)
-                    {
-                        bool tempres = false;
-                        if (rowsEachColumnStyle != null && rowsEachColumnStyle.Keys.Contains(i))
-                        {
-                            tempres = IncOpenExcel.CreateOrUpdateRowAt(sheetData, dataTable.Rows[i], rowNo+(uint)i, columnNo, defaultCellStyle, rowsEachColumnStyle[i]);
-                        }
-                        else
-                        {
-                            tempres = IncOpenExcel.CreateOrUpdateRowAt(sheetData, dataTable.Rows[i], rowNo+ (uint)i, columnNo, defaultCellStyle,null);
-                        }
-                        if (!tempres) { failcount++; }
-                    }
-                    if (failcount == 0) { res = true; }
+                    Dictionary<int, uint> tempRowStyle = rowsEachColumnStyle == null ? null : rowsEachColumnStyle.Keys.Contains(i) == true ? rowsEachColumnStyle[i] : null;
+                    IncOpenExcel.CreateOrUpdateRowAt(sheetData, dataTable.Rows[i], rowNo + (uint)(i + 1), columnNo, defaultCellStyle, tempRowStyle);
                 }
             }
-            return res;
+            return true;
         }
 
         public bool CreateOrUpdateRowAt(string sheetName, DataRow dataRow, uint rowNo, uint columnNo, Dictionary<int, uint> eachColumnStyle = null)
         {
             bool res = false;
-            Worksheet worksheet = getWorksheet(sheetName);
-            SheetData sheetData = worksheet == null?null: worksheet.Elements<SheetData>().First();
+            SheetData sheetData = GetSheetData(sheetName);
             if (sheetData != null)
             {
                 res=IncOpenExcel.CreateOrUpdateRowAt(sheetData, dataRow, rowNo, columnNo, defaultCellStyle, eachColumnStyle);
             }
             return res;
         }
+
+        public List<string> GetRowsXml(string sheetName, UInt32 startRowNo, UInt32 endRowNo)
+        {
+            List<string> rowsXml = new List<string>();
+            if (endRowNo >= startRowNo && startRowNo>=0)
+            {
+                var sheetdata = GetSheetData(sheetName);
+                if (sheetdata!=null)
+                {
+                    var rows = sheetdata.Elements<Row>().Where(x => x.RowIndex >= startRowNo && x.RowIndex <= endRowNo);
+                    foreach (Row row in rows)
+                    {
+                        rowsXml.Add(row.OuterXml);
+                    }
+                }
+            }
+            return rowsXml;
+        }
+
         #endregion
 
         #region cell
@@ -104,11 +103,7 @@ namespace Common
         {
             Worksheet res = null;
             IEnumerable<Sheet> sheets = document.WorkbookPart.Workbook.GetFirstChild<Sheets>().Elements<Sheet>().Where(s => s.Name == sheetname);
-            if (sheets.Count() == 0)
-            {
-                res = null;
-            }
-            else
+            if (sheets.Count()> 0)
             {
                 string relationshipId = sheets.First().Id.Value;
                 WorksheetPart worksheetPart = (WorksheetPart)document.WorkbookPart.GetPartById(relationshipId);
@@ -116,7 +111,13 @@ namespace Common
             }
             return res;
         }
-        public SheetData getSheetDate(Worksheet worksheet)
+        public SheetData GetSheetData(string sheetname)
+        {
+            Worksheet worksheet = getWorksheet(sheetname);
+            return GetSheetData(worksheet);
+        }
+
+        public SheetData GetSheetData(Worksheet worksheet)
         {
             SheetData res = null;
             if (worksheet != null)
@@ -152,46 +153,37 @@ namespace Common
         #region file
         private static SpreadsheetDocument CreateFile(string newFilePath, string firstSheetName, out DefaultCellStyle defaultCellStyle)
         {
-            SpreadsheetDocument spreadsheetDocument = null;
-            defaultCellStyle = null;
-            try
+            //建立xlsx文件
+            SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Create(newFilePath, SpreadsheetDocumentType.Workbook, true);
+
+            //建立xl,worksheets目录(会默认生成0字节的workbook和worksheet,以及2个res文档)
+            WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
+            WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
+
+            //建立workbook文档,设定模式的worksheet (sheet的3个属性必须填写,特别的是name是这里设定,有点不符合常见的抽象思维)
+            Workbook workbook = new Workbook();
+            Sheets sheets = new Sheets();
+            Sheet sheet = new Sheet()
             {
-                //建立xlsx文件
-                spreadsheetDocument = SpreadsheetDocument.Create(newFilePath, SpreadsheetDocumentType.Workbook, true);
+                Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
+                SheetId = 1,
+                Name = firstSheetName
+            };
+            sheets.Append(sheet);
+            workbook.AppendChild<Sheets>(sheets);
+            workbookpart.Workbook = workbook;
 
-                //建立xl,worksheets目录(会默认生成0字节的workbook和worksheet,以及2个res文档)
-                WorkbookPart workbookpart = spreadsheetDocument.AddWorkbookPart();
-                WorksheetPart worksheetPart = workbookpart.AddNewPart<WorksheetPart>();
+            //建立默认的worksheet文档(可以先workbook,后worksheet)
+            SheetData sheetData = new SheetData();
+            Worksheet worksheet = new Worksheet();
+            worksheet.Append(sheetData);
+            worksheetPart.Worksheet = worksheet;//给默认的worksheet赋值,否则0字节.
 
-                //建立workbook文档,设定模式的worksheet (sheet的3个属性必须填写,特别的是name是这里设定,有点不符合常见的抽象思维)
-                Workbook workbook = new Workbook();
-                Sheets sheets = new Sheets();
-                Sheet sheet = new Sheet()
-                {
-                    Id = spreadsheetDocument.WorkbookPart.GetIdOfPart(worksheetPart),
-                    SheetId = 1,
-                    Name = firstSheetName
-                };
-                sheets.Append(sheet);
-                workbook.AppendChild<Sheets>(sheets);
-                workbookpart.Workbook = workbook;
+            //建立样式文件
+            createDeafultStyle(workbookpart, out defaultCellStyle);
+            spreadsheetDocument.Save();
 
-                //建立默认的worksheet文档(可以先workbook,后worksheet)
-                SheetData sheetData = new SheetData();
-                Worksheet worksheet = new Worksheet();
-                worksheet.Append(sheetData);
-                worksheetPart.Worksheet = worksheet;//给默认的worksheet赋值,否则0字节.
 
-                //建立样式文件
-                createDeafultStyle(workbookpart, out defaultCellStyle);
-                spreadsheetDocument.Save();
-            }
-            catch (Exception e)
-            {
-                spreadsheetDocument = null;
-                defaultCellStyle = null;
-                throw e;
-            }
             return spreadsheetDocument;
         }
         #endregion
@@ -221,10 +213,6 @@ namespace Common
                     sheetData.InsertBefore(newRow, biggerrows.First());
                 }
                 res = true;
-            }
-            else
-            {
-                throw new Exception("create row argument error.");
             }
             return res;
         }
@@ -265,50 +253,46 @@ namespace Common
         #region cell
         private static Cell createCell(string reference, Type type, object value, DefaultCellStyle defaultCellStyle, uint customStyle = 0)
         {
-            Cell theCell = null;
-            try
+            if (reference == null || type == null || defaultCellStyle == null)
             {
-                theCell = new Cell();
-                theCell.CellReference = reference;
+                return null;
+            }
+            Cell theCell = new Cell();
+            theCell.CellReference = reference;
 
-                CellValues theCellValue = GetValueType(type);
-                theCell.DataType = new EnumValue<CellValues>(theCellValue);
+            CellValues theCellValue = GetValueType(type);
+            theCell.DataType = new EnumValue<CellValues>(theCellValue);
 
-                if (theCellValue == CellValues.Date)
+            if (theCellValue == CellValues.Date)
+            {
+                if (value.ToString() != "")
                 {
-                    if (value.ToString() != "")
-                    {
-                        theCell.CellValue = new CellValue(((DateTime)value));
-                    }
-                    else
-                    {
-                        theCell.CellValue = new CellValue("");
-                    }
-                    if (customStyle == 0)
-                    {
-                        theCell.StyleIndex = defaultCellStyle.dateTimeIndex;
-                    }
-                    else
-                    {
-                        theCell.StyleIndex = customStyle;
-                    }
+                    theCell.CellValue = new CellValue(((DateTime)value));
                 }
                 else
                 {
-                    theCell.CellValue = new CellValue(value.ToString());
-                    if (customStyle == 0)
-                    {
-                        theCell.StyleIndex = defaultCellStyle.normalIndex;
-                    }
-                    else
-                    {
-                        theCell.StyleIndex = customStyle;
-                    }
+                    theCell.CellValue = new CellValue("");
+                }
+                if (customStyle == 0)
+                {
+                    theCell.StyleIndex = defaultCellStyle.dateTimeIndex;
+                }
+                else
+                {
+                    theCell.StyleIndex = customStyle;
                 }
             }
-            catch (Exception e)
+            else
             {
-                throw e;
+                theCell.CellValue = new CellValue(value.ToString());
+                if (customStyle == 0)
+                {
+                    theCell.StyleIndex = defaultCellStyle.normalIndex;
+                }
+                else
+                {
+                    theCell.StyleIndex = customStyle;
+                }
             }
             return theCell;
         }
@@ -317,7 +301,7 @@ namespace Common
         #region other
         private static void SetExcelPivotTableCacheAutoReflesh(SpreadsheetDocument document)
         {
-            try
+            if (document != null)
             {
                 WorkbookPart wbPart = document.WorkbookPart;
                 var pivottableCashes = wbPart.PivotTableCacheDefinitionParts;
@@ -325,10 +309,6 @@ namespace Common
                 {
                     pivottablecachePart.PivotCacheDefinition.RefreshOnLoad = true;
                 }
-            }
-            catch (Exception e)
-            {
-                throw e;
             }
         }
 
@@ -364,6 +344,21 @@ namespace Common
             {
                 return CellValues.String;
             }
+        }
+
+
+        private static DataTable GetColumnsNames(DataTable dataTable)
+        {
+            DataTable databable_books = new DataTable("ColumnsNames");
+            DataRow newRow = databable_books.NewRow();
+            for (int i = 0; i < dataTable.Columns.Count; i++)
+            {
+                databable_books.Columns.Add("column" + i, Type.GetType("System.String"));
+
+                newRow["column" + i] = dataTable.Columns[i].ColumnName;
+            }
+            databable_books.Rows.Add(newRow);
+            return databable_books;
         }
         #endregion
 

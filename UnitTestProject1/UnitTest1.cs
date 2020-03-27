@@ -12,6 +12,8 @@ namespace UnitTestProject1
     [TestClass]
     public class UnitTest1
     {
+        private static readonly string SHEETNAME = "Report";
+
         //创建测试,期望错误的都有异常出现.否则都可以建立document成员变量.
         [TestMethod]
         public void CreateFile()
@@ -24,7 +26,7 @@ namespace UnitTestProject1
                 {
                     using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(files[i], "Report"))
                     {
-                        Assert.AreEqual(incOpenExcel.IsRight(), true);
+                        Assert.AreEqual(incOpenExcel.IsValidate(), true);
                     }
                 }
                 catch(Exception e)
@@ -41,29 +43,21 @@ namespace UnitTestProject1
             //position 0,0 [-1,-1],[2,3] ,[1,1]
 
             string path = "C:\\testfile\\testjustrow.xlsx";
-            try
-            {
-                using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, "Report"))
-                {
-                    Assert.AreEqual(incOpenExcel.IsRight(), true);
 
-                    incOpenExcel.CreateOrUpdateRowAt("Report", null, 4, 1, null);
-                    incOpenExcel.CreateOrUpdateRowAt("Report", null, 1, 1, null);
-                    incOpenExcel.CreateOrUpdateRowAt("Report", null, 2, 1, null);
-                    incOpenExcel.CreateOrUpdateRowAt("Report", null, 3, 1, null);
-                    incOpenExcel.CreateOrUpdateRowAt("Report", null, 1, 1, null);
-                    incOpenExcel.CreateOrUpdateRowAt("Report", null, 5, 1, null);
-
-                    
-                }
-                
-            }
-            catch (Exception e)
+            using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, "Report"))
             {
-                Debug.Print(e.ToString());
+                Assert.AreEqual(incOpenExcel.IsValidate(), true);
+
+                incOpenExcel.CreateOrUpdateRowAt("Report", null, 4, 1, null);
+                incOpenExcel.CreateOrUpdateRowAt("Report", null, 1, 1, null);
+                incOpenExcel.CreateOrUpdateRowAt("Report", null, 2, 1, null);
+                incOpenExcel.CreateOrUpdateRowAt("Report", null, 3, 1, null);
+                incOpenExcel.CreateOrUpdateRowAt("Report", null, 1, 1, null);
+                incOpenExcel.CreateOrUpdateRowAt("Report", null, 5, 1, null);
             }
             unzip(path);
         }
+
 
         [TestMethod]
         public void CreateOrUpdateRowAt2()
@@ -76,7 +70,7 @@ namespace UnitTestProject1
             {
                 using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, "Report"))
                 {
-                    Assert.AreEqual(incOpenExcel.IsRight(), true);
+                    Assert.AreEqual(incOpenExcel.IsValidate(), true);
 
                     DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
 
@@ -107,7 +101,7 @@ namespace UnitTestProject1
             {
                 using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, "Report"))
                 {
-                    Assert.AreEqual(incOpenExcel.IsRight(), true);
+                    Assert.AreEqual(incOpenExcel.IsValidate(), true);
 
                     DataTable dataTable = null;// Common.incUnitTest.GetDatatableCustomCount(5);
 
@@ -129,10 +123,79 @@ namespace UnitTestProject1
 
         //测试样式.
         [TestMethod]
-        public void CreateOrUpdateRowsAt2()
+        public void CreateOrUpdateRowsAt_ok()
+        {
+            string bllpath = "C:\\testfile\\bll_templateok.xlsx";
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+            bool res = CUSTOMRP.BLL.ExcelHelper.CreateReport(bllpath, dataTable);
+            Assert.AreEqual(res, true);
+        }
+
+        [TestMethod]
+        public void CreateOrUpdateRowsAt_datanull()
+        {
+            string bllpath = "C:\\testfile\\bll_template_datanull.xlsx";
+            DataTable dataTable = null;
+            bool res = CUSTOMRP.BLL.ExcelHelper.CreateReport(bllpath, dataTable);
+            Assert.AreEqual(res, true);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void CreateOrUpdateRowsAt_pathnull()
+        {
+            string bllpath = null;
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+            bool res = CUSTOMRP.BLL.ExcelHelper.CreateReport(bllpath, dataTable);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void CreateOrUpdateRowsAt_pathempty()
         {
 
+            string bllpath = "";
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+            bool res = CUSTOMRP.BLL.ExcelHelper.CreateReport(bllpath, dataTable);
+            Assert.AreEqual(res, true);
+
+            res = CUSTOMRP.BLL.ExcelHelper.CreateReport(null, dataTable);
         }
+
+
+        //测试样式.
+        [TestMethod]
+        public void CreateOrUpdateRowsAt_Remove()
+        {
+            string bllpath = "C:\\testfile\\bll_templatefixremove.xlsx";
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+
+            move(bllpath, dataTable);
+
+
+        }
+        
+
+        //不是立即移动，而是得到xml，再附加文件的末尾，并附带一个移动到的行编号
+        public static bool move(string path, DataTable dataTable)
+        {
+            bool res = false;
+
+            using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, SHEETNAME))
+            {
+                incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, 1, 2, null);
+
+                List<string> rowsXmls= incOpenExcel.GetRowsXml(SHEETNAME, 2, 4);
+                //incOpenExcel.AppendRowsXml()
+                //getRows
+                //AppendAt(xmlrows,appendIndex)
+            }
+
+
+
+            return res;
+        }
+
 
         //todo 加载也要测试非异常,有文档变量
         [TestMethod]
@@ -147,5 +210,8 @@ namespace UnitTestProject1
             string descpath = "C:/testfile/unzip"+Path.GetFileName(file) + DateTime.Now.ToFileTimeUtc();
             Common.ZipFloClass.UncompressFile(descpath, file, true);
         }
+
+
+       
     }
 }

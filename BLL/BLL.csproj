@@ -114,6 +114,7 @@
     <Compile Include="AppNum.cs" />
     <Compile Include="COMMON.cs" />
     <Compile Include="DATABASE.cs" />
+    <Compile Include="ExcelHelper.cs" />
     <Compile Include="GROUPRIGHT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="QUERYPARAMS.cs" />
