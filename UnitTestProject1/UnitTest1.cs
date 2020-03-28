@@ -131,6 +131,7 @@ namespace UnitTestProject1
             Assert.AreEqual(res, true);
         }
 
+
         [TestMethod]
         public void CreateOrUpdateRowsAt_datanull()
         {
@@ -140,6 +141,7 @@ namespace UnitTestProject1
             Assert.AreEqual(res, true);
         }
 
+
         [TestMethod]
         [ExpectedException(typeof(Exception))]
         public void CreateOrUpdateRowsAt_pathnull()
@@ -148,6 +150,7 @@ namespace UnitTestProject1
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
             bool res = CUSTOMRP.BLL.ExcelHelper.CreateReport(bllpath, dataTable);
         }
+
 
         [TestMethod]
         [ExpectedException(typeof(Exception))]
@@ -183,9 +186,9 @@ namespace UnitTestProject1
                 incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, 1, 2, null);
 
                 List<string> rowsXmls = incOpenExcel.GetRowsXml(SHEETNAME, 2, 4);
+                incOpenExcel.DeleteRows(SHEETNAME, 2, 4);
                 incOpenExcel.MoveRows(SHEETNAME, rowsXmls, 20);
             }
-
             return res;
         }
 
@@ -198,6 +201,7 @@ namespace UnitTestProject1
             unzip(filepath);
         }
 
+
         private void unzip(string file)
         {
             string descpath = "C:/testfile/unzip"+Path.GetFileName(file) + DateTime.Now.ToFileTimeUtc();
@@ -205,6 +209,5 @@ namespace UnitTestProject1
         }
 
 
-       
     }
 }

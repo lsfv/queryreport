@@ -75,10 +75,38 @@ namespace Common
             return res;
         }
 
-        public List<string> GetRowsXml(string sheetName, UInt32 startRowNo, UInt32 endRowNo)
+        public IEnumerable<Row> GetRows(string sheetName, uint startRowNo, uint endRowNo)
         {
-            var sheetdata = GetSheetData(sheetName);
-            return IncOpenExcel.GetRowsXml(sheetdata, sheetName, startRowNo, endRowNo);
+            IEnumerable<Row> res = null;
+            if (!string.IsNullOrEmpty(sheetName))
+            {
+                SheetData sheetdata = GetSheetData(sheetName);
+                res = IncOpenExcel.GetRows(sheetdata, startRowNo, endRowNo);
+            }
+            return res;
+        }
+
+        public List<string> GetRowsXml(string sheetName, uint startRowNo, uint endRowNo)
+        {
+            List<string> res = null;
+            if (!string.IsNullOrEmpty(sheetName))
+            {
+                var sheetdata = GetSheetData(sheetName);
+                res= IncOpenExcel.GetRowsXml(sheetdata, startRowNo, endRowNo);
+            }
+            return res;
+        }
+
+        public bool DeleteRows(string sheetName, uint startRowNo, uint endRowNo)
+        {
+            bool res = false;
+            var rows = GetRows(sheetName, startRowNo, endRowNo);
+            if (rows != null)
+            {
+                IncOpenExcel.DeleteRows(rows);
+            }
+            res = true;
+            return res;
         }
 
         public bool MoveRows(string sheetName, List<string> xmlrows, uint offset)
@@ -276,12 +304,23 @@ namespace Common
             return newRow;
         }
 
-        private static List<string> GetRowsXml(SheetData sheetdata, string sheetName, UInt32 startRowNo, UInt32 endRowNo)
+        private static IEnumerable<Row> GetRows(SheetData sheetdata, uint startRowNo, uint endRowNo)
         {
-            List<string> rowsXml = new List<string>();
-            if (sheetdata != null && endRowNo >= startRowNo && startRowNo >= 0)
+            IEnumerable<Row> res = null;
+            if (sheetdata != null && endRowNo>=startRowNo)
             {
                 var rows = sheetdata.Elements<Row>().Where(x => x.RowIndex >= startRowNo && x.RowIndex <= endRowNo);
+                res = rows;
+            }
+            return res;
+        }
+
+        private static List<string> GetRowsXml(SheetData sheetdata, uint startRowNo, uint endRowNo)
+        {
+            List<string> rowsXml = new List<string>();
+            IEnumerable<Row> rows = GetRows(sheetdata, startRowNo, endRowNo);
+            if (rows!=null)
+            {
                 foreach (Row row in rows)
                 {
                     rowsXml.Add(row.OuterXml);
@@ -300,6 +339,17 @@ namespace Common
                 foreach (Cell cell in allcells)
                 {
                     cell.CellReference = cell.CellReference.Value.Replace(preIndex.ToString(), row.RowIndex.ToString());
+                }
+            }
+        }
+
+        private static void DeleteRows(IEnumerable<Row> rows)
+        {
+            if (rows != null)
+            {
+                foreach (Row r in rows.ToList())//删除不能用可碟带类型,因为需要当前来movenext.先换成集合把.
+                {
+                    r.Remove();
                 }
             }
         }
