@@ -167,12 +167,9 @@ namespace UnitTestProject1
         [TestMethod]
         public void CreateOrUpdateRowsAt_Remove()
         {
-            string bllpath = "C:\\testfile\\bll_templatefixremove.xlsx";
+            string bllpath = "C:\\testfile\\bll_templateMoveAt.xlsx";
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
-
             move(bllpath, dataTable);
-
-
         }
         
 
@@ -185,13 +182,9 @@ namespace UnitTestProject1
             {
                 incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, 1, 2, null);
 
-                List<string> rowsXmls= incOpenExcel.GetRowsXml(SHEETNAME, 2, 4);
-                //incOpenExcel.AppendRowsXml()
-                //getRows
-                //AppendAt(xmlrows,appendIndex)
+                List<string> rowsXmls = incOpenExcel.GetRowsXml(SHEETNAME, 2, 4);
+                incOpenExcel.MoveRows(SHEETNAME, rowsXmls, 20);
             }
-
-
 
             return res;
         }

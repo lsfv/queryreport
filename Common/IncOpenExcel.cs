@@ -77,20 +77,38 @@ namespace Common
 
         public List<string> GetRowsXml(string sheetName, UInt32 startRowNo, UInt32 endRowNo)
         {
-            List<string> rowsXml = new List<string>();
-            if (endRowNo >= startRowNo && startRowNo>=0)
+            var sheetdata = GetSheetData(sheetName);
+            return IncOpenExcel.GetRowsXml(sheetdata, sheetName, startRowNo, endRowNo);
+        }
+
+        public bool MoveRows(string sheetName, List<string> xmlrows, uint offset)
+        {
+            bool res = false;
+            SheetData sheetData = GetSheetData(sheetName);
+            List<Row> newRowsList = new List<Row>();
+            if (xmlrows != null)
             {
-                var sheetdata = GetSheetData(sheetName);
-                if (sheetdata!=null)
+                foreach (string strRow in xmlrows)
                 {
-                    var rows = sheetdata.Elements<Row>().Where(x => x.RowIndex >= startRowNo && x.RowIndex <= endRowNo);
-                    foreach (Row row in rows)
+                    try
                     {
-                        rowsXml.Add(row.OuterXml);
+                        Row changingRow = new Row(strRow);
+                        ChangeRowNoAndCellReference(changingRow, changingRow.RowIndex+ offset);
+                        newRowsList.Add(changingRow);
+                    }
+                    catch
+                    {
+                        newRowsList = new List<Row>();
                     }
                 }
             }
-            return rowsXml;
+            //todo 新写一个替换的方法.
+            foreach (Row row in newRowsList)
+            {
+                CreateOrUpdateRowAt(sheetData, row,row.RowIndex);
+            }
+
+            return res;
         }
 
         #endregion
@@ -191,11 +209,20 @@ namespace Common
         #region row
         private static bool CreateOrUpdateRowAt(SheetData sheetData, DataRow dataRow, uint rowNo, uint columnNo, DefaultCellStyle defaultCellStyle, Dictionary<int, uint> eachColumnStyle)
         {
+            if (rowNo > 0 && columnNo > 0 && defaultCellStyle != null && sheetData != null)
+            {
+                Row newRow = CreateRow(rowNo, columnNo, dataRow, defaultCellStyle, eachColumnStyle);
+                CreateOrUpdateRowAt(sheetData, newRow,newRow.RowIndex);
+            }
+            return true;
+        }
+
+        private static bool CreateOrUpdateRowAt(SheetData sheetData, Row newRow,uint rowNo)
+        {
             bool res = false;
             //create row and cell. append or insert.
-            if (sheetData != null && rowNo > 0 && columnNo > 0 && defaultCellStyle != null)
+            if (sheetData != null && newRow!=null)
             {
-                Row newRow = CreateRow(rowNo,columnNo,dataRow,defaultCellStyle, eachColumnStyle);
                 //是否存在row,1.存在,删除.2.现在是否存在大于row,存在,在前插入.不存在.直接附加.
                 var rows = sheetData.Elements<Row>().Where(x => x.RowIndex == rowNo);
                 if (rows.Count() > 0)
@@ -248,6 +275,35 @@ namespace Common
 
             return newRow;
         }
+
+        private static List<string> GetRowsXml(SheetData sheetdata, string sheetName, UInt32 startRowNo, UInt32 endRowNo)
+        {
+            List<string> rowsXml = new List<string>();
+            if (sheetdata != null && endRowNo >= startRowNo && startRowNo >= 0)
+            {
+                var rows = sheetdata.Elements<Row>().Where(x => x.RowIndex >= startRowNo && x.RowIndex <= endRowNo);
+                foreach (Row row in rows)
+                {
+                    rowsXml.Add(row.OuterXml);
+                }
+            }
+            return rowsXml;
+        }
+
+        private static void ChangeRowNoAndCellReference(Row row, uint newRowNo)//行变化行号后，需要修改row和cell的行号。
+        {
+            if (row != null)
+            {
+                uint preIndex = row.RowIndex;
+                row.RowIndex = newRowNo;
+                var allcells = row.Elements<Cell>();
+                foreach (Cell cell in allcells)
+                {
+                    cell.CellReference = cell.CellReference.Value.Replace(preIndex.ToString(), row.RowIndex.ToString());
+                }
+            }
+        }
+
         #endregion
 
         #region cell
