@@ -26,45 +26,54 @@ namespace Common
         {
             return document == null ? false : true;
         }
-        public IncOpenExcel(string newFilePath, string sheetName)
+        public IncOpenExcel(string FilePath, string sheetName,bool isCreate)
         {
-            if (string.IsNullOrWhiteSpace(newFilePath))
+            if (string.IsNullOrWhiteSpace(FilePath) || string.IsNullOrWhiteSpace(sheetName))
             {
                 throw new Exception(error_empty);
             }
-            if (Path.GetExtension(newFilePath) != ".xlsx")
+            if (Path.GetExtension(FilePath) != ".xlsx")
             {
                 throw new Exception(error_filetype);
             }
-            if (File.Exists(newFilePath))
+
+            if (isCreate)
             {
-                File.Delete(newFilePath);
+                if (File.Exists(FilePath))
+                {
+                    File.Delete(FilePath);
+                }
+                document = CreateFile(FilePath, sheetName, out defaultCellStyle);
             }
-            document = CreateFile(newFilePath, sheetName, out defaultCellStyle);
+            else
+            {
+                document = openFile(FilePath, out defaultCellStyle);
+            }
         }
+
         #endregion
 
         #region row
-        public bool CreateOrUpdateRowsAt(string sheetName, DataTable dataTable, uint rowNo, uint columnNo, Dictionary<int, Dictionary<int, uint>> rowsEachColumnStyle = null)
+        public bool CreateOrUpdateRowsAt(string sheetName, DataTable dataTable, uint rowNo, uint columnNo, Dictionary<uint, Dictionary<uint, uint>> reportStyle_RowColumnStyleNo = null)
         {
             SheetData sheetData = GetSheetData(sheetName);
             if (sheetData != null && dataTable != null)
             {
                 DataTable columnsTable = GetColumnsNames(dataTable);
 
-                Dictionary<int, uint> titleStyle = rowsEachColumnStyle == null ? null : rowsEachColumnStyle.Keys.Contains(-1) == true ? rowsEachColumnStyle[-1] : null;
+                Dictionary<uint, uint> titleStyle = reportStyle_RowColumnStyleNo == null ? null : reportStyle_RowColumnStyleNo.Keys.Contains(rowNo) == true ? reportStyle_RowColumnStyleNo[rowNo] : null;
                 IncOpenExcel.CreateOrUpdateRowAt(sheetData, columnsTable.Rows[0], rowNo, columnNo, defaultCellStyle, titleStyle);
 
                 for (int i = 0; i < dataTable.Rows.Count; i++)
                 {
-                    Dictionary<int, uint> tempRowStyle = rowsEachColumnStyle == null ? null : rowsEachColumnStyle.Keys.Contains(i) == true ? rowsEachColumnStyle[i] : null;
+                    Dictionary<uint, uint> tempRowStyle = reportStyle_RowColumnStyleNo == null ? null : reportStyle_RowColumnStyleNo.Keys.Contains((uint)(rowNo+i+1)) == true ? reportStyle_RowColumnStyleNo[(uint)(rowNo + i + 1)] : null;
                     IncOpenExcel.CreateOrUpdateRowAt(sheetData, dataTable.Rows[i], rowNo + (uint)(i + 1), columnNo, defaultCellStyle, tempRowStyle);
                 }
             }
             return true;
         }
 
-        public bool CreateOrUpdateRowAt(string sheetName, DataRow dataRow, uint rowNo, uint columnNo, Dictionary<int, uint> eachColumnStyle = null)
+        public bool CreateOrUpdateRowAt(string sheetName, DataRow dataRow, uint rowNo, uint columnNo, Dictionary<uint, uint> eachColumnStyle = null)
         {
             bool res = false;
             SheetData sheetData = GetSheetData(sheetName);
@@ -85,6 +94,21 @@ namespace Common
             }
             return res;
         }
+
+
+        public Row GetRow(string sheetName, uint RowNo)
+        {
+            Row res = null;
+            if (!string.IsNullOrEmpty(sheetName))
+            {
+                SheetData sheetdata = GetSheetData(sheetName);
+                var rows= sheetdata.Elements<Row>().Where(x => x.RowIndex == RowNo);
+                if (rows.Count() > 0)
+                {res = rows.First();}
+            }
+            return res;
+        }
+
 
         public List<string> GetRowsXml(string sheetName, uint startRowNo, uint endRowNo)
         {
@@ -109,7 +133,7 @@ namespace Common
             return res;
         }
 
-        public bool MoveRows(string sheetName, List<string> xmlrows, uint offset)
+        public bool MoveRows(string sheetName, List<string> xmlrows, int offset)
         {
             bool res = false;
             SheetData sheetData = GetSheetData(sheetName);
@@ -121,7 +145,7 @@ namespace Common
                     try
                     {
                         Row changingRow = new Row(strRow);
-                        ChangeRowNoAndCellReference(changingRow, changingRow.RowIndex+ offset);
+                        ChangeRowNoAndCellReference(changingRow, (uint)(changingRow.RowIndex+ offset));
                         newRowsList.Add(changingRow);
                     }
                     catch
@@ -130,7 +154,6 @@ namespace Common
                     }
                 }
             }
-            //todo 新写一个替换的方法.
             foreach (Row row in newRowsList)
             {
                 CreateOrUpdateRowAt(sheetData, row,row.RowIndex);
@@ -142,9 +165,95 @@ namespace Common
         #endregion
 
         #region cell
+        public bool CreateOrUpdateCellAt(string sheetName, uint rowNumber, uint columnNumber, Type datatype, object value,uint customStyle=0)
+        {
+            if (!string.IsNullOrWhiteSpace(sheetName))
+            {
+                SheetData sheetData = GetSheetData(sheetName);
+                if (sheetData != null)
+                {
+                    SetOrUpdateCellValue(sheetData, rowNumber, columnNumber, datatype, value, defaultCellStyle, customStyle);
+                }
+            }
+            return true;
+        }
         #endregion
 
         #region other
+        public static Dictionary<uint, uint> getRowStyles(Row theRow)
+        {
+            Dictionary<uint, uint> styles = new Dictionary<uint, uint>();
+            if (theRow != null)
+            {
+                var cells = theRow.Elements<Cell>();
+                foreach (Cell cell in cells)
+                {
+                    if (!string.IsNullOrWhiteSpace(cell.CellReference) && cell.StyleIndex != null)
+                    {
+                        uint  column;
+                        Ref2RC(cell.CellReference,  out column);
+                        styles.Add(column, cell.StyleIndex);
+                    }
+                }
+            }
+            return styles;
+        }
+
+        public static void Ref2RC(string refa,  out uint columnNo)
+        {
+            columnNo = 0;
+            refa = refa.ToUpper();
+            Dictionary<char, int> maping = new Dictionary<char, int>();
+            maping.Add('A', 1); maping.Add('B', 2); maping.Add('C', 3); maping.Add('D', 4);
+            maping.Add('E', 5); maping.Add('F', 6); maping.Add('G', 7); maping.Add('H', 8);
+            maping.Add('I', 9); maping.Add('J', 10); maping.Add('K', 11); maping.Add('L', 12);
+            maping.Add('M', 13); maping.Add('N', 14); maping.Add('O', 15); maping.Add('P', 16);
+            maping.Add('Q', 17); maping.Add('R', 18); maping.Add('S', 19); maping.Add('T', 20);
+            maping.Add('U', 21); maping.Add('V', 22); maping.Add('W', 23); maping.Add('X', 24);
+            maping.Add('Y', 25); maping.Add('Z', 26);
+
+            List<char> chars = refa.ToList<char>();
+            List<char> columns = new List<char>();
+            foreach (char c in chars)
+            {
+                if (c >= 'A' && c <= 'Z')
+                {
+                    columns.Add(c);
+                }
+            }
+            if (columns.Count == 2)
+            {
+                columnNo = (uint)(26 * maping[columns[0]] + maping[columns[1]]);
+            }
+            else if (columns.Count == 1)
+            {
+                columnNo = (uint)maping[columns[0]];
+            }
+        }
+
+        public uint FindStringInColumn(string sheetname, string str, uint columnNo)
+        {
+            uint res = 0;
+            SheetData sheetData = GetSheetData(sheetname);
+            if (sheetData != null)
+            {
+                IEnumerable<Row> rows = sheetData.Elements<Row>();
+                foreach (Row row in rows)
+                {
+                    if (row.Elements<Cell>() != null && row.Elements<Cell>().Count() > 0)
+                    {
+                        var Cells = row.Elements<Cell>().Where(x => x.CellReference.Value == GetCellReference(row.RowIndex, columnNo));
+                        if (Cells != null && Cells.Count() > 0 && GetCellRealString(document,Cells.First()) == str)
+                        {
+                            res = row.RowIndex;
+                        }
+                    }
+                }
+            }
+            return res;
+        }
+
+
         public Worksheet getWorksheet(string sheetname)
         {
             Worksheet res = null;
@@ -162,7 +271,6 @@ namespace Common
             Worksheet worksheet = getWorksheet(sheetname);
             return GetSheetData(worksheet);
         }
-
         public SheetData GetSheetData(Worksheet worksheet)
         {
             SheetData res = null;
@@ -176,7 +284,6 @@ namespace Common
             }
             return res;
         }
-
         public void SaveAndClose()
         {
             if (document != null)
@@ -193,7 +300,6 @@ namespace Common
         }
         #endregion
         #endregion 
-
 
         #region private
         #region file
@@ -232,10 +338,19 @@ namespace Common
 
             return spreadsheetDocument;
         }
+
+        private static SpreadsheetDocument openFile(string filepath,out DefaultCellStyle defaultCellStyle)
+        {
+            SpreadsheetDocument spreadsheetDocument = SpreadsheetDocument.Open(filepath, true);
+            SetExcelPivotTableCacheAutoReflesh(spreadsheetDocument);
+            createDeafultStyle(spreadsheetDocument.WorkbookPart, out defaultCellStyle);
+            return spreadsheetDocument;
+        }
+
         #endregion
 
         #region row
-        private static bool CreateOrUpdateRowAt(SheetData sheetData, DataRow dataRow, uint rowNo, uint columnNo, DefaultCellStyle defaultCellStyle, Dictionary<int, uint> eachColumnStyle)
+        private static bool CreateOrUpdateRowAt(SheetData sheetData, DataRow dataRow, uint rowNo, uint columnNo, DefaultCellStyle defaultCellStyle, Dictionary<uint, uint> eachColumnStyle)
         {
             if (rowNo > 0 && columnNo > 0 && defaultCellStyle != null && sheetData != null)
             {
@@ -273,7 +388,7 @@ namespace Common
         }
 
         //Dictionary<int, uint> 表格列的索引(from zero)和样式编号
-        private static Row CreateRow(uint rowNo, uint columnNo, DataRow dataRow, DefaultCellStyle defaultCellStyle, Dictionary<int, uint> eachColumnStyle = null)
+        private static Row CreateRow(uint rowNo, uint columnNo, DataRow dataRow, DefaultCellStyle defaultCellStyle, Dictionary<uint, uint> eachCellStyle = null)
         {
             Row newRow = new Row();
             newRow.RowIndex = rowNo;
@@ -286,9 +401,9 @@ namespace Common
                     string cellref = GetCellReference(rowNo, columnNo + i);
                     Type cellType = dataRow.Table.Columns[(int)i].DataType;
                     object cellValue = dataRow[(int)i];
-                    if (eachColumnStyle != null && eachColumnStyle.Keys.Contains((int)i))
+                    if (eachCellStyle != null && eachCellStyle.Keys.Contains(columnNo + i))
                     {
-                        newCell = createCell(cellref, cellType, cellValue, defaultCellStyle, eachColumnStyle[(int)i]);
+                        newCell = createCell(cellref, cellType, cellValue, defaultCellStyle, eachCellStyle[columnNo + i]);
                     }
                     else
                     {
@@ -402,6 +517,105 @@ namespace Common
             }
             return theCell;
         }
+        private static bool SetOrUpdateCellValue(SheetData sheetData, uint rowNumber, uint columnNumber, Type datatype,object value, DefaultCellStyle defaultCellStyle, uint customStyle = 0)
+        {
+            if (sheetData!=null && value != null && datatype!=null)
+            {
+                //创建cell.
+                //0.不存在row,建立row,插入cell.
+                //0.row存在1.删除cell.2.是否有比这个cell更大的cell,有插入大cell之前.否则直接附加在row后面.
+                string cellRefrence = GetCellReference(rowNumber, columnNumber);
+
+                IEnumerable<Row> equalOrbiggerRows = sheetData.Elements<Row>().Where(x => x.RowIndex >= rowNumber);
+                Row equalRow = null, biggerRow = null;
+                if (equalOrbiggerRows != null && equalOrbiggerRows.Count() > 0 && equalOrbiggerRows.First().RowIndex == rowNumber)
+                {
+                    equalRow = equalOrbiggerRows.First();
+                }
+                else if (equalOrbiggerRows != null && equalOrbiggerRows.Count() > 0 && equalOrbiggerRows.First().RowIndex > rowNumber)
+                {
+                    biggerRow = equalOrbiggerRows.First();
+                }
+
+                if (equalRow != null)//存在row.  1.是否存在cell,存在跟新,不存在建立新cell.2.是否有比这个cell更大的cell,有插入大cell之前.否则直接附加在Row后面.
+                {
+                    IEnumerable<Cell> equalOrbiggerCells = equalRow.Elements<Cell>().Where(x => x.CellReference >= new StringValue(cellRefrence));
+
+                    Cell equalCell = null;
+                    Cell biggerCell = null;
+                    if (equalOrbiggerCells != null && equalOrbiggerCells.Count() > 0 && equalOrbiggerCells.First().CellReference == cellRefrence)
+                    {
+                        equalCell = equalOrbiggerCells.First();
+                    }
+                    else if (equalOrbiggerCells != null && equalOrbiggerCells.Count() > 0 && equalOrbiggerCells.First().CellReference > new StringValue(cellRefrence))
+                    {
+                        biggerCell = equalOrbiggerCells.First();
+                    }
+
+                    Cell newCell = createCell(cellRefrence, datatype, value, defaultCellStyle, customStyle);
+                    if (equalCell != null)
+                    {
+                        equalOrbiggerRows.First().ReplaceChild(newCell, equalCell);
+                    }
+                    else
+                    {
+                        if (biggerCell != null)
+                        {
+                            equalOrbiggerRows.First().InsertBefore(newCell, biggerCell);
+                        }
+                        else
+                        {
+                            equalOrbiggerRows.First().Append(newCell);
+                        }
+                    }
+                }
+                else//不存在.新建row and cell.
+                {
+                    Row newrow = new Row();
+                    newrow.RowIndex = rowNumber;
+
+                    Cell theCell = IncOpenExcel.createCell(cellRefrence, datatype, value, defaultCellStyle, customStyle);
+                    if (theCell != null)
+                    {
+                        newrow.Append(theCell);
+                    }
+
+                    if (biggerRow != null)
+                    {
+                        sheetData.InsertBefore(newrow, equalOrbiggerRows.First());//插入的行不是最大的,插到比它大的前面.
+                    }
+                    else
+                    {
+                        sheetData.Append(newrow); ;//插入的行是最大的,直接附加到最后
+                    }
+                }
+            }
+            return true;
+        }
+        public static string GetCellRealString(SpreadsheetDocument document, Cell cell)
+        {
+            string res = null;
+            if (cell != null)
+            {
+                if (cell.DataType != null)
+                {
+                    CellValues cellType = cell.DataType;
+                    if (cellType == CellValues.SharedString)
+                    {
+                        res= getShareString(document,int.Parse(cell.CellValue.Text));
+                    }
+                    else
+                    {
+                        res= cell.CellValue.Text;
+                    }
+                }
+                else
+                {
+                    res= cell.CellValue == null ? "" : cell.CellValue.Text;
+                }
+            }
+            return res;
+        }
         #endregion
 
         #region other
@@ -417,8 +631,7 @@ namespace Common
                 }
             }
         }
-
-        public static string GetCellReference( UInt32 rowIndex, UInt32 colIndex)
+        public static string GetCellReference(uint rowIndex, uint colIndex)
         {
             UInt32 dividend = colIndex;
             string columnName = String.Empty;
@@ -451,8 +664,6 @@ namespace Common
                 return CellValues.String;
             }
         }
-
-
         private static DataTable GetColumnsNames(DataTable dataTable)
         {
             DataTable databable_books = new DataTable("ColumnsNames");
@@ -465,6 +676,19 @@ namespace Common
             }
             databable_books.Rows.Add(newRow);
             return databable_books;
+        }
+        private static string getShareString(SpreadsheetDocument documet, int index)
+        {
+            string res = null;
+            if (documet != null && documet.WorkbookPart.SharedStringTablePart != null && documet.WorkbookPart.SharedStringTablePart.SharedStringTable != null)
+            {
+                IEnumerable<SharedStringItem> items = documet.WorkbookPart.SharedStringTablePart.SharedStringTable.Elements<SharedStringItem>();
+                if (items.Count() > index)
+                {
+                    res = items.ElementAt(index).Text.InnerText;
+                }
+            }
+            return res;
         }
         #endregion
 

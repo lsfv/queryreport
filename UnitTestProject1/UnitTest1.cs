@@ -14,6 +14,7 @@ namespace UnitTestProject1
     {
         private static readonly string SHEETNAME = "Report";
 
+
         //创建测试,期望错误的都有异常出现.否则都可以建立document成员变量.
         [TestMethod]
         public void CreateFile()
@@ -24,7 +25,7 @@ namespace UnitTestProject1
             {
                 try
                 {
-                    using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(files[i], "Report"))
+                    using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(files[i], "Report",true))
                     {
                         Assert.AreEqual(incOpenExcel.IsValidate(), true);
                     }
@@ -44,7 +45,7 @@ namespace UnitTestProject1
 
             string path = "C:\\testfile\\testjustrow.xlsx";
 
-            using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, "Report"))
+            using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, "Report", true))
             {
                 Assert.AreEqual(incOpenExcel.IsValidate(), true);
 
@@ -58,24 +59,19 @@ namespace UnitTestProject1
             unzip(path);
         }
 
-
         [TestMethod]
         public void CreateOrUpdateRowAt2()
         {
-            //null,ok.
-            //position 0,0 [-1,-1],[2,3] ,[1,1]
-
+            //null,ok.   position 0,0 [-1,-1],[2,3] ,[1,1]
             string path = "C:\\testfile\\testrowdata.xlsx";
             try
             {
-                using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, "Report"))
+                using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, "Report", true))
                 {
                     Assert.AreEqual(incOpenExcel.IsValidate(), true);
-
                     DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
-
-                    Dictionary<int, uint> style = new Dictionary<int, uint>();
-                    style.Add(2, 1);
+                    Dictionary<uint, uint> style = new Dictionary<uint, uint>();
+                    style.Add(5,1);
 
                     incOpenExcel.CreateOrUpdateRowAt("Report", dataTable.Rows[0], 4, 4, style);
                     incOpenExcel.CreateOrUpdateRowAt("Report", null, 1, 1, null);
@@ -99,7 +95,7 @@ namespace UnitTestProject1
             string path = "C:\\testfile\\testtabledata1.xlsx";
             try
             {
-                using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, "Report"))
+                using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, "Report", true))
                 {
                     Assert.AreEqual(incOpenExcel.IsValidate(), true);
 
@@ -181,7 +177,7 @@ namespace UnitTestProject1
         {
             bool res = false;
 
-            using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, SHEETNAME))
+            using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, SHEETNAME, true))
             {
                 incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, 1, 2, null);
 
@@ -193,7 +189,175 @@ namespace UnitTestProject1
         }
 
 
-        //todo 加载也要测试非异常,有文档变量
+        //测试更新cell.
+        [TestMethod]
+        public void T10_CreateOrUpdateCell()
+        {
+            string path = "C:\\testfile\\bll_templateUpdateCell.xlsx";
+
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+            using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, SHEETNAME, true))
+            {
+                incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, 1, 2, null);
+                incOpenExcel.CreateOrUpdateCellAt(SHEETNAME, 1, 1, typeof(string), "_start");
+            }
+
+        }
+
+        //测试 datable 带 flag
+        [TestMethod]
+        public void T1101_CreateTable_Flag()
+        {
+            string path = "C:\\testfile\\CreateTable1.xlsx";
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+        }
+        [TestMethod]
+        public void T1102_CreateTable_Flag()
+        {
+            string path = "C:\\testfile\\CreateTable2.xlsx";
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(0);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+        }
+        [TestMethod]
+        public void T1103_CreateTable_Flag()
+        {
+            string path = "C:\\testfile\\CreateTable3.xlsx";
+            DataTable dataTable = null;
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+        }
+
+        [TestMethod]
+        public void T1104_CreateTable_Flag()
+        {
+            string path = "C:\\testfile\\CreateTable3.xlsx";
+            DataTable dataTable = null;
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+        }
+
+        [TestMethod]
+        public void T1201_UpdateTabel()
+        {
+            string path = "C:\\testfile\\updateTabel1.xlsx";
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+
+            dataTable = null;
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+        }
+
+
+        [TestMethod]
+        public void T1202_UpdateTabel()
+        {
+            string path = "C:\\testfile\\updateTabel2.xlsx";
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(0);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+        }
+
+
+        [TestMethod]
+        public void T1203_UpdateTabel()
+        {
+            string path = "C:\\testfile\\updateTabel3.xlsx";
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(1);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+        }
+
+
+        [TestMethod]
+        public void T1204_UpdateTabel()
+        {
+            string path = "C:\\testfile\\updateTabel4.xlsx";
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(10);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+        }
+
+
+        [TestMethod]
+        public void T1205_UpdateTabel()
+        {
+            string path = "C:\\testfile\\updateTabel5.xlsx";
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(10);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(2);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(0);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+
+            dataTable = null;
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(3);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+        }
+
+        [TestMethod]
+        public void T1301_GetRowColumn()
+        {
+            uint r, c;
+            Ref2RC("A2", out r, out c);
+            Debug.Print(r + "." + c);
+
+            Ref2RC("z2", out r, out c);
+            Debug.Print(r + "." + c);
+
+            Ref2RC("bc4", out r, out c);
+            Debug.Print(r + "." + c);
+        }
+
+        public void Ref2RC(string refa,out uint rowNo,out uint columnNo)
+        {
+            rowNo = 0;
+            columnNo = 0;
+            refa = refa.ToUpper();
+            Dictionary<char, int> maping = new Dictionary<char, int>();
+            maping.Add('A', 1); maping.Add('B', 2); maping.Add('C', 3); maping.Add('D', 4);
+            maping.Add('E', 5); maping.Add('F', 6); maping.Add('G', 7); maping.Add('H', 8);
+            maping.Add('I', 9); maping.Add('J', 10); maping.Add('K', 11); maping.Add('L', 12);
+            maping.Add('M', 13); maping.Add('N', 14); maping.Add('O', 15); maping.Add('P', 16);
+            maping.Add('Q', 17); maping.Add('R', 18); maping.Add('S', 19); maping.Add('T', 20);
+            maping.Add('U', 21); maping.Add('V', 22); maping.Add('W', 23); maping.Add('X', 24);
+            maping.Add('Y', 25); maping.Add('Z', 26);
+
+            List<char> chars = refa.ToList<char>();
+            List<char> columns = new List<char>();
+            List<char> rows = new List<char>();
+            foreach (char c in chars)
+            {
+                if (c >= 'A' && c <= 'Z')
+                {
+                    columns.Add(c);
+                }
+                else if (c >= '0' && c <= '9')
+                {
+                    rows.Add(c);
+                }
+            }
+            if (columns.Count == 2)
+            {
+                columnNo = (uint)(26 * maping[columns[0]] + maping[columns[1]]);
+            }
+            else if (columns.Count == 1)
+            {
+                columnNo = (uint)maping[columns[0]];
+            }
+        }
+
         [TestMethod]
         public void unzipExcel()
         {
@@ -207,7 +371,5 @@ namespace UnitTestProject1
             string descpath = "C:/testfile/unzip"+Path.GetFileName(file) + DateTime.Now.ToFileTimeUtc();
             Common.ZipFloClass.UncompressFile(descpath, file, true);
         }
-
-
     }
 }
