@@ -11,16 +11,32 @@ namespace CUSTOMRP.BLL
         {
             if (myExcelFile!=null && dataTable != null && sheetName != null &&  columnsIndex != null && columnsIndex.Count > 0)
             {
-                writtingRowNo = writtingRowNo + 1;
+                writtingRowNo++;
+                int minIndex = columnsIndex.Min();
+                minIndex = minIndex == 0 ? 0 : minIndex - 1;
                 for (int i = 0; i < columnsIndex.Count; i++)
                 {
                     int columnIndex = columnsIndex[i];
                     if (columnIndex <= dataTable.Columns.Count - 1)
                     {
                         string tempTotal = GetTotal(dataTable, columnIndex);
-                        myExcelFile.CreateOrUpdateCellAt(sheetName, writtingRowNo, (uint)(columnIndex+1+1), typeof(decimal), tempTotal);
+                        if (columnIndex == minIndex)
+                        {
+                            tempTotal = "Total " + tempTotal;
+                            myExcelFile.CreateOrUpdateCellAt(sheetName, writtingRowNo, (uint)(columnIndex + 1 + 1), typeof(string), tempTotal);//index->no:+1. flag:+1
+                        }
+                        else
+                        {
+                            myExcelFile.CreateOrUpdateCellAt(sheetName, writtingRowNo, (uint)(columnIndex + 1 + 1), typeof(decimal), tempTotal);
+                        }
                     }
                 }
+
+                if (!columnsIndex.Contains(minIndex))
+                {
+                    myExcelFile.CreateOrUpdateCellAt(sheetName, writtingRowNo, (uint)minIndex+1+1, typeof(string), "Total");
+                }
+                writtingRowNo++;
             }
             return myExcelFile;
         }
@@ -34,9 +50,12 @@ namespace CUSTOMRP.BLL
                 {
                     resd += decimal.Parse(row[columnIndex].ToString());
                 }
+                return resd.ToString();
             }
-            catch { }
-            return resd.ToString();
+            catch {
+                return "";
+            }
+            
         }
     }
 }

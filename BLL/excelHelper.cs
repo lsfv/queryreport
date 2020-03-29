@@ -24,16 +24,12 @@ namespace CUSTOMRP.BLL
                     uint startColumnNo = 2;
                     uint writingRowNo = startRowNo;
                     incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, startRowNo, startColumnNo, null);
-                    writingRowNo += (uint)dataTable.Rows.Count;
+                    writingRowNo += (uint)dataTable.Rows.Count+1;
+
                     List<int> ll = new List<int>();
-                    ll.Add(0);
-                    ll.Add(1);
-                    ll.Add(2);
                     ll.Add(3);
-                    ll.Add(5);
-                    ll.Add(15);
                     InsertSpecialPart_reportTotal.FillSomeData(incOpenExcel, dataTable, SHEETNAME, ll,ref writingRowNo);
-                    writingRowNo++;
+                    writingRowNo--;
                     SetDataFlag(startRowNo, writingRowNo, incOpenExcel, SHEETNAME);
                 }
             }
@@ -48,8 +44,9 @@ namespace CUSTOMRP.BLL
                 if (dataTable != null)
                 {
                     //0.get style of report 1.save bottom  2.delete all from data  3.append data 4. get offset and change boxxom 5.append bottom
-                    uint startRowNo, endRowNo;
+                    uint startRowNo, endRowNo, writingRowNo;
                     GetDataFlag(incOpenExcel, out startRowNo, out endRowNo, SHEETNAME);
+                    writingRowNo = startRowNo;
 
                     Dictionary<uint, uint> titleStyle = Common.IncOpenExcel.getRowStyles(incOpenExcel.GetRow(SHEETNAME, startRowNo));
                     Dictionary<uint, Dictionary<uint, uint>> reportStyle = new Dictionary<uint, Dictionary<uint, uint>>();
@@ -58,9 +55,16 @@ namespace CUSTOMRP.BLL
                     List<string> bottomXmls = incOpenExcel.GetRowsXml(SHEETNAME, endRowNo + 1, uint.MaxValue);
                     incOpenExcel.DeleteRows(SHEETNAME, startRowNo, uint.MaxValue);
                     incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, startRowNo, 2, reportStyle);
-                    int offset = dataTable.Rows.Count + 1 - (int)(endRowNo - startRowNo + 1);
+
+                    writingRowNo += (uint)dataTable.Rows.Count + 1;
+                    List<int> ll = new List<int>();
+                    ll.Add(3);
+                    InsertSpecialPart_reportTotal.FillSomeData(incOpenExcel, dataTable, SHEETNAME, ll, ref writingRowNo);
+                    writingRowNo--;
+                    SetDataFlag(startRowNo, writingRowNo, incOpenExcel, SHEETNAME);
+
+                    int offset = (int)(writingRowNo - startRowNo);
                     incOpenExcel.MoveRows(SHEETNAME, bottomXmls, offset);
-                    SetDataFlag(startRowNo, startRowNo + (uint)dataTable.Rows.Count, incOpenExcel, SHEETNAME);
                 }
             }
             return true;
