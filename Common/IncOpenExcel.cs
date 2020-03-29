@@ -781,7 +781,7 @@ namespace Common
         private static void createDeafultStyle(WorkbookPart workbookpart, out DefaultCellStyle cellStyle)
         {
 
-            cellStyle = new DefaultCellStyle(0, 0, 0);
+            cellStyle = new DefaultCellStyle(0, 0, 0,0,0,0);
             if (workbookpart != null)
             {
                 //1.建立必要的文件和其根节点.
@@ -801,10 +801,19 @@ namespace Common
                 {
                     workbookpart.WorkbookStylesPart.Stylesheet.Fills = new Fills(new Fill(new PatternFill() { PatternType = PatternValues.None }), new Fill(new PatternFill() { PatternType = PatternValues.Gray125 }));
                 }
-                if (workbookpart.WorkbookStylesPart.Stylesheet.Borders == null)
+                if (workbookpart.WorkbookStylesPart.Stylesheet.Borders == null)//todo need 分出一个方法,便于保证每次都有.
                 {
                     workbookpart.WorkbookStylesPart.Stylesheet.Borders = new Borders();
                     workbookpart.WorkbookStylesPart.Stylesheet.Borders.Append(new Border(new RightBorder(), new TopBorder(), new BottomBorder(), new DiagonalBorder()));
+                    RightBorder rightBorder = new RightBorder();
+                    rightBorder.Style = BorderStyleValues.Thin;
+                    TopBorder topBorder = new TopBorder();
+                    topBorder.Style = BorderStyleValues.Thin;
+                    BottomBorder bottomBorder = new BottomBorder();
+                    bottomBorder.Style = BorderStyleValues.Thin;
+                    DiagonalBorder diagonalBorder = new DiagonalBorder();
+                    diagonalBorder.Style = BorderStyleValues.Thin;
+                    workbookpart.WorkbookStylesPart.Stylesheet.Borders.Append(new Border(rightBorder, topBorder, bottomBorder, diagonalBorder));
                 }
                 if (workbookpart.WorkbookStylesPart.Stylesheet.CellFormats == null)
                 {
@@ -829,12 +838,12 @@ namespace Common
                 cellStyle.normalIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, defaultFont, null, null);
                 cellStyle.blackIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, BoldFont, null, null);
                 cellStyle.dateTimeIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, defaultFont, null, dateDeafult);
+                cellStyle.normalIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, defaultFont, null, null);
                 workbookpart.WorkbookStylesPart.Stylesheet.Save();
             }
         }
-
-        
         #endregion
+
         #endregion
 
         #region innerclass
@@ -843,12 +852,18 @@ namespace Common
             public UInt32 normalIndex { get; set; }
             public UInt32 dateTimeIndex { get; set; }
             public UInt32 blackIndex { get; set; }
+            public uint normalIndex_border;
+            public uint dateTimeIndex_border;
+            public uint blackIndex_border;
 
-            public DefaultCellStyle(UInt32 _normalIndex, UInt32 _dateTimeIndex, UInt32 _blackIndex)
+            public DefaultCellStyle(uint normalIndex, uint dateTimeIndex, uint blackIndex, uint normalIndex_border, uint dateTimeIndex_border, uint blackIndex_border)
             {
-                normalIndex = _normalIndex;
-                dateTimeIndex = _dateTimeIndex;
-                blackIndex = _blackIndex;
+                this.normalIndex = normalIndex;
+                this.dateTimeIndex = dateTimeIndex;
+                this.blackIndex = blackIndex;
+                this.normalIndex_border = normalIndex_border;
+                this.dateTimeIndex_border = dateTimeIndex_border;
+                this.blackIndex_border = blackIndex_border;
             }
         }
         #endregion

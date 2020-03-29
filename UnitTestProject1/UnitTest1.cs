@@ -122,7 +122,7 @@ namespace UnitTestProject1
         {
             string bllpath = "C:\\testfile\\bll_templateok.xlsx";
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
-            bool res = CUSTOMRP.BLL.ExcelHelper.CreateReport(bllpath, dataTable);
+            bool res = CUSTOMRP.BLL.ExcelHelper.CreateReport(bllpath, dataTable, null);
             Assert.AreEqual(res, true);
         }
 
@@ -132,7 +132,7 @@ namespace UnitTestProject1
         {
             string bllpath = "C:\\testfile\\bll_template_datanull.xlsx";
             DataTable dataTable = null;
-            bool res = CUSTOMRP.BLL.ExcelHelper.CreateReport(bllpath, dataTable);
+            bool res = CUSTOMRP.BLL.ExcelHelper.CreateReport(bllpath, dataTable, null);
             Assert.AreEqual(res, true);
         }
 
@@ -143,7 +143,7 @@ namespace UnitTestProject1
         {
             string bllpath = null;
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
-            bool res = CUSTOMRP.BLL.ExcelHelper.CreateReport(bllpath, dataTable);
+            bool res = CUSTOMRP.BLL.ExcelHelper.CreateReport(bllpath, dataTable, null);
         }
 
 
@@ -154,10 +154,10 @@ namespace UnitTestProject1
 
             string bllpath = "";
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
-            bool res = CUSTOMRP.BLL.ExcelHelper.CreateReport(bllpath, dataTable);
+            bool res = CUSTOMRP.BLL.ExcelHelper.CreateReport(bllpath, dataTable, null);
             Assert.AreEqual(res, true);
 
-            res = CUSTOMRP.BLL.ExcelHelper.CreateReport(null, dataTable);
+            res = CUSTOMRP.BLL.ExcelHelper.CreateReport(null, dataTable, null);
         }
 
 
@@ -209,21 +209,21 @@ namespace UnitTestProject1
         {
             string path = "C:\\testfile\\CreateTable1.xlsx";
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
-            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable, null);
         }
         [TestMethod]
         public void T1102_CreateTable_Flag()
         {
             string path = "C:\\testfile\\CreateTable2.xlsx";
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(0);
-            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable, null);
         }
         [TestMethod]
         public void T1103_CreateTable_Flag()
         {
             string path = "C:\\testfile\\CreateTable3.xlsx";
             DataTable dataTable = null;
-            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable, null);
         }
 
         [TestMethod]
@@ -231,7 +231,7 @@ namespace UnitTestProject1
         {
             string path = "C:\\testfile\\CreateTable3.xlsx";
             DataTable dataTable = null;
-            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable, null);
         }
 
         [TestMethod]
@@ -239,10 +239,10 @@ namespace UnitTestProject1
         {
             string path = "C:\\testfile\\updateTabel1.xlsx";
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
-            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable,null);
 
             dataTable = null;
-            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, null);
         }
 
 
@@ -251,10 +251,10 @@ namespace UnitTestProject1
         {
             string path = "C:\\testfile\\updateTabel2.xlsx";
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
-            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable, null);
 
             dataTable = Common.incUnitTest.GetDatatableCustomCount(0);
-            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, null);
         }
 
 
@@ -263,10 +263,10 @@ namespace UnitTestProject1
         {
             string path = "C:\\testfile\\updateTabel3.xlsx";
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
-            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable, null);
 
             dataTable = Common.incUnitTest.GetDatatableCustomCount(1);
-            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, null);
         }
 
 
@@ -275,10 +275,10 @@ namespace UnitTestProject1
         {
             string path = "C:\\testfile\\updateTabel4.xlsx";
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
-            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable, null);
 
             dataTable = Common.incUnitTest.GetDatatableCustomCount(10);
-            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, null);
         }
 
 
@@ -286,23 +286,24 @@ namespace UnitTestProject1
         public void T1205_UpdateTabel()
         {
             string path = "C:\\testfile\\updateTabel5.xlsx";
+
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
-            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable, null);
 
             dataTable = Common.incUnitTest.GetDatatableCustomCount(10);
-            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, null);
 
             dataTable = Common.incUnitTest.GetDatatableCustomCount(2);
-            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, null);
 
             dataTable = Common.incUnitTest.GetDatatableCustomCount(0);
-            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, null);
 
             dataTable = null;
-            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, null);
 
             dataTable = Common.incUnitTest.GetDatatableCustomCount(3);
-            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, null);
         }
 
         [TestMethod]

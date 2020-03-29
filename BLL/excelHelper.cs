@@ -7,14 +7,14 @@ using System.Text;
 namespace CUSTOMRP.BLL
 {
     //todo 最后需要 看下GetCellReference 是否是row ,column.
-    //todo total,
+    //todo  全部画格子.2.更新时,除下title也全部画格子.
     public abstract class ExcelHelper
     {
         private static readonly string SHEETNAME = "Report";
         private static readonly string STRING_DATASTART = "_DATASTART";
         private static readonly string STRING_DATAEND = "_DATAEND";
 
-        public static bool CreateReport(string path, DataTable dataTable)
+        public static bool CreateReport(string path, DataTable dataTable, List<int> totalColumn)
         {
             using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, SHEETNAME,true))
             {
@@ -26,9 +26,7 @@ namespace CUSTOMRP.BLL
                     incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, startRowNo, startColumnNo, null);
                     writingRowNo += (uint)dataTable.Rows.Count+1;
 
-                    List<int> ll = new List<int>();
-                    ll.Add(3);
-                    InsertSpecialPart_reportTotal.FillSomeData(incOpenExcel, dataTable, SHEETNAME, ll,ref writingRowNo);
+                    InsertSpecialPart_reportTotal.FillSomeData(incOpenExcel, dataTable, SHEETNAME, totalColumn, ref writingRowNo);
                     writingRowNo--;
                     SetDataFlag(startRowNo, writingRowNo, incOpenExcel, SHEETNAME);
                 }
@@ -37,7 +35,7 @@ namespace CUSTOMRP.BLL
         }
 
 
-        public static bool UpdateReport(string path, DataTable dataTable)
+        public static bool UpdateReport(string path, DataTable dataTable, List<int> totalColumn)
         {
             using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, SHEETNAME, false))
             {
@@ -57,9 +55,7 @@ namespace CUSTOMRP.BLL
                     incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, startRowNo, 2, reportStyle);
 
                     writingRowNo += (uint)dataTable.Rows.Count + 1;
-                    List<int> ll = new List<int>();
-                    ll.Add(3);
-                    InsertSpecialPart_reportTotal.FillSomeData(incOpenExcel, dataTable, SHEETNAME, ll, ref writingRowNo);
+                    InsertSpecialPart_reportTotal.FillSomeData(incOpenExcel, dataTable, SHEETNAME, totalColumn, ref writingRowNo);
                     writingRowNo--;
                     SetDataFlag(startRowNo, writingRowNo, incOpenExcel, SHEETNAME);
 

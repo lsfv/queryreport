@@ -9,10 +9,6 @@ namespace QueryReport.Admin
 {
     public partial class ViewNew2 : System.Web.UI.Page
     {
-        private CUSTOMRP.Model.SOURCEVIEW myView = null;
-        private List<CUSTOMRP.Model.SOURCEVIEWCOLUMN> myColumns = null;
-        private List<TblView> dbViewList = null;
-
         protected void Page_Load(object sender, EventArgs e)
         {
 
