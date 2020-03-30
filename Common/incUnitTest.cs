@@ -178,5 +178,22 @@ namespace Common
 
             return databable_books;
         }
+
+        public static DataTable GetStringDatatableCustomCount(int columnCount)
+        {
+            DataTable databable_books = null;
+            if (columnCount > 0)
+            {
+                databable_books=new DataTable("TemplateDatatable");
+
+                for (int i = 0; i < columnCount; i++)
+                {
+                    databable_books.Columns.Add("column" + i, typeof(string));
+                }
+                return databable_books;
+            }
+            return databable_books;
+        }
+
     }
 }

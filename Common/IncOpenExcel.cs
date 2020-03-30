@@ -17,7 +17,7 @@ namespace Common
         public readonly static string error_empty = "it is null or empty";
 
         private SpreadsheetDocument document = null;
-        private DefaultCellStyle defaultCellStyle = null;
+        public DefaultCellStyle defaultCellStyle = null;
 
 
         #region public
@@ -54,25 +54,6 @@ namespace Common
         #endregion
 
         #region row
-        public bool CreateOrUpdateRowsAt(string sheetName, DataTable dataTable, uint rowNo, uint columnNo, Dictionary<uint, Dictionary<uint, uint>> reportStyle_RowColumnStyleNo = null)
-        {
-            SheetData sheetData = GetSheetData(sheetName);
-            if (sheetData != null && dataTable != null)
-            {
-                DataTable columnsTable = GetColumnsNames(dataTable);
-
-                Dictionary<uint, uint> titleStyle = reportStyle_RowColumnStyleNo == null ? null : reportStyle_RowColumnStyleNo.Keys.Contains(rowNo) == true ? reportStyle_RowColumnStyleNo[rowNo] : null;
-                IncOpenExcel.CreateOrUpdateRowAt(sheetData, columnsTable.Rows[0], rowNo, columnNo, defaultCellStyle, titleStyle);
-
-                for (int i = 0; i < dataTable.Rows.Count; i++)
-                {
-                    Dictionary<uint, uint> tempRowStyle = reportStyle_RowColumnStyleNo == null ? null : reportStyle_RowColumnStyleNo.Keys.Contains((uint)(rowNo+i+1)) == true ? reportStyle_RowColumnStyleNo[(uint)(rowNo + i + 1)] : null;
-                    IncOpenExcel.CreateOrUpdateRowAt(sheetData, dataTable.Rows[i], rowNo + (uint)(i + 1), columnNo, defaultCellStyle, tempRowStyle);
-                }
-            }
-            return true;
-        }
-
         public bool CreateOrUpdateRowAt(string sheetName, DataRow dataRow, uint rowNo, uint columnNo, Dictionary<uint, uint> eachColumnStyle = null)
         {
             bool res = false;
@@ -133,7 +114,7 @@ namespace Common
             return res;
         }
 
-        public bool MoveRows(string sheetName, List<string> xmlrows, int offset)
+        public bool MoveRows(string sheetName, List<string> xmlrows, uint newLineNo)
         {
             bool res = false;
             SheetData sheetData = GetSheetData(sheetName);
@@ -145,7 +126,7 @@ namespace Common
                     try
                     {
                         Row changingRow = new Row(strRow);
-                        ChangeRowNoAndCellReference(changingRow, (uint)(changingRow.RowIndex+ offset));
+                        ChangeRowNoAndCellReference(changingRow, newLineNo);
                         newRowsList.Add(changingRow);
                     }
                     catch
@@ -198,6 +179,55 @@ namespace Common
             }
             return styles;
         }
+
+        //todo o...
+        public static Dictionary<uint, uint> getRowStyles(DataColumnCollection dataColumn,uint startColumnNo,int cateogry,DefaultCellStyle defaultCellStyle)
+        {
+            Dictionary<uint, uint> styles = new Dictionary<uint, uint>();
+            if (dataColumn != null)
+            {
+                for (int i = 0; i < dataColumn.Count; i++)
+                {
+                    uint defaultStyle = IncOpenExcel.getDefaultStyle(dataColumn[i].DataType,defaultCellStyle, cateogry);
+                    styles.Add((uint)i + startColumnNo, defaultStyle);
+                }
+            }
+            return styles;
+        }
+
+        //category .0:normal   1:4lineborder   
+        public static uint getDefaultStyle(System.Type type,DefaultCellStyle defaultCellStyle, int category)
+        {
+            uint res = 0;
+            CellValues theCellValue = GetValueType(type);
+
+            if (theCellValue == CellValues.Date)
+            {
+                if (category == 0)
+                {
+                    res = defaultCellStyle.dateTimeIndex;
+                }
+                else if (category == 1)
+                {
+                    res = defaultCellStyle.dateTimeIndex_border;
+                }
+            }
+            else
+            {
+                if (category == 0)
+                {
+                    res = defaultCellStyle.normalIndex;
+                }
+              
+                else if (category == 1 )
+                {
+                    res = defaultCellStyle.normalIndex_border;
+                }
+               
+            }
+            return res;
+        }
+
 
         public static void Ref2RC(string refa,  out uint columnNo)
         {
@@ -619,6 +649,9 @@ namespace Common
         #endregion
 
         #region other
+
+        
+
         private static void SetExcelPivotTableCacheAutoReflesh(SpreadsheetDocument document)
         {
             if (document != null)
@@ -664,7 +697,7 @@ namespace Common
                 return CellValues.String;
             }
         }
-        private static DataTable GetColumnsNames(DataTable dataTable)
+        public static DataTable GetColumnsNames(DataTable dataTable)
         {
             DataTable databable_books = new DataTable("ColumnsNames");
             DataRow newRow = databable_books.NewRow();
@@ -761,6 +794,11 @@ namespace Common
                 cellFormat.ApplyFont = true;
                 cellFormat.FontId = fontIndex;
             }
+            if (borderid != null)
+            {
+                cellFormat.ApplyBorder = true;
+                cellFormat.BorderId = borderid;
+            }
             if (fillIndex != null)
             {
                 cellFormat.FillId = fillIndex;
@@ -777,10 +815,48 @@ namespace Common
             styleSheet.CellFormats.Count++;
             return result;
         }
+
+        private static UInt32Value createEmptyBorder(Stylesheet styleSheet)
+        {
+            styleSheet.Borders.Count = styleSheet.Borders.Count == null ? 0 : styleSheet.Borders.Count;
+
+            Border tempBorder = new Border(new RightBorder(), new TopBorder(), new BottomBorder(), new DiagonalBorder());
+
+            styleSheet.Borders.Append(tempBorder);
+            UInt32Value res = styleSheet.Borders.Count;
+            styleSheet.Borders.Count++;
+            return res;
+        }
+
+
+        private static UInt32Value create4LinesBorder(Stylesheet styleSheet)
+        {
+            styleSheet.Borders.Count = styleSheet.Borders.Count == null ? 0 : styleSheet.Borders.Count;
+
+            RightBorder rightBorder = new RightBorder();
+            rightBorder.Style = BorderStyleValues.Thin;
+            TopBorder topBorder = new TopBorder();
+            topBorder.Style = BorderStyleValues.Thin;
+            BottomBorder bottomBorder = new BottomBorder();
+            bottomBorder.Style = BorderStyleValues.Thin;
+            LeftBorder leftBorder = new LeftBorder();
+            leftBorder.Style = BorderStyleValues.Thin;
+            Border tempBorder = new Border();
+            tempBorder.LeftBorder = leftBorder;
+            tempBorder.RightBorder = rightBorder;
+            tempBorder.TopBorder = topBorder;
+            tempBorder.BottomBorder = bottomBorder;
+
+            styleSheet.Borders.Append(tempBorder);
+            UInt32Value res = styleSheet.Borders.Count;
+            styleSheet.Borders.Count++;
+            return res;
+        }
+
+
         //建立一个最小样式表.
         private static void createDeafultStyle(WorkbookPart workbookpart, out DefaultCellStyle cellStyle)
         {
-
             cellStyle = new DefaultCellStyle(0, 0, 0,0,0,0);
             if (workbookpart != null)
             {
@@ -801,19 +877,9 @@ namespace Common
                 {
                     workbookpart.WorkbookStylesPart.Stylesheet.Fills = new Fills(new Fill(new PatternFill() { PatternType = PatternValues.None }), new Fill(new PatternFill() { PatternType = PatternValues.Gray125 }));
                 }
-                if (workbookpart.WorkbookStylesPart.Stylesheet.Borders == null)//todo need 分出一个方法,便于保证每次都有.
+                if (workbookpart.WorkbookStylesPart.Stylesheet.Borders == null)
                 {
                     workbookpart.WorkbookStylesPart.Stylesheet.Borders = new Borders();
-                    workbookpart.WorkbookStylesPart.Stylesheet.Borders.Append(new Border(new RightBorder(), new TopBorder(), new BottomBorder(), new DiagonalBorder()));
-                    RightBorder rightBorder = new RightBorder();
-                    rightBorder.Style = BorderStyleValues.Thin;
-                    TopBorder topBorder = new TopBorder();
-                    topBorder.Style = BorderStyleValues.Thin;
-                    BottomBorder bottomBorder = new BottomBorder();
-                    bottomBorder.Style = BorderStyleValues.Thin;
-                    DiagonalBorder diagonalBorder = new DiagonalBorder();
-                    diagonalBorder.Style = BorderStyleValues.Thin;
-                    workbookpart.WorkbookStylesPart.Stylesheet.Borders.Append(new Border(rightBorder, topBorder, bottomBorder, diagonalBorder));
                 }
                 if (workbookpart.WorkbookStylesPart.Stylesheet.CellFormats == null)
                 {
@@ -827,6 +893,8 @@ namespace Common
                 //自定义字体
                 UInt32 defaultFont = createFont(workbookpart.WorkbookStylesPart.Stylesheet, "Microsoft YaHei", (double)11, false, System.Drawing.Color.Black);
                 UInt32 BoldFont = createFont(workbookpart.WorkbookStylesPart.Stylesheet, "Microsoft YaHei", (double)11, true, System.Drawing.Color.Black);
+                uint borderEmpty = createEmptyBorder(workbookpart.WorkbookStylesPart.Stylesheet);
+                uint border4Line = create4LinesBorder(workbookpart.WorkbookStylesPart.Stylesheet);
                 //自定义数字格式,时间格式
                 UInt32 dateDeafult = 240;
                 var numberFormatDate_index = new NumberingFormat();
@@ -834,11 +902,12 @@ namespace Common
                 numberFormatDate_index.NumberFormatId = dateDeafult;//随意定义100~200之间.
                 workbookpart.WorkbookStylesPart.Stylesheet.NumberingFormats.InsertAt(numberFormatDate_index, workbookpart.WorkbookStylesPart.Stylesheet.NumberingFormats.Count());
                 //自定义最终给用户的单元格式.
-                //todo:这里应该扩展机会会大.需要重构
                 cellStyle.normalIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, defaultFont, null, null);
                 cellStyle.blackIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, BoldFont, null, null);
                 cellStyle.dateTimeIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, defaultFont, null, dateDeafult);
-                cellStyle.normalIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, defaultFont, null, null);
+                cellStyle.normalIndex_border = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, defaultFont, null, null);
+                cellStyle.blackIndex_border = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, BoldFont, null, null);
+                cellStyle.dateTimeIndex_border = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, defaultFont, null, dateDeafult);
                 workbookpart.WorkbookStylesPart.Stylesheet.Save();
             }
         }

@@ -100,13 +100,13 @@ namespace UnitTestProject1
 
                     DataTable dataTable = null;// Common.incUnitTest.GetDatatableCustomCount(5);
 
-                    incOpenExcel.CreateOrUpdateRowsAt("Report", dataTable, 2, 2, null);
+                    //excelh CreateOrUpdateRowsAt(incOpenExcel, "Report", dataTable, 2, 2,null);
 
                     dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
-                    incOpenExcel.CreateOrUpdateRowsAt("Report", dataTable, 2, 2, null);
+                    //incOpenExcel.CreateOrUpdateRowsAt("Report", dataTable, 2, 2, null);
 
                     dataTable = Common.incUnitTest.GetDatatableCustomCount(2);
-                    incOpenExcel.CreateOrUpdateRowsAt("Report", dataTable, 3, 1, null);
+                    //incOpenExcel.CreateOrUpdateRowsAt("Report", dataTable, 3, 1, null);
                 }
             }
             catch (Exception e)
@@ -178,7 +178,7 @@ namespace UnitTestProject1
 
             using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, SHEETNAME, true))
             {
-                incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, 1, 2, null);
+                //incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, 1, 2, null);
 
                 List<string> rowsXmls = incOpenExcel.GetRowsXml(SHEETNAME, 2, 4);
                 incOpenExcel.DeleteRows(SHEETNAME, 2, 4);
@@ -197,7 +197,7 @@ namespace UnitTestProject1
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
             using (Common.IncOpenExcel incOpenExcel = new Common.IncOpenExcel(path, SHEETNAME, true))
             {
-                incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, 1, 2, null);
+                //incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, 1, 2,null);
                 incOpenExcel.CreateOrUpdateCellAt(SHEETNAME, 1, 1, typeof(string), "_start");
             }
 
@@ -288,13 +288,19 @@ namespace UnitTestProject1
             string path = "C:\\testfile\\updateTabel5.xlsx";
 
             DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
-            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable, null);
+            List<int> totalIndex = new List<int>();
+            totalIndex.Add(3);
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable, totalIndex);
 
             dataTable = Common.incUnitTest.GetDatatableCustomCount(10);
             CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, null);
 
+
+            List<int> totalIndex2 = new List<int>();
+            totalIndex2.Add(0);
+            totalIndex2.Add(1);
             dataTable = Common.incUnitTest.GetDatatableCustomCount(2);
-            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, null);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, totalIndex2);
 
             dataTable = Common.incUnitTest.GetDatatableCustomCount(0);
             CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, null);
@@ -302,8 +308,10 @@ namespace UnitTestProject1
             dataTable = null;
             CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, null);
 
+            List<int> totalIndex3 = new List<int>();
+            totalIndex3.Add(3);
             dataTable = Common.incUnitTest.GetDatatableCustomCount(3);
-            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, null);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, totalIndex3);
         }
 
         [TestMethod]

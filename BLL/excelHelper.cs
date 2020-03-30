@@ -7,7 +7,6 @@ using System.Text;
 namespace CUSTOMRP.BLL
 {
     //todo 最后需要 看下GetCellReference 是否是row ,column.
-    //todo  全部画格子.2.更新时,除下title也全部画格子.
     public abstract class ExcelHelper
     {
         private static readonly string SHEETNAME = "Report";
@@ -20,13 +19,20 @@ namespace CUSTOMRP.BLL
             {
                 if (dataTable != null)
                 {
+                    //init variable
                     uint startRowNo = 1;
                     uint startColumnNo = 2;
                     uint writingRowNo = startRowNo;
-                    incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, startRowNo, startColumnNo, null);
+                    bool hasTotal = totalColumn == null ? false : totalColumn.Count > 0 ? true : false;
+
+                    //insert databable
+                    CreateOrUpdateRowsAt(incOpenExcel, SHEETNAME, incOpenExcel.defaultCellStyle, dataTable, startRowNo, startColumnNo, null);
                     writingRowNo += (uint)dataTable.Rows.Count+1;
 
-                    InsertSpecialPart_reportTotal.FillSomeData(incOpenExcel, dataTable, SHEETNAME, totalColumn, ref writingRowNo);
+                    //insert total
+                    InsertSpecialPart_reportTotal.FillSomeData(incOpenExcel, dataTable, SHEETNAME, totalColumn, ref writingRowNo,incOpenExcel.defaultCellStyle);
+
+                    //insert dataFlag
                     writingRowNo--;
                     SetDataFlag(startRowNo, writingRowNo, incOpenExcel, SHEETNAME);
                 }
@@ -42,29 +48,58 @@ namespace CUSTOMRP.BLL
                 if (dataTable != null)
                 {
                     //0.get style of report 1.save bottom  2.delete all from data  3.append data 4. get offset and change boxxom 5.append bottom
+                    ////init variable
                     uint startRowNo, endRowNo, writingRowNo;
+                    uint startColumnNo = 2;
                     GetDataFlag(incOpenExcel, out startRowNo, out endRowNo, SHEETNAME);
                     writingRowNo = startRowNo;
-
+                    bool hasTotal = totalColumn == null ? false : totalColumn.Count > 0 ? true : false;
                     Dictionary<uint, uint> titleStyle = Common.IncOpenExcel.getRowStyles(incOpenExcel.GetRow(SHEETNAME, startRowNo));
-                    Dictionary<uint, Dictionary<uint, uint>> reportStyle = new Dictionary<uint, Dictionary<uint, uint>>();
-                    reportStyle.Add(startRowNo, titleStyle);
-
+                    
+                    //delete predata
                     List<string> bottomXmls = incOpenExcel.GetRowsXml(SHEETNAME, endRowNo + 1, uint.MaxValue);
                     incOpenExcel.DeleteRows(SHEETNAME, startRowNo, uint.MaxValue);
-                    incOpenExcel.CreateOrUpdateRowsAt(SHEETNAME, dataTable, startRowNo, 2, reportStyle);
 
+                    //insert databable
+                    CreateOrUpdateRowsAt(incOpenExcel, SHEETNAME, incOpenExcel.defaultCellStyle, dataTable, startRowNo, startColumnNo, titleStyle);
                     writingRowNo += (uint)dataTable.Rows.Count + 1;
-                    InsertSpecialPart_reportTotal.FillSomeData(incOpenExcel, dataTable, SHEETNAME, totalColumn, ref writingRowNo);
+
+                    //insert total
+                    InsertSpecialPart_reportTotal.FillSomeData(incOpenExcel, dataTable, SHEETNAME, totalColumn, ref writingRowNo, incOpenExcel.defaultCellStyle);
+
+                    //insert dataFlag
                     writingRowNo--;
                     SetDataFlag(startRowNo, writingRowNo, incOpenExcel, SHEETNAME);
 
-                    int offset = (int)(writingRowNo - startRowNo);
-                    incOpenExcel.MoveRows(SHEETNAME, bottomXmls, offset);
+                    //append bottom
+                    writingRowNo++;
+                    incOpenExcel.MoveRows(SHEETNAME, bottomXmls, writingRowNo);
                 }
             }
             return true;
         }
+
+        private static bool CreateOrUpdateRowsAt(Common.IncOpenExcel excelFile,string sheetName, Common.IncOpenExcel.DefaultCellStyle defaultCellStyle, DataTable dataTable, uint rowNo, uint columnNo, Dictionary<uint, uint> titleStyle)
+        {
+            if (excelFile!=null && sheetName != null && dataTable != null && defaultCellStyle != null)
+            {
+                DataTable columnsTable = Common.IncOpenExcel.GetColumnsNames(dataTable);
+
+                if (titleStyle == null)
+                {
+                    titleStyle = Common.IncOpenExcel.getRowStyles(columnsTable.Columns, columnNo, 1, defaultCellStyle);//todo blacked here
+                }
+                excelFile.CreateOrUpdateRowAt(sheetName, columnsTable.Rows[0], rowNo, columnNo, titleStyle);
+
+                for (int i = 0; i < dataTable.Rows.Count; i++)
+                {
+                    Dictionary<uint, uint> tempRowStyle = Common.IncOpenExcel.getRowStyles(dataTable.Columns, columnNo, 1, defaultCellStyle);
+                    excelFile.CreateOrUpdateRowAt(sheetName, dataTable.Rows[i], rowNo + (uint)(i + 1), columnNo, tempRowStyle);
+                }
+            }
+            return true;
+        }
+
 
         private static void SetDataFlag(uint startRow, uint endrow, Common.IncOpenExcel myexcel, string sheetName)
         {
@@ -89,13 +124,5 @@ namespace CUSTOMRP.BLL
             }
         }
 
-        private static Dictionary<uint, Dictionary<uint, uint>> getRerportStyle(Common.IncOpenExcel myexcel, DataTable dataTable)
-        {
-            Dictionary<uint, Dictionary<uint, uint>> res = new Dictionary<uint, Dictionary<uint, uint>>();
-
-
-
-            return res;
-        }
     }
 }
