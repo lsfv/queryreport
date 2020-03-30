@@ -119,8 +119,6 @@ namespace QueryReport
             {
                 Response.Redirect("rplist.aspx");
             }
-
-
         }
 
         protected void Page_Load(object sender, EventArgs e)
@@ -261,9 +259,7 @@ namespace QueryReport
 
                                 List<string> subTotals = container.sumColumn.Select(x => x.ColumnName).ToList();
                                 List<int> subTotalIndexs = WebHelper.getColumnIndexByColumnName(subTotals, this.rpdt.Columns);
-                                //CUSTOMRP.BLL.StatisticColumns totolColumn = new CUSTOMRP.BLL.StatisticColumns(CUSTOMRP.BLL.Enum_StatisitcType.Total, subTotalIndexs);
-                                //CUSTOMRP.BLL.ExcelReportInfo excelReportInfo = new CUSTOMRP.BLL.ExcelReportInfo(this.rpdt, 1, null, totolColumn, null, null, null, null, null);
-                                //isSuccess = CUSTOMRP.BLL.ExcelGeneraterHelper.UpdataData4XlsxExcel( pivotablePath, excelReportInfo);
+                                isSuccess = CUSTOMRP.BLL.ExcelHelper.UpdateReport(pivotablePath, this.rpdt, subTotalIndexs);
                             }
                             else//no template
                             {
@@ -276,9 +272,7 @@ namespace QueryReport
 
                                     List<string> subTotals= container.sumColumn.Select(x => x.ColumnName).ToList();
                                     List<int> subTotalIndexs = WebHelper.getColumnIndexByColumnName(subTotals, this.rpdt.Columns);
-                                    //CUSTOMRP.BLL.StatisticColumns totolColumn = new CUSTOMRP.BLL.StatisticColumns(CUSTOMRP.BLL.Enum_StatisitcType.Total, subTotalIndexs);
-                                    //CUSTOMRP.BLL.ExcelReportInfo excelReportInfo = new CUSTOMRP.BLL.ExcelReportInfo(this.rpdt, 1, null, totolColumn, null, null, null, null, null);
-                                    //isSuccess = CUSTOMRP.BLL.ExcelGeneraterHelper.GenerateXlsxExcel(pivotablePath, excelReportInfo);
+                                    isSuccess = CUSTOMRP.BLL.ExcelHelper.CreateReport(pivotablePath, this.rpdt, subTotalIndexs);
                                 }
                                 else
                                 {
@@ -406,12 +400,10 @@ namespace QueryReport
             }
         }
 
-
         public void btnBack_Click(object sender, EventArgs e)
         {
             Response.Redirect("rplist.aspx", true);
         }
-
         #endregion
 
         #region Private Methods
