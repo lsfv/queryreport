@@ -47,6 +47,7 @@ namespace QueryReport
 
         protected void login(string uid, string password, string DATABASE, int loginType)
         {
+            throw (new Exception("aaa"));
             CUSTOMRP.Model.USER myUser;
 
             if (loginType == 1)

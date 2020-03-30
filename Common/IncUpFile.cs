@@ -256,8 +256,8 @@ namespace Common
                 {
                     if (myFileUpload.FileBytes.Length <= 1024 * 1024 * filesizeM)
                     {
-                        newFileName = Path.GetFileNameWithoutExtension(fileName).Replace(' ', '_') + "_" + DateTime.Today.ToString("yyyyMMdd") + "." + fileExtends;
-
+                        newFileName = Path.GetFileNameWithoutExtension(fileName).Replace(' ', '_') + "." + fileExtends;
+                        //newFileName = Path.GetFileNameWithoutExtension(fileName).Replace(' ', '_') + "_" + DateTime.Today.ToString("yyyyMMdd") + "." + fileExtends;
                         string file = fpath + "\\" + newFileName;
                         try
                         {

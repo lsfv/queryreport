@@ -502,8 +502,9 @@ namespace QueryReport.Admin
 
                 #endregion
             }
-            catch
+            catch(Exception e)
             {
+                throw e;
                 // don't throw error here
             }
         }
@@ -625,19 +626,12 @@ namespace QueryReport.Admin
                             this.AjaxSaveData(data);
                             result = true;
                         }
-#if DEBUG
-                        catch (Exception ex)
-                        {
-                            AjaxShowError(ex.ToString());
-                            return false;
-                        }
-#else
                         catch
                         {
-                            AjaxShowError(AppNum.ErrorMsg.GeneralError);
+                            AjaxShowError(AppNum.ErrorMsg.InvalidData);
                             return false;
                         }
-#endif
+
                         AjaxShowError(String.Empty);    // OK
                     }
                     break;

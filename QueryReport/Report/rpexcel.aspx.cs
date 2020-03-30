@@ -202,7 +202,7 @@ namespace QueryReport
                 //colnames = svcolnames.Where(x => !x.HIDDEN).Select(x => x.DisplayName).ToArray();
                 colnames = svcolnames.Where(x => !x.HIDDEN).Select(x => x.COLUMNNAME).ToArray();
 
-            #endregion
+                #endregion
 
                 if (selectedColumns != null)
                 {
@@ -383,7 +383,7 @@ namespace QueryReport
         {
             //check file.  2.get story path 3. upload and insert record to database. 4.change ui text.
             //1.check pivotable =>label ,btn 2. upload=>label btn, 
-            string absoluteDir = Server.MapPath("~/"+AppNum.STR_EXCELTEMPLATEPATH);
+            string absoluteDir = Server.MapPath("~/" + AppNum.STR_EXCELTEMPLATEPATH);
             List<string> types = new List<string>();
             types.Add("xlsx");
             string fileOrigName = this.fu_exceltempletea.FileName;
@@ -421,7 +421,6 @@ namespace QueryReport
                 else
                 {
                     //updateRecord(tempID);
-
                     template.WordFileName = filename;
                     template.OrigFileName = fileOrigName;
                     template.ModifyDate = DateTime.Now;
@@ -627,7 +626,8 @@ namespace QueryReport
                         }
                         if (svc == null)
                         {
-                            if (isRefresh) {
+                            if (isRefresh)
+                            {
                                 colnames = CUSTOMRP.BLL.AppHelper.GetColumnNamesForTblView(me.ID, me.DatabaseNAME, sv.TBLVIEWNAME);
                             }
                             else
@@ -1264,7 +1264,8 @@ namespace QueryReport
             {
                 serializer.WriteObject(ms, "_");
             }
-            else {
+            else
+            {
                 string oldId = Request.Params["id"];
                 int newID = CUSTOMRP.BLL.AppHelper.CopyReport(me.ID, int.Parse(oldId));
                 serializer.WriteObject(ms, "rpexcel.aspx?id=" + newID);
@@ -1391,7 +1392,8 @@ namespace QueryReport
                     case CUSTOMRP.Model.SOURCEVIEW.SourceViewType.StoredProc:
                         {
                             columninfos = CUSTOMRP.BLL.AppHelper.GetColumnInfoForStoredProc(me.ID, me.DatabaseNAME, sv.ID);
-                            if (columninfos.Any(x => x.DataType == null)) {
+                            if (columninfos.Any(x => x.DataType == null))
+                            {
                                 columninfos = CUSTOMRP.BLL.AppHelper.GetColumnInfoForStoredProcRefresh(me.ID, me.DatabaseNAME, sv.TBLVIEWNAME);
                                 updateSourceColumn = true;
                             }
