@@ -591,9 +591,9 @@ namespace QueryReport.Admin
                         {
                             data = this.GetSVData(payload);
                         }
-                        catch
+                        catch (Exception ex)
                         {
-                            AjaxShowError(AppNum.ErrorMsg.InvalidData);
+                            AjaxShowError(ex.ToString());
                             return false;
                         }
 
@@ -626,9 +626,9 @@ namespace QueryReport.Admin
                             this.AjaxSaveData(data);
                             result = true;
                         }
-                        catch
+                        catch(Exception ex)
                         {
-                            AjaxShowError(AppNum.ErrorMsg.InvalidData);
+                            AjaxShowError(ex.ToString());
                             return false;
                         }
 
