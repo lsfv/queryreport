@@ -367,6 +367,63 @@ namespace UnitTestProject1
         }
 
         [TestMethod]
+        [ExpectedException(typeof(Exception))]
+        public void T1401_CreateTabel()
+        {
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(null, null, null);
+        }
+
+        [TestMethod]
+        public void T1410_UpdateTabel()
+        {
+            string path = "C:\\testfile\\updateTabel10.xlsx";
+
+            DataTable dataTable = Common.incUnitTest.GetDatatableCustomCount(2);
+            List<int> totalIndex = null;
+            CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable, totalIndex);
+
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(3);
+            totalIndex = new List<int>();
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, totalIndex);
+
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+            totalIndex = new List<int>();
+            totalIndex.Add(1);
+            totalIndex.Add(3);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, totalIndex);
+
+
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(1);
+            totalIndex = new List<int>();
+            totalIndex.Add(1);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, totalIndex);
+
+
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(0);
+            totalIndex = new List<int>();
+            totalIndex.Add(1);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, totalIndex);
+
+            dataTable = null;
+            totalIndex = new List<int>();
+            totalIndex.Add(1);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, totalIndex);
+
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+            totalIndex = new List<int>();
+            totalIndex.Add(1);
+            totalIndex.Add(2);
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, totalIndex);
+
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(10);
+            totalIndex = null;
+            CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, totalIndex);
+        }
+
+
+
+
+        [TestMethod]
         public void unzipExcel()
         {
             string filepath = "C:\\testfile\\updateTabel5.xlsx";

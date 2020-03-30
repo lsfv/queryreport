@@ -121,20 +121,24 @@ namespace Common
             List<Row> newRowsList = new List<Row>();
             if (xmlrows != null)
             {
+                int index = 0;
                 foreach (string strRow in xmlrows)
                 {
                     try
                     {
                         Row changingRow = new Row(strRow);
-                        ChangeRowNoAndCellReference(changingRow, newLineNo);
+                        ChangeRowNoAndCellReference(changingRow, newLineNo+(uint)index);
                         newRowsList.Add(changingRow);
                     }
                     catch
                     {
                         newRowsList = new List<Row>();
                     }
+                    index++;
                 }
             }
+        
+            //insert into datasheet.
             foreach (Row row in newRowsList)
             {
                 CreateOrUpdateRowAt(sheetData, row,row.RowIndex);
