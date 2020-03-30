@@ -180,7 +180,7 @@ namespace Common
             return styles;
         }
 
-        //todo o...
+        //0:normal 1. 4lines  2. balck  3black
         public static Dictionary<uint, uint> getRowStyles(DataColumnCollection dataColumn,uint startColumnNo,int cateogry,DefaultCellStyle defaultCellStyle)
         {
             Dictionary<uint, uint> styles = new Dictionary<uint, uint>();
@@ -195,7 +195,7 @@ namespace Common
             return styles;
         }
 
-        //category .0:normal   1:4lineborder   
+        //category .0 normal 1 border  2 black  3black and border
         public static uint getDefaultStyle(System.Type type,DefaultCellStyle defaultCellStyle, int category)
         {
             uint res = 0;
@@ -209,7 +209,15 @@ namespace Common
                 }
                 else if (category == 1)
                 {
+                    res = defaultCellStyle.blackdateTimeIndex;
+                }
+                else if (category == 2)
+                {
                     res = defaultCellStyle.dateTimeIndex_border;
+                }
+                else if (category == 3)
+                {
+                    res = defaultCellStyle.blackdateTimeIndex_border;
                 }
             }
             else
@@ -218,12 +226,19 @@ namespace Common
                 {
                     res = defaultCellStyle.normalIndex;
                 }
-              
                 else if (category == 1 )
+                {
+                    res = defaultCellStyle.blackIndex;
+                }
+                else if (category == 2)
                 {
                     res = defaultCellStyle.normalIndex_border;
                 }
-               
+                else if (category == 3)
+                {
+                    res = defaultCellStyle.blackIndex_border;
+                }
+
             }
             return res;
         }
@@ -857,7 +872,7 @@ namespace Common
         //建立一个最小样式表.
         private static void createDeafultStyle(WorkbookPart workbookpart, out DefaultCellStyle cellStyle)
         {
-            cellStyle = new DefaultCellStyle(0, 0, 0,0,0,0);
+            cellStyle = new DefaultCellStyle(0, 0, 0,0,0,0,0,0);
             if (workbookpart != null)
             {
                 //1.建立必要的文件和其根节点.
@@ -903,11 +918,17 @@ namespace Common
                 workbookpart.WorkbookStylesPart.Stylesheet.NumberingFormats.InsertAt(numberFormatDate_index, workbookpart.WorkbookStylesPart.Stylesheet.NumberingFormats.Count());
                 //自定义最终给用户的单元格式.
                 cellStyle.normalIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, defaultFont, null, null);
-                cellStyle.blackIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, BoldFont, null, null);
                 cellStyle.dateTimeIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, defaultFont, null, dateDeafult);
+
+                cellStyle.blackIndex = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, BoldFont, null, null);
+                cellStyle.blackdateTimeIndex= createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, BoldFont, null, dateDeafult);
+
                 cellStyle.normalIndex_border = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, defaultFont, null, null);
-                cellStyle.blackIndex_border = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, BoldFont, null, null);
                 cellStyle.dateTimeIndex_border = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, defaultFont, null, dateDeafult);
+
+                cellStyle.blackIndex_border = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, BoldFont, null, null);
+                cellStyle.blackdateTimeIndex_border = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, BoldFont, null, dateDeafult);
+
                 workbookpart.WorkbookStylesPart.Stylesheet.Save();
             }
         }
@@ -920,20 +941,31 @@ namespace Common
         {
             public UInt32 normalIndex { get; set; }
             public UInt32 dateTimeIndex { get; set; }
-            public UInt32 blackIndex { get; set; }
+            
             public uint normalIndex_border;
             public uint dateTimeIndex_border;
-            public uint blackIndex_border;
 
-            public DefaultCellStyle(uint normalIndex, uint dateTimeIndex, uint blackIndex, uint normalIndex_border, uint dateTimeIndex_border, uint blackIndex_border)
+            public UInt32 blackIndex { get; set; }
+            public UInt32 blackdateTimeIndex { get; set; }
+
+            public uint blackIndex_border;
+            public UInt32 blackdateTimeIndex_border { get; set; }
+
+            public DefaultCellStyle(uint normalIndex, uint dateTimeIndex, uint normalIndex_border, uint dateTimeIndex_border, uint blackIndex, uint blackdateTimeIndex, uint blackIndex_border, uint blackdateTimeIndex_border)
             {
                 this.normalIndex = normalIndex;
                 this.dateTimeIndex = dateTimeIndex;
-                this.blackIndex = blackIndex;
                 this.normalIndex_border = normalIndex_border;
                 this.dateTimeIndex_border = dateTimeIndex_border;
+                this.blackIndex = blackIndex;
+                this.blackdateTimeIndex = blackdateTimeIndex;
                 this.blackIndex_border = blackIndex_border;
+                this.blackdateTimeIndex_border = blackdateTimeIndex_border;
             }
+
+            
+
+            
         }
         #endregion
     }

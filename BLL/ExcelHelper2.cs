@@ -25,7 +25,7 @@ namespace CUSTOMRP.BLL
                 DataTable totalTable = CreateTable(dataTable, columnsIndex);
 
                 //得到样式,并fill report
-                Dictionary<uint,uint> rowstyle= Common.IncOpenExcel.getRowStyles(totalTable.Columns, 2, 1, defaultCellStyle);
+                Dictionary<uint,uint> rowstyle= Common.IncOpenExcel.getRowStyles(totalTable.Columns, 2, 3, defaultCellStyle);
                 myExcelFile.CreateOrUpdateRowAt(sheetName, totalTable.Rows[0], writtingRowNo, 2, rowstyle);
                 writtingRowNo++;
 

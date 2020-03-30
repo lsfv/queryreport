@@ -87,13 +87,13 @@ namespace CUSTOMRP.BLL
 
                 if (titleStyle == null)
                 {
-                    titleStyle = Common.IncOpenExcel.getRowStyles(columnsTable.Columns, columnNo, 1, defaultCellStyle);//todo blacked here
+                    titleStyle = Common.IncOpenExcel.getRowStyles(columnsTable.Columns, columnNo, 3, defaultCellStyle);//todo blacked here
                 }
                 excelFile.CreateOrUpdateRowAt(sheetName, columnsTable.Rows[0], rowNo, columnNo, titleStyle);
 
                 for (int i = 0; i < dataTable.Rows.Count; i++)
                 {
-                    Dictionary<uint, uint> tempRowStyle = Common.IncOpenExcel.getRowStyles(dataTable.Columns, columnNo, 1, defaultCellStyle);
+                    Dictionary<uint, uint> tempRowStyle = Common.IncOpenExcel.getRowStyles(dataTable.Columns, columnNo, 2, defaultCellStyle);
                     excelFile.CreateOrUpdateRowAt(sheetName, dataTable.Rows[i], rowNo + (uint)(i + 1), columnNo, tempRowStyle);
                 }
             }
