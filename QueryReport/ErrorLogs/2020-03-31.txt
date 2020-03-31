@@ -70,3 +70,47 @@ Trace：   在 QueryReport.SignIn.login(String uid, String password, String DATA
    在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
    在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
 ********************************************************************************************
+ip:::1
+DataTime：2020/3/31 18:55:05
+Url：http://localhost:8090/SignIn.aspx
+Message：abc
+Source：QueryReport
+Type：System.Exception
+Function：Void login(System.String, System.String, System.String, Int32)
+Trace：   在 QueryReport.SignIn.login(String uid, String password, String DATABASE, Int32 loginType) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 50
+   在 QueryReport.SignIn.signin(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 44
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/3/31 18:55:39
+Url：http://localhost:8090/Report/rpexcel.aspx?action=refreshDlgColumns
+Message：值不能为 null。
+参数名: source
+Source：System.Core
+Type：System.ArgumentNullException
+Function：System.Collections.Generic.IEnumerable`1[TResult] Select[TSource,TResult](System.Collections.Generic.IEnumerable`1[TSource], System.Func`2[TSource,TResult])
+Trace：   在 System.Linq.Enumerable.Select[TSource,TResult](IEnumerable`1 source, Func`2 selector)
+   在 QueryReport.rpexcel.AjaxReloadDlgColumns() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel.aspx.cs:行号 854
+   在 QueryReport.rpexcel.ProcessAjaxRequestParameters() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel.aspx.cs:行号 783
+   在 QueryReport.rpexcel.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel.aspx.cs:行号 145
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/3/31 18:57:05
+Url：http://localhost:8090/Report/rpexcel.aspx?action=refreshDlgColumns
+Message：值不能为 null。
+参数名: source
+Source：System.Core
+Type：System.ArgumentNullException
+Function：System.Collections.Generic.IEnumerable`1[TResult] Select[TSource,TResult](System.Collections.Generic.IEnumerable`1[TSource], System.Func`2[TSource,TResult])
+Trace：   在 System.Linq.Enumerable.Select[TSource,TResult](IEnumerable`1 source, Func`2 selector)
+   在 QueryReport.rpexcel.AjaxReloadDlgColumns() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel.aspx.cs:行号 854
+   在 QueryReport.rpexcel.ProcessAjaxRequestParameters() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel.aspx.cs:行号 783
+   在 QueryReport.rpexcel.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel.aspx.cs:行号 145
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************

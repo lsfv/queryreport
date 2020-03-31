@@ -851,7 +851,11 @@ namespace QueryReport
 
         private void AjaxReloadDlgColumns()
         {
-            Fields[] FieldNames = this.columninfos.Select(x => new Fields() { ColumnName = x.ColName, DisplayName = x.DisplayName }).ToArray();
+            Fields[] FieldNames = null;
+            if (this.columninfos != null)
+            {
+                FieldNames = this.columninfos.Select(x => new Fields() { ColumnName = x.ColName, DisplayName = x.DisplayName }).ToArray();
+            }
 
             ColumnReloadOptions payload = new ColumnReloadOptions()
             {
@@ -1465,8 +1469,9 @@ namespace QueryReport
                     WebHelper.bllSOURCEVIEWCOLUMN.UpdateModelList(me.ID, updatedColumns);
                 }
             }
-            catch
+            catch(Exception ex)
             {
+                throw ex;
                 // simply return false here
             }
             return result;

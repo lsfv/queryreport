@@ -217,15 +217,6 @@ namespace QueryReport
                 catch (Exception ex)
                 {
                     throw ex;
-                    //if (ex.Message.Contains("IX_REPORT"))   // something related to duplicate key
-                    //{
-                    //    this.lblJavascript.Text = String.Format("<script type=\"text/javascript\">alert(\"{0}\");</script>", "Duplicate report name is found in the database. Please check.");
-                    //}
-                    //else
-                    //{
-                    //    var last = CUSTOMRP.BLL.AppHelper.GetLastError();
-                    //    this.lblJavascript.Text = String.Format("<script type=\"text/javascript\">alert(\"{0}:\n{1}\");</script>", last.ReportName, last.Message);
-                    //}
                 }
             }
         }
@@ -389,16 +380,8 @@ namespace QueryReport
                         rptFooter, subcountLabel, sortonCols, isAscending, seq, hideRows, pdfGridLines);
                 }
             }
-            catch (System.Threading.ThreadAbortException ex)
-            {
-               //CUSTOMRP.BLL.AppHelper.LogException(ex, me.ID, myReport.ID, myReport.REPORTNAME); // myReport.REPORTNAME
-                //this.lblJavascript.Text = WebHelper.GetAlertJS(ex.Message);
-                throw ex;
-            }
             catch (Exception ex)
             {
-                //CUSTOMRP.BLL.AppHelper.LogException(ex, me.ID, myReport.ID, myReport.REPORTNAME); // myReport.REPORTNAME
-                //this.lblJavascript.Text = WebHelper.GetAlertJS(ex.ToString());
                 throw ex;
             }
         }
@@ -807,7 +790,8 @@ namespace QueryReport
             }
             catch (Exception ex)
             {
-                Response.Write("<script>alert(" + ex.ToString() + ")</script>");
+                throw ex;
+                //Response.Write("<script>alert(" + ex.ToString() + ")</script>");
             }
         }
         //v1.2.0 Kim 2016.12.08 replace criteria str from sql str to readable text
