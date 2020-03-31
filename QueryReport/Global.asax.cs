@@ -40,8 +40,52 @@ namespace QueryReport
 
         void Application_Error(object sender, EventArgs e)
         {
-            // Code that runs when an unhandled error occurs
+            //在出现未处理的错误时运行的代码
+            Exception ex = Server.GetLastError().GetBaseException();
+            string errorTime = "DataTime：" + DateTime.Now.ToString();
+            string errorAddress = "Url：" + Request.Url.ToString();
+            string errorInfo = "Message：" + ex.Message;
+            string errorInfo1 =ex.Message;
+            string errorSource = "Source：" + ex.Source;
+            string errorType = "Type：" + ex.GetType();
+            string errorFunction = "Function：" + ex.TargetSite;
+            string errorTrace = "Trace：" + ex.StackTrace;
+            Server.ClearError();
+            System.IO.StreamWriter writer = null;
+            try
+            {
+                lock (this)
+                {
+                    //写入日志 
+                    string path = string.Empty;
+                    path = Server.MapPath("~/ErrorLogs/");
+                    //不存在则创建错误日志文件夹
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    path += string.Format(@"\{0}.txt", DateTime.Now.ToString("yyyy-MM-dd"));
 
+                    writer = !File.Exists(path) ? File.CreateText(path) : File.AppendText(path); //判断文件是否存在，如果不存在则创建，存在则添加
+                    writer.WriteLine("ip:" + Request.UserHostAddress);
+                    writer.WriteLine(errorTime);
+                    writer.WriteLine(errorAddress);
+                    writer.WriteLine(errorInfo);
+                    writer.WriteLine(errorSource);
+                    writer.WriteLine(errorType);
+                    writer.WriteLine(errorFunction);
+                    writer.WriteLine(errorTrace);
+                    writer.WriteLine("********************************************************************************************");
+                }
+            }
+            finally
+            {
+                if (writer != null)
+                {
+                    writer.Close();
+                }
+            }
+            Response.Redirect("~/ErrorPage.aspx?message=" + errorInfo1);
         }
 
         void Session_Start(object sender, EventArgs e)

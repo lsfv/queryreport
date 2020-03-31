@@ -1,0 +1,72 @@
+ip:::1
+DataTime：2020/3/31 18:47:28
+Url：http://localhost:8090/SignIn.aspx
+Message：abc
+Source：QueryReport
+Type：System.Exception
+Function：Void login(System.String, System.String, System.String, Int32)
+Trace：   在 QueryReport.SignIn.login(String uid, String password, String DATABASE, Int32 loginType) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 50
+   在 QueryReport.SignIn.signin(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 44
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/3/31 18:48:10
+Url：http://localhost:8090/SignIn.aspx
+Message：abc
+Source：QueryReport
+Type：System.Exception
+Function：Void login(System.String, System.String, System.String, Int32)
+Trace：   在 QueryReport.SignIn.login(String uid, String password, String DATABASE, Int32 loginType) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 50
+   在 QueryReport.SignIn.signin(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 44
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/3/31 18:49:17
+Url：http://localhost:8090/SignIn.aspx
+Message：abc
+Source：QueryReport
+Type：System.Exception
+Function：Void login(System.String, System.String, System.String, Int32)
+Trace：   在 QueryReport.SignIn.login(String uid, String password, String DATABASE, Int32 loginType) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 50
+   在 QueryReport.SignIn.signin(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 44
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/3/31 18:50:17
+Url：http://localhost:8090/SignIn.aspx
+Message：abc
+Source：QueryReport
+Type：System.Exception
+Function：Void login(System.String, System.String, System.String, Int32)
+Trace：   在 QueryReport.SignIn.login(String uid, String password, String DATABASE, Int32 loginType) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 50
+   在 QueryReport.SignIn.signin(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 44
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/3/31 18:51:18
+Url：http://localhost:8090/SignIn.aspx
+Message：abc
+Source：QueryReport
+Type：System.Exception
+Function：Void login(System.String, System.String, System.String, Int32)
+Trace：   在 QueryReport.SignIn.login(String uid, String password, String DATABASE, Int32 loginType) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 50
+   在 QueryReport.SignIn.signin(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 44
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/3/31 18:51:29
+Url：http://localhost:8090/SignIn.aspx
+Message：abc
+Source：QueryReport
+Type：System.Exception
+Function：Void login(System.String, System.String, System.String, Int32)
+Trace：   在 QueryReport.SignIn.login(String uid, String password, String DATABASE, Int32 loginType) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 50
+   在 QueryReport.SignIn.signin(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 44
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
