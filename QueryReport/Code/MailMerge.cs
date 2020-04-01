@@ -485,7 +485,10 @@ namespace QueryReport.Code
                 if (current_childs[i].Name == (nsW + "fldSimple"))
                 {
                     string fieldname = current_childs[i].Attribute(nsW + "instr").Value;
-                    fieldname = fieldname.Substring(fieldname.IndexOf("MERGEFIELD ") + 11).Trim();
+                    if (fieldname.Length > 21)
+                    {
+                        fieldname = fieldname.Substring(fieldname.IndexOf("MERGEFIELD ") + 11).Trim();
+                    }
                     // this is simple field
                     if (columnnames.Contains(fieldname))
                     {
@@ -496,8 +499,7 @@ namespace QueryReport.Code
                     else if (columnnames.Where(x => GetSafeFieldName(x) == fieldname).Count() > 0)
                     {
                         string origFieldName = columnnames.Where(x => GetSafeFieldName(x) == fieldname).FirstOrDefault();
-                        XElement newRun = new XElement(nsW + "r",
-                            new XElement(nsW + "t", new XAttribute(XNamespace.Xml + "space", "preserve"), new XText(AppHelper.FormatData(dr[origFieldName]))));
+                        XElement newRun = new XElement(nsW + "r",new XElement(nsW + "t", new XAttribute(XNamespace.Xml + "space", "preserve"), new XText(AppHelper.FormatData(dr[origFieldName]))));
                         childs.Add(newRun);
                     }
                 }

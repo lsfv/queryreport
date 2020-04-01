@@ -191,10 +191,11 @@ namespace QueryReport
             this.lblJavascript.Text = String.Format("<script type=\"text/javascript\">alert(\"{0}\");</script>", "Error occurred. Settings are not saved.");
         }
 
+        //run
         protected void btnPrint_Click(object sender, EventArgs e)
         {
-            try
-            {
+            //try
+            //{
                 string WordFilePath = null;
                 string downloadFilename = null;
                 if ((myReport != null) && (myReport.WordFile != null) && (File.Exists(g_Config["WordTemplatePath"] + myReport.WordFile.WordFileName)))
@@ -358,16 +359,11 @@ namespace QueryReport
                         Context.Response.End();
                     }
                 }
-            }
-            catch (System.Threading.ThreadAbortException)
-            {
-                // This is normal for Server.Transfer()
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine(ex);
-                throw;
-            }
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw ex;
+            //}
         }
 
         public void btnBack_Click(object sender, EventArgs e)

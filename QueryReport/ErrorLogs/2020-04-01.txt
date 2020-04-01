@@ -1,0 +1,160 @@
+ip:::1
+DataTime：2020/4/1 17:59:23
+Url：http://localhost:8090/Report/rpwordsave.aspx
+Message：startIndex 不能大于字符串长度。
+参数名: startIndex
+Source：mscorlib
+Type：System.ArgumentOutOfRangeException
+Function：System.String Substring(Int32, Int32)
+Trace：   在 System.String.Substring(Int32 startIndex, Int32 length)
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 488
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.ProcessDocumentData(MemoryStream& ms, DataTable dt, String[] columnNames) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 410
+   在 QueryReport.Code.MailMerge.PerformMailMergeFromTemplate(String sourcefile, DataTable dt, String[] columnNames) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 50
+   在 QueryReport.rpwordsave.btnPrint_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 369
+   在 System.Web.UI.WebControls.Button.OnClick(EventArgs e)
+   在 System.Web.UI.WebControls.Button.RaisePostBackEvent(String eventArgument)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/1 18:00:25
+Url：http://localhost:8090/Report/rpexcel2.aspx?id=25610
+Message：未将对象引用设置到对象的实例。
+Source：QueryReport
+Type：System.NullReferenceException
+Function：Void Page_Init(System.Object, System.EventArgs)
+Trace：   在 QueryReport.rpexcel2.Page_Init(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel2.aspx.cs:行号 107
+   在 System.EventHandler.Invoke(Object sender, EventArgs e)
+   在 System.Web.UI.Control.OnInit(EventArgs e)
+   在 System.Web.UI.Page.OnInit(EventArgs e)
+   在 System.Web.UI.Control.InitRecursive(Control namingContainer)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/1 18:01:04
+Url：http://localhost:8090/Report/rpwordsave.aspx?id=25612
+Message：startIndex 不能大于字符串长度。
+参数名: startIndex
+Source：mscorlib
+Type：System.ArgumentOutOfRangeException
+Function：System.String Substring(Int32, Int32)
+Trace：   在 System.String.Substring(Int32 startIndex, Int32 length)
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 488
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.ProcessDocumentData(MemoryStream& ms, DataTable dt, String[] columnNames) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 410
+   在 QueryReport.Code.MailMerge.PerformMailMergeFromTemplate(String sourcefile, DataTable dt, String[] columnNames) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 50
+   在 QueryReport.rpwordsave.btnPrint_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 369
+   在 System.Web.UI.WebControls.Button.OnClick(EventArgs e)
+   在 System.Web.UI.WebControls.Button.RaisePostBackEvent(String eventArgument)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/1 18:09:35
+Url：http://localhost:8090/Report/rpwordsave.aspx
+Message：startIndex 不能大于字符串长度。
+参数名: startIndex
+Source：mscorlib
+Type：System.ArgumentOutOfRangeException
+Function：System.String Substring(Int32, Int32)
+Trace：   在 System.String.Substring(Int32 startIndex, Int32 length)
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 488
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.ProcessDocumentData(MemoryStream& ms, DataTable dt, String[] columnNames) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 410
+   在 QueryReport.Code.MailMerge.PerformMailMergeFromTemplate(String sourcefile, DataTable dt, String[] columnNames) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 50
+   在 QueryReport.rpwordsave.btnPrint_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 369
+   在 System.Web.UI.WebControls.Button.OnClick(EventArgs e)
+   在 System.Web.UI.WebControls.Button.RaisePostBackEvent(String eventArgument)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/1 18:09:54
+Url：http://localhost:8090/Report/rpwordsave.aspx?id=25613&cmd=run
+Message：startIndex 不能大于字符串长度。
+参数名: startIndex
+Source：mscorlib
+Type：System.ArgumentOutOfRangeException
+Function：System.String Substring(Int32, Int32)
+Trace：   在 System.String.Substring(Int32 startIndex, Int32 length)
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 488
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.ProcessDocumentData(MemoryStream& ms, DataTable dt, String[] columnNames) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 410
+   在 QueryReport.Code.MailMerge.PerformMailMergeFromTemplate(String sourcefile, DataTable dt, String[] columnNames) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 50
+   在 QueryReport.rpwordsave.btnPrint_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 369
+   在 System.Web.UI.WebControls.Button.OnClick(EventArgs e)
+   在 System.Web.UI.WebControls.Button.RaisePostBackEvent(String eventArgument)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/1 18:17:30
+Url：http://localhost:8090/Report/rpwordsave.aspx?id=25613&cmd=run
+Message：startIndex 不能大于字符串长度。
+参数名: startIndex
+Source：mscorlib
+Type：System.ArgumentOutOfRangeException
+Function：System.String Substring(Int32, Int32)
+Trace：   在 System.String.Substring(Int32 startIndex, Int32 length)
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 488
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.ProcessDocumentData(MemoryStream& ms, DataTable dt, String[] columnNames) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 410
+   在 QueryReport.Code.MailMerge.PerformMailMergeFromTemplate(String sourcefile, DataTable dt, String[] columnNames) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 50
+   在 QueryReport.rpwordsave.btnPrint_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 370
+   在 System.Web.UI.WebControls.Button.OnClick(EventArgs e)
+   在 System.Web.UI.WebControls.Button.RaisePostBackEvent(String eventArgument)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/1 18:19:18
+Url：http://localhost:8090/Report/rpwordsave.aspx?id=25613&cmd=run
+Message：startIndex 不能大于字符串长度。
+参数名: startIndex
+Source：QueryReport
+Type：System.ArgumentOutOfRangeException
+Function：Void btnPrint_Click(System.Object, System.EventArgs)
+Trace：   在 QueryReport.rpwordsave.btnPrint_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 365
+   在 System.Web.UI.WebControls.Button.OnClick(EventArgs e)
+   在 System.Web.UI.WebControls.Button.RaisePostBackEvent(String eventArgument)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/1 18:25:32
+Url：http://localhost:8090/Report/rpwordsave.aspx?id=25613&cmd=run
+Message：startIndex 不能大于字符串长度。
+参数名: startIndex
+Source：QueryReport
+Type：System.ArgumentOutOfRangeException
+Function：Void btnPrint_Click(System.Object, System.EventArgs)
+Trace：   在 QueryReport.rpwordsave.btnPrint_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 365
+   在 System.Web.UI.WebControls.Button.OnClick(EventArgs e)
+   在 System.Web.UI.WebControls.Button.RaisePostBackEvent(String eventArgument)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/1 18:30:01
+Url：http://localhost:8090/Report/rpwordsave.aspx?id=25613&cmd=run
+Message：startIndex 不能大于字符串长度。
+参数名: startIndex
+Source：mscorlib
+Type：System.ArgumentOutOfRangeException
+Function：System.String Substring(Int32, Int32)
+Trace：   在 System.String.Substring(Int32 startIndex, Int32 length)
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 488
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.replaceData(XElement current, DataRow dr, String[] columnnames, String parentrsid) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 552
+   在 QueryReport.Code.MailMerge.ProcessDocumentData(MemoryStream& ms, DataTable dt, String[] columnNames) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 410
+   在 QueryReport.Code.MailMerge.PerformMailMergeFromTemplate(String sourcefile, DataTable dt, String[] columnNames) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\MailMerge.cs:行号 50
+   在 QueryReport.rpwordsave.btnPrint_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 348
+   在 System.Web.UI.WebControls.Button.OnClick(EventArgs e)
+   在 System.Web.UI.WebControls.Button.RaisePostBackEvent(String eventArgument)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
