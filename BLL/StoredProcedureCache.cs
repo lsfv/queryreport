@@ -15,7 +15,7 @@ namespace CUSTOMRP.BLL
         {
             
             DataTable dt = null;
-            string key = spName + DateTime.Now.ToString("hhmm");//保留1分钟的数据
+            string key = spName + DateTime.Now.ToString("hh");//保留60分钟的数据
             if (storedPTables.Keys.Contains(key))
             {
                 dt= storedPTables[key];
@@ -25,8 +25,6 @@ namespace CUSTOMRP.BLL
                 string sql = "use "+dbname+";EXEC [qreport].["+spName+"];";
                 BLL.COMMON bllcommon = new COMMON();
                 dt=bllcommon.query(1, sql.ToString());
-                storedPTables.Add(key, dt);
-
 
                 for (int i = 0; i < storedPTables.Keys.Count; i++)
                 {
@@ -36,6 +34,11 @@ namespace CUSTOMRP.BLL
                         break;
                     }
                 }
+
+                storedPTables.Add(key, dt);
+
+
+                
             }
             return dt;
         }
