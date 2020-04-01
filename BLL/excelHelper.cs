@@ -60,6 +60,8 @@ namespace CUSTOMRP.BLL
                     List<string> bottomXmls = incOpenExcel.GetRowsXml(SHEETNAME, endRowNo + 1, uint.MaxValue);
                     incOpenExcel.DeleteRows(SHEETNAME, startRowNo, uint.MaxValue);
 
+                    
+
                     //insert databable
                     CreateOrUpdateRowsAt(incOpenExcel, SHEETNAME, incOpenExcel.defaultCellStyle, dataTable, startRowNo, startColumnNo, titleStyle);
                     writingRowNo += (uint)dataTable.Rows.Count + 1;
@@ -74,6 +76,9 @@ namespace CUSTOMRP.BLL
                     //append bottom
                     writingRowNo++;
                     incOpenExcel.MoveRows(SHEETNAME, bottomXmls, writingRowNo);
+
+                    //clear value which contain formule
+                    incOpenExcel.ClearFormulaCache(SHEETNAME);
                 }
             }
             return true;

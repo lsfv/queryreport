@@ -382,11 +382,11 @@ namespace UnitTestProject1
             List<int> totalIndex = null;
             CUSTOMRP.BLL.ExcelHelper.CreateReport(path, dataTable, totalIndex);
 
-            dataTable = Common.incUnitTest.GetDatatableCustomCount(3);
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(3,30);
             totalIndex = new List<int>();
             CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, totalIndex);
 
-            dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
+            dataTable = Common.incUnitTest.GetDatatableCustomCount(5,4);
             totalIndex = new List<int>();
             totalIndex.Add(1);
             totalIndex.Add(3);

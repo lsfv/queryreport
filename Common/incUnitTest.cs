@@ -81,7 +81,7 @@ namespace Common
             return databable_books;
         }
 
-        public static DataTable GetDatatableCustomCount(int count)
+        public static DataTable GetDatatableCustomCount(int count,int offset=0)
         {
             if (count >= 0)
             {
@@ -94,7 +94,7 @@ namespace Common
                     DataRow newRow;
                     newRow = databable_books.NewRow();
                     newRow["Product"] = "book" + (i + 1).ToString();
-                    newRow["BookID"] = i + 1;
+                    newRow["BookID"] = i + 1+ offset;
                     newRow["Date"] = DateTime.Now;
                     newRow["Description"] = "我很喜欢" + (i + 1).ToString();
                     databable_books.Rows.Add(newRow);

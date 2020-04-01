@@ -51,6 +51,28 @@ namespace Common
             }
         }
 
+        public void ClearFormulaCache(string sheetName)
+        {
+            SheetData sheetData = GetSheetData(sheetName);
+            if (sheetData != null)
+            {
+                var rows = sheetData.Elements<Row>();
+                foreach (Row row in rows)
+                {
+                    if (row != null)
+                    {
+                        foreach (Cell cell in row.Elements<Cell>())
+                        {
+                            if (cell.CellFormula != null)
+                            {
+                                cell.CellValue = null;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         #endregion
 
         #region row
@@ -670,7 +692,6 @@ namespace Common
         #region other
 
         
-
         private static void SetExcelPivotTableCacheAutoReflesh(SpreadsheetDocument document)
         {
             if (document != null)
@@ -683,6 +704,7 @@ namespace Common
                 }
             }
         }
+
         public static string GetCellReference(uint rowIndex, uint colIndex)
         {
             UInt32 dividend = colIndex;
