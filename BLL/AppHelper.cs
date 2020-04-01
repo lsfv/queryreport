@@ -151,25 +151,28 @@ namespace CUSTOMRP.BLL
                                              select Convert.ToString(rw["r"])).ToArray();
                         return convertedList;
                     case 2:             // Stored procedure
-                        // Slow, but there is no better way than this
-                        string[] colnames = GetColumnNamesForStoredProc(UserID, DBName, sourceName);    // Needs the whole, unmodified schema
-                        StringBuilder sb = new StringBuilder(string.Format("use {0}; DECLARE @Schema TABLE (", DBName));
-                        for (int x = 0; x < colnames.Length; x++)
-                        {
-                            sb.Append(string.Format("[{0}] NVARCHAR(MAX){1}", colnames[x], x == colnames.Length - 1 ? String.Empty : ",")); // Always cast to NVARCHAR(MAX)
-                        }
-                        sb.Append(string.Format("); INSERT INTO @Schema EXEC [qreport].[{0}]; SELECT DISTINCT [{1}] AS r FROM @Schema ORDER BY r", sourceName, columnName));
-                        DataTable dt_2 = bllcommon.query(UserID, sb.ToString());
-                        var convertedList_2 = (from rw in dt_2.AsEnumerable()
-                                               select Convert.ToString(rw["r"])).ToArray();
-                        return convertedList_2;
+                        //// Slow, but there is no better way than this
+                        //string[] colnames = GetColumnNamesForStoredProc(UserID, DBName, sourceName);    // Needs the whole, unmodified schema
+                        //StringBuilder sb = new StringBuilder(string.Format("use {0}; DECLARE @Schema TABLE (", DBName));
+                        //for (int x = 0; x < colnames.Length; x++)
+                        //{
+                        //    sb.Append(string.Format("[{0}] NVARCHAR(MAX){1}", colnames[x], x == colnames.Length - 1 ? String.Empty : ",")); // Always cast to NVARCHAR(MAX)
+                        //}
+                        //sb.Append(string.Format("); INSERT INTO @Schema EXEC [qreport].[{0}]; SELECT DISTINCT [{1}] AS r FROM @Schema ORDER BY r", sourceName, columnName));
+                        //DataTable dt_2 = bllcommon.query(UserID, sb.ToString());
+                        //var convertedList_2 = (from rw in dt_2.AsEnumerable() select Convert.ToString(rw["r"])).ToArray();
+                        //return convertedList_2;
+                        DataTable dataTable = CUSTOMRP.BLL.StoredProcedureCache.GetTable(sourceName, DBName);
+                        HashSet<string> setRes = CUSTOMRP.BLL.StoredProcedureCache.GetValues(dataTable, columnName);
+                        String[] res = setRes.ToArray();
+                        return res;
                     default:
                         return new string[] { };
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                Common.JScript.AlertAndRedirect("Browse values is not available for this query. Please input values manually.", "rpexcel2.aspx"); //++
+                Common.JScript.AlertAndRedirect("Browse values is not available for this query. Please input values manually."+ex.Message, "rpexcel2.aspx"); //++
                 return new string[] { };
             }
         }
