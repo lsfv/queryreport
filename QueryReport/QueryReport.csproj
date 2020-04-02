@@ -620,6 +620,7 @@
     <Content Include="Controls\D3AddChartCard.ascx" />
     <Content Include="Controls\D3Chart.ascx" />
     <Content Include="ErrorPage.aspx" />
+    <Content Include="ErrorPage2.aspx" />
     <Content Include="File\v_QR_Probation.docx" />
     <Content Include="File\blank.docx" />
     <Content Include="Assets\stylesheets\fa4\fonts\fontawesome-webfont.eot" />
@@ -859,6 +860,13 @@
     </Compile>
     <Compile Include="ErrorPage.aspx.designer.cs">
       <DependentUpon>ErrorPage.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="ErrorPage2.aspx.cs">
+      <DependentUpon>ErrorPage2.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="ErrorPage2.aspx.designer.cs">
+      <DependentUpon>ErrorPage2.aspx</DependentUpon>
     </Compile>
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
