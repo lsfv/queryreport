@@ -54,16 +54,17 @@ namespace CUSTOMRP.BLL
                     GetDataFlag(incOpenExcel, out startRowNo, out endRowNo, SHEETNAME);
                     writingRowNo = startRowNo;
                     bool hasTotal = totalColumn == null ? false : totalColumn.Count > 0 ? true : false;
-                    Dictionary<uint, uint> titleStyle = Common.IncOpenExcel.getRowStyles(incOpenExcel.GetRow(SHEETNAME, startRowNo));
+                    bool isHiddenTitle = false;
+                    Dictionary<uint, uint> titleStyle = Common.IncOpenExcel.getRowStyles(incOpenExcel.GetRow(SHEETNAME, startRowNo),out isHiddenTitle);
+                    
                     
                     //delete predata
                     List<string> bottomXmls = incOpenExcel.GetRowsXml(SHEETNAME, endRowNo + 1, uint.MaxValue);
                     incOpenExcel.DeleteRows(SHEETNAME, startRowNo, uint.MaxValue);
 
                     
-
                     //insert databable
-                    CreateOrUpdateRowsAt(incOpenExcel, SHEETNAME, incOpenExcel.defaultCellStyle, dataTable, startRowNo, startColumnNo, titleStyle);
+                    CreateOrUpdateRowsAt(incOpenExcel, SHEETNAME, incOpenExcel.defaultCellStyle, dataTable, startRowNo, startColumnNo, titleStyle,isHiddenTitle);
                     writingRowNo += (uint)dataTable.Rows.Count + 1;
 
                     //insert total
@@ -84,7 +85,10 @@ namespace CUSTOMRP.BLL
             return true;
         }
 
-        private static bool CreateOrUpdateRowsAt(Common.IncOpenExcel excelFile,string sheetName, Common.IncOpenExcel.DefaultCellStyle defaultCellStyle, DataTable dataTable, uint rowNo, uint columnNo, Dictionary<uint, uint> titleStyle)
+     
+
+
+        private static bool CreateOrUpdateRowsAt(Common.IncOpenExcel excelFile,string sheetName, Common.IncOpenExcel.DefaultCellStyle defaultCellStyle, DataTable dataTable, uint rowNo, uint columnNo, Dictionary<uint, uint> titleStyle,bool titlehidden=false)
         {
             if (excelFile!=null && sheetName != null && dataTable != null && defaultCellStyle != null)
             {
@@ -92,13 +96,13 @@ namespace CUSTOMRP.BLL
 
                 if (titleStyle == null)
                 {
-                    titleStyle = Common.IncOpenExcel.getRowStyles(columnsTable.Columns, columnNo, 3, defaultCellStyle);//todo blacked here
+                    titleStyle = Common.IncOpenExcel.getRowStyles(columnsTable.Columns, columnNo, 3, defaultCellStyle);//3:black style
                 }
-                excelFile.CreateOrUpdateRowAt(sheetName, columnsTable.Rows[0], rowNo, columnNo, titleStyle);
+                excelFile.CreateOrUpdateRowAt(sheetName, columnsTable.Rows[0], rowNo, columnNo, titleStyle,titlehidden);
 
                 for (int i = 0; i < dataTable.Rows.Count; i++)
                 {
-                    Dictionary<uint, uint> tempRowStyle = Common.IncOpenExcel.getRowStyles(dataTable.Columns, columnNo, 2, defaultCellStyle);
+                    Dictionary<uint, uint> tempRowStyle = Common.IncOpenExcel.getRowStyles(dataTable.Columns, columnNo, 2, defaultCellStyle);//2:normal style
                     excelFile.CreateOrUpdateRowAt(sheetName, dataTable.Rows[i], rowNo + (uint)(i + 1), columnNo, tempRowStyle);
                 }
             }

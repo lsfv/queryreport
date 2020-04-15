@@ -75,17 +75,19 @@ namespace Common
 
         #endregion
 
+
         #region row
-        public bool CreateOrUpdateRowAt(string sheetName, DataRow dataRow, uint rowNo, uint columnNo, Dictionary<uint, uint> eachColumnStyle = null)
+        public bool CreateOrUpdateRowAt(string sheetName, DataRow dataRow, uint rowNo, uint columnNo, Dictionary<uint, uint> eachColumnStyle = null,bool isHidden=false)
         {
             bool res = false;
             SheetData sheetData = GetSheetData(sheetName);
             if (sheetData != null)
             {
-                res=IncOpenExcel.CreateOrUpdateRowAt(sheetData, dataRow, rowNo, columnNo, defaultCellStyle, eachColumnStyle);
+                res=IncOpenExcel.CreateOrUpdateRowAt(sheetData, dataRow, rowNo, columnNo, defaultCellStyle, eachColumnStyle,isHidden);
             }
             return res;
         }
+
 
         public IEnumerable<Row> GetRows(string sheetName, uint startRowNo, uint endRowNo)
         {
@@ -187,11 +189,20 @@ namespace Common
         #endregion
 
         #region other
-        public static Dictionary<uint, uint> getRowStyles(Row theRow)
+        public static Dictionary<uint, uint> getRowStyles(Row theRow,out bool isHidden)
         {
             Dictionary<uint, uint> styles = new Dictionary<uint, uint>();
+            isHidden = false;
             if (theRow != null)
             {
+                if (theRow.Hidden!=null && theRow.Hidden.HasValue)
+                {
+                    if (theRow.Hidden.Value == true)
+                    {
+                        isHidden = true;
+                    }
+                }
+                
                 var cells = theRow.Elements<Cell>();
                 foreach (Cell cell in cells)
                 {
@@ -421,11 +432,12 @@ namespace Common
         #endregion
 
         #region row
-        private static bool CreateOrUpdateRowAt(SheetData sheetData, DataRow dataRow, uint rowNo, uint columnNo, DefaultCellStyle defaultCellStyle, Dictionary<uint, uint> eachColumnStyle)
+        private static bool CreateOrUpdateRowAt(SheetData sheetData, DataRow dataRow, uint rowNo, uint columnNo, DefaultCellStyle defaultCellStyle, Dictionary<uint, uint> eachColumnStyle,bool isHidden=false)
         {
             if (rowNo > 0 && columnNo > 0 && defaultCellStyle != null && sheetData != null)
             {
                 Row newRow = CreateRow(rowNo, columnNo, dataRow, defaultCellStyle, eachColumnStyle);
+                newRow.Hidden = new BooleanValue(isHidden);
                 CreateOrUpdateRowAt(sheetData, newRow,newRow.RowIndex);
             }
             return true;
