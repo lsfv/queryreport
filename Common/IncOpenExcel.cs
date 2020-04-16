@@ -984,8 +984,8 @@ namespace Common
                 cellStyle.blackIndex_border = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, BoldFont, null, null);
                 cellStyle.blackdateTimeIndex_border = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, BoldFont, null, dateDeafult);
 
-                cellStyle.normal_black_alignment = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, BoldFont, null, null, HorizontalAlignmentValues.Right);
-                cellStyle.dateTime_black_alignment= createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, BoldFont, null, dateDeafult, HorizontalAlignmentValues.Right);
+                cellStyle.normal_black_alignment = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, BoldFont, null, null, HorizontalAlignmentValues.Right);
+                cellStyle.dateTime_black_alignment= createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, BoldFont, null, dateDeafult, HorizontalAlignmentValues.Right);
 
                 workbookpart.WorkbookStylesPart.Stylesheet.Save();
             }
