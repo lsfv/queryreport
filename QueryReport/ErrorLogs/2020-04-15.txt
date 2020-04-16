@@ -1,0 +1,11 @@
+ip:::1
+DataTime：2020/4/15 19:20:24
+Url：http://localhost:8090/Report/rpexcel2.aspx?id=15456
+Message：Cannot insert the OpenXmlElement "newChild" because it is part of a tree. 
+Source：QueryReport
+Type：System.InvalidOperationException
+Function：Void btnRun_Click(System.Object, System.EventArgs)
+Trace：   在 QueryReport.rpexcel2.btnRun_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel2.aspx.cs:行号 385
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************

@@ -395,7 +395,7 @@ namespace UnitTestProject1
 
             dataTable = Common.incUnitTest.GetDatatableCustomCount(1);
             totalIndex = new List<int>();
-            totalIndex.Add(1);
+            totalIndex.Add(0);
             CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, totalIndex);
 
 
@@ -406,7 +406,7 @@ namespace UnitTestProject1
 
             dataTable = null;
             totalIndex = new List<int>();
-            totalIndex.Add(1);
+            totalIndex.Add(0);
             CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, totalIndex);
 
             dataTable = Common.incUnitTest.GetDatatableCustomCount(5);
@@ -419,7 +419,6 @@ namespace UnitTestProject1
             totalIndex = null;
             CUSTOMRP.BLL.ExcelHelper.UpdateReport(path, dataTable, totalIndex);
         }
-
 
 
         [TestMethod]

@@ -26,6 +26,10 @@ namespace CUSTOMRP.BLL
 
                 //得到样式,并fill report
                 Dictionary<uint,uint> rowstyle= Common.IncOpenExcel.getRowStyles(totalTable.Columns, 2, 3, defaultCellStyle);
+                for (int i = 0; i < rowstyle.Keys.Count; i++)//Total的样式特殊点，需要右边对齐，因为无法把total设置为数字类型,因为有'total'这个字符的存在，所以无法默认右边对齐.必须手工设置
+                {
+                    rowstyle[rowstyle.Keys.ToArray()[i]] = defaultCellStyle.normal_black_alignment;
+                }
                 myExcelFile.CreateOrUpdateRowAt(sheetName, totalTable.Rows[0], writtingRowNo, 2, rowstyle);
                 writtingRowNo++;
 

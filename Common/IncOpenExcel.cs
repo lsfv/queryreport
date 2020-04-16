@@ -217,7 +217,7 @@ namespace Common
             return styles;
         }
 
-        //0:normal 1. 4lines  2. balck  3black
+        //0:normal 1. 4lines  2. balck  3. black
         public static Dictionary<uint, uint> getRowStyles(DataColumnCollection dataColumn,uint startColumnNo,int cateogry,DefaultCellStyle defaultCellStyle)
         {
             Dictionary<uint, uint> styles = new Dictionary<uint, uint>();
@@ -834,13 +834,29 @@ namespace Common
             return result;
         }
         //创建一个单元格样式
-        private static UInt32Value createCellFormat(Stylesheet styleSheet, UInt32Value borderid, UInt32Value fontIndex, UInt32Value fillIndex, UInt32Value numberFormatId)
+        //todo 如果参数下次再多，就需要考虑把同类的细节参数放到一个新建立参数类中,以提升代码阅读性。
+        private static UInt32Value createCellFormat(Stylesheet styleSheet, UInt32Value borderid, UInt32Value fontIndex, UInt32Value fillIndex, UInt32Value numberFormatId,HorizontalAlignmentValues horizontal=HorizontalAlignmentValues.Left)
         {
             if (styleSheet.CellFormats.Count == null)
             {
                 styleSheet.CellFormats.Count = (UInt32Value)0;
             }
-            CellFormat cellFormat = new CellFormat();
+            CellFormat cellFormat = null;
+            if (horizontal==HorizontalAlignmentValues.Left)
+            {
+                cellFormat = new CellFormat();
+            }
+            else
+            {
+                Alignment alignment = new Alignment()
+                {
+                    Horizontal = horizontal,
+                    Vertical = VerticalAlignmentValues.Center
+                };
+
+                cellFormat = new CellFormat(alignment);
+            }
+            
             cellFormat.BorderId = 0;
             if (fontIndex != null)
             {
@@ -862,6 +878,9 @@ namespace Common
                 cellFormat.NumberFormatId = numberFormatId;
                 cellFormat.ApplyNumberFormat = true;
             }
+
+
+            
 
             styleSheet.CellFormats.Append(cellFormat);
             UInt32Value result = styleSheet.CellFormats.Count;
@@ -910,7 +929,7 @@ namespace Common
         //建立一个最小样式表.
         private static void createDeafultStyle(WorkbookPart workbookpart, out DefaultCellStyle cellStyle)
         {
-            cellStyle = new DefaultCellStyle(0, 0, 0,0,0,0,0,0);
+            cellStyle = new DefaultCellStyle(0, 0, 0,0,0,0,0,0,0,0);
             if (workbookpart != null)
             {
                 //1.建立必要的文件和其根节点.
@@ -967,6 +986,17 @@ namespace Common
                 cellStyle.blackIndex_border = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, BoldFont, null, null);
                 cellStyle.blackdateTimeIndex_border = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, BoldFont, null, dateDeafult);
 
+                //Alignment alignment_right = new Alignment();
+                //alignment_right.Horizontal = HorizontalAlignmentValues.Right;
+                //alignment_right.Vertical = VerticalAlignmentValues.Center;
+                Alignment alignment_right = new Alignment()
+                {
+                    Horizontal = HorizontalAlignmentValues.Right,
+                    Vertical = VerticalAlignmentValues.Center
+                };
+                cellStyle.normal_black_alignment = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, BoldFont, null, null, HorizontalAlignmentValues.Right);
+                cellStyle.dateTime_black_alignment= createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, BoldFont, null, dateDeafult, HorizontalAlignmentValues.Right);
+
                 workbookpart.WorkbookStylesPart.Stylesheet.Save();
             }
         }
@@ -987,9 +1017,8 @@ namespace Common
             public UInt32 blackdateTimeIndex { get; set; }
 
             public uint blackIndex_border;
-            public UInt32 blackdateTimeIndex_border { get; set; }
 
-            public DefaultCellStyle(uint normalIndex, uint dateTimeIndex, uint normalIndex_border, uint dateTimeIndex_border, uint blackIndex, uint blackdateTimeIndex, uint blackIndex_border, uint blackdateTimeIndex_border)
+            public DefaultCellStyle(uint normalIndex, uint dateTimeIndex, uint normalIndex_border, uint dateTimeIndex_border, uint blackIndex, uint blackdateTimeIndex, uint blackIndex_border, uint blackdateTimeIndex_border, uint normal_black_alignment, uint dateTime_black_alignment)
             {
                 this.normalIndex = normalIndex;
                 this.dateTimeIndex = dateTimeIndex;
@@ -999,12 +1028,84 @@ namespace Common
                 this.blackdateTimeIndex = blackdateTimeIndex;
                 this.blackIndex_border = blackIndex_border;
                 this.blackdateTimeIndex_border = blackdateTimeIndex_border;
+                this.normal_black_alignment = normal_black_alignment;
+                this.dateTime_black_alignment = dateTime_black_alignment;
             }
 
-            
+            public UInt32 blackdateTimeIndex_border { get; set; }
 
-            
+            public uint normal_black_alignment { get; set; }
+            public uint dateTime_black_alignment { get; set; }
+
+         
         }
         #endregion
     }
 }
+
+
+
+
+#region A sample of style
+/*
+WorkbookStylesPart stylesheet = spreadsheet.WorkbookPart
+    .AddNewPart<WorkbookStylesPart>();
+
+Stylesheet workbookstylesheet = new Stylesheet();
+//    <Fonts>
+Font font0 = new Font(); // Default font
+
+Font font1 = new Font(); // Bold font
+Bold bold = new Bold();
+font1.Append(bold);
+
+Fonts fonts = new Fonts(); // <APENDING Fonts>
+fonts.Append(font0);
+fonts.Append(font1);
+
+// <Fills>
+Fill fill0 = new Fill(); // Default fill
+
+Fills fills = new Fills(); // <APENDING Fills>
+fills.Append(fill0);
+
+// <Borders>
+Border border0 = new Border(); // Defualt border
+
+Borders borders = new Borders(); // <APENDING Borders>
+borders.Append(border0);
+
+// <CellFormats>
+CellFormat cellformat0 = new CellFormat()
+{
+    FormatId = 0,
+    FillId = 0,
+    BorderId = 0
+};
+
+Alignment alignment = new Alignment()
+{
+    Horizontal = HorizontalAlignmentValues.Center,
+    Vertical = VerticalAlignmentValues.Center
+};
+
+CellFormat cellformat1 = new CellFormat(alignment)
+{
+    FontId = 1
+};
+
+// <APENDING CellFormats>
+CellFormats cellformats = new CellFormats();
+cellformats.Append(cellformat0);
+cellformats.Append(cellformat1);
+
+// Append FONTS, FILLS , BORDERS & CellFormats to stylesheet <Preserve the ORDER>
+workbookstylesheet.Append(fonts);
+workbookstylesheet.Append(fills);
+workbookstylesheet.Append(borders);
+workbookstylesheet.Append(cellformats);
+
+stylesheet.Stylesheet = workbookstylesheet;
+stylesheet.Stylesheet.Save();
+*/
+#endregion
