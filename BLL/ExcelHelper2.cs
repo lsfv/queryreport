@@ -33,7 +33,7 @@ namespace CUSTOMRP.BLL
                 myExcelFile.CreateOrUpdateRowAt(sheetName, totalTable.Rows[0], writtingRowNo, 2, rowstyle);
                 writtingRowNo++;
 
-                myExcelFile.CreateOrUpdateRowAt(sheetName, totalTable.Rows[1], writtingRowNo, 2, rowstyle);//todo blacked style
+                myExcelFile.CreateOrUpdateRowAt(sheetName, totalTable.Rows[1], writtingRowNo, 2, rowstyle);
                 writtingRowNo++;
             }
             return myExcelFile;

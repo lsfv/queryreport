@@ -848,11 +848,9 @@ namespace Common
             }
             else
             {
-                Alignment alignment = new Alignment()
-                {
-                    Horizontal = horizontal,
-                    Vertical = VerticalAlignmentValues.Center
-                };
+                Alignment alignment = new Alignment();
+                alignment.Horizontal = horizontal;
+                alignment.Vertical = VerticalAlignmentValues.Center;
 
                 cellFormat = new CellFormat(alignment);
             }
@@ -986,14 +984,6 @@ namespace Common
                 cellStyle.blackIndex_border = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, BoldFont, null, null);
                 cellStyle.blackdateTimeIndex_border = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, border4Line, BoldFont, null, dateDeafult);
 
-                //Alignment alignment_right = new Alignment();
-                //alignment_right.Horizontal = HorizontalAlignmentValues.Right;
-                //alignment_right.Vertical = VerticalAlignmentValues.Center;
-                Alignment alignment_right = new Alignment()
-                {
-                    Horizontal = HorizontalAlignmentValues.Right,
-                    Vertical = VerticalAlignmentValues.Center
-                };
                 cellStyle.normal_black_alignment = createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, BoldFont, null, null, HorizontalAlignmentValues.Right);
                 cellStyle.dateTime_black_alignment= createCellFormat(workbookpart.WorkbookStylesPart.Stylesheet, null, BoldFont, null, dateDeafult, HorizontalAlignmentValues.Right);
 

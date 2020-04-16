@@ -6,7 +6,6 @@ using System.Text;
 
 namespace CUSTOMRP.BLL
 {
-    //todo 最后需要 看下GetCellReference 是否是row ,column.
     public abstract class ExcelHelper
     {
         private static readonly string SHEETNAME = "Report";
