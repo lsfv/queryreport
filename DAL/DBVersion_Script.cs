@@ -81,7 +81,6 @@ namespace CUSTOMRP.DAL
                         new SqlParameter("@script_sql", SqlDbType.NVarChar,-1) ,
                         new SqlParameter("@script_extend", SqlDbType.NVarChar,250) ,
                         new SqlParameter("@script_date", SqlDbType.DateTime)
-
             };
 
             parameters[0].Value = model.script_version;
