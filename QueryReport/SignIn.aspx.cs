@@ -7,12 +7,13 @@ namespace QueryReport
 {
     public partial class SignIn : System.Web.UI.Page
     {
+        private int supportDBVersion = 999;
         protected void Page_Load(object sender, EventArgs e)
         {
             //this.baseUrl.Attributes.Add("href", String.Format("{0}://{1}:{2}/{3}", Request.Url.Scheme, Request.Url.Host, Request.Url.Port, Request.ApplicationPath != "/" ? Request.ApplicationPath : String.Empty));
             if (!IsPostBack)
             {
-                this.lblBuildNumber.Text = "Version " + Common.IncCommon.GetBuildNumber(4);
+                this.lblBuildNumber.Text = "Version " + Common.IncCommon.GetBuildNumber(4)+"."+supportDBVersion;
 
                 if (string.IsNullOrEmpty(Request.QueryString["uid"]) == false && string.IsNullOrEmpty(Request.QueryString["hash"]) == false && string.IsNullOrEmpty(Request.QueryString["dbid"]) == false && string.IsNullOrEmpty(Request.QueryString["dbname"]) == false)
                 {

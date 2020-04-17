@@ -109,6 +109,7 @@
     <Compile Include="COMMON.cs" />
     <Compile Include="DATABASE.cs" />
     <Compile Include="DbHelperSQL.cs" />
+    <Compile Include="DBVersion_Script.cs" />
     <Compile Include="ERRORLOG.cs" />
     <Compile Include="GROUPRIGHT.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

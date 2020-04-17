@@ -114,6 +114,7 @@
     <Compile Include="AppNum.cs" />
     <Compile Include="COMMON.cs" />
     <Compile Include="DATABASE.cs" />
+    <Compile Include="dbscript.cs" />
     <Compile Include="ExcelHelper.cs" />
     <Compile Include="ExcelHelper2.cs" />
     <Compile Include="GROUPRIGHT.cs" />

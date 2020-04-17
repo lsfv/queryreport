@@ -105,6 +105,7 @@
     <Compile Include="ColumnInfo.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="DATABASE.cs" />
+    <Compile Include="DBVersion_Script.cs" />
     <Compile Include="ERRORLOG.cs" />
     <Compile Include="FORMULAFIELD.cs" />
     <Compile Include="GROUPRIGHT.cs" />
