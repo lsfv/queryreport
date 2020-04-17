@@ -1,0 +1,40 @@
+ip:::1
+DataTime：2020/4/17 17:35:10
+Url：http://localhost:8090/Admin/DbUpdate.aspx
+Message：尝试除以零。
+Source：QueryReport
+Type：System.DivideByZeroException
+Function：Void Page_Load(System.Object, System.EventArgs)
+Trace：   在 QueryReport.Admin.DbUpdate.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Admin\DbUpdate.aspx.cs:行号 16
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/17 17:46:47
+Url：http://localhost:8090/Admin/DbUpdate.aspx
+Message：尝试除以零。
+Source：QueryReport
+Type：System.DivideByZeroException
+Function：Void Page_Load(System.Object, System.EventArgs)
+Trace：   在 QueryReport.Admin.DbUpdate.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Admin\DbUpdate.aspx.cs:行号 16
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/17 17:50:29
+Url：http://localhost:8090/Admin/DbUpdate.aspx
+Message：c:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Admin\DbUpdate.aspx(9): error CS1061: “ASP.admin_dbupdate_aspx”不包含“Button1_Click”的定义，并且找不到可接受类型为“ASP.admin_dbupdate_aspx”的第一个参数的扩展方法“Button1_Click”(是否缺少 using 指令或程序集引用?)
+Source：System.Web
+Type：System.Web.HttpCompileException
+Function：System.Web.Compilation.BuildResult CompileWebFile(System.Web.VirtualPath)
+Trace：   在 System.Web.Compilation.BuildManager.CompileWebFile(VirtualPath virtualPath)
+   在 System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   在 System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile, Boolean throwIfNotFound, Boolean ensureIsUpToDate)
+   在 System.Web.Compilation.BuildManager.GetVirtualPathObjectFactory(VirtualPath virtualPath, HttpContext context, Boolean allowCrossApp, Boolean throwIfNotFound)
+   在 System.Web.Compilation.BuildManager.CreateInstanceFromVirtualPath(VirtualPath virtualPath, Type requiredBaseType, HttpContext context, Boolean allowCrossApp)
+   在 System.Web.UI.PageHandlerFactory.GetHandlerHelper(HttpContext context, String requestType, VirtualPath virtualPath, String physicalPath)
+   在 System.Web.HttpApplication.MaterializeHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   在 System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+********************************************************************************************

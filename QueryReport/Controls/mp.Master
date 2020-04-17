@@ -109,6 +109,7 @@
                         <li class='' id="menuuserlist"><a runat="server" id="linkslevel" onserverclick="linkuserlista"><i class='icon-caret-right'></i><span>User Maintenance</span></a></li>
                         <li class='' id="menuwordlist" runat="server" visible="false"><a runat="server" id="A8" onserverclick="linkwordlista"><i class='icon-caret-right'></i><span>Word Template Maintenance</span></a></li>
                         <li class='' id="menudataimport"><a runat="server" id="A9" onserverclick="linkdataimporta"><i class='icon-caret-right'></i><span>Copy Security</span></a></li>
+                        <li class='' id="menudbupdate"><a runat="server" id="A10" onserverclick="linkdbupdatea"><i class='icon-caret-right'></i><span>DB Update</span></a></li>
                     </ul>
                 </li>
                 </ul>

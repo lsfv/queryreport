@@ -3,7 +3,7 @@ using System.Data;
 using System.Collections.Generic;
 using CUSTOMRP.Model;
 using CUSTOMRP.DAL;
-namespace BLL
+namespace CUSTOMRP.BLL
 {
     //DBVersion_Script
     public partial class DBVersion_Script

@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
+
 namespace QueryReport
 {
     public partial class ErrorPage2 : System.Web.UI.Page
@@ -13,7 +14,7 @@ namespace QueryReport
         {
             if (!string.IsNullOrWhiteSpace(Request.QueryString["message"]))
             {
-                this.Label1.Text = "Error:" + Request.QueryString["message"];
+                this.Label1.Text = "Error Msg:" + Request.QueryString["message"];
             }
         }
     }

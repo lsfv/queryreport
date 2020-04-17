@@ -59,6 +59,7 @@ namespace QueryReport.Controls
             Response.Redirect("~/Admin/ViewList.aspx");
         }
 
+        
 
         public void linklevellista(object sender, EventArgs e)
         {
@@ -107,18 +108,15 @@ namespace QueryReport.Controls
             Session[QueryReport.Code.AppNum.str_var_UserCookie_menuselected] = "menudataimport";
             Response.Redirect("~/Admin/DataTransfer.aspx");
         }
-        
+
+        public void linkdbupdatea(object sender, EventArgs e)
+        {
+            Session[QueryReport.Code.AppNum.str_var_UserCookie_menuselected] = "menudbupdate";
+            Response.Redirect("~/Admin/DbUpdate.aspx");
+        }
+
         protected void loginout(object sender, EventArgs e)
         {
-
-            //菜单折叠的cookie还是要清除。登录后初始化菜单是否关闭。
-            //if (Request.Cookies["openNav"] != null)
-            //{
-            //    HttpCookie myCookie = new HttpCookie("openNav");
-            //    myCookie.Expires = DateTime.Now.AddDays(-1d);
-            //    Response.Cookies.Add(myCookie);
-            //}
-
             Session.Clear();
             // v1.0.0 - Cheong - Clear Cookies AFTER clearing session as session key is stored in cookies
             Response.Cookies.Clear();//只是说不要向客户端写入cookie了。

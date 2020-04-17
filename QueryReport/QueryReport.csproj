@@ -153,6 +153,7 @@
     <Content Include="Admin\Company.aspx" />
     <Content Include="Admin\CompanyNew.aspx" />
     <Content Include="Admin\DataTransfer.aspx" />
+    <Content Include="Admin\DbUpdate.aspx" />
     <Content Include="Admin\GroupRight.aspx" />
     <Content Include="Admin\QuickSetup.aspx" />
     <Content Include="Admin\ReportGroup.aspx" />
@@ -720,6 +721,13 @@
     </Compile>
     <Compile Include="Admin\DataTransfer.aspx.designer.cs">
       <DependentUpon>DataTransfer.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Admin\DbUpdate.aspx.cs">
+      <DependentUpon>DbUpdate.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\DbUpdate.aspx.designer.cs">
+      <DependentUpon>DbUpdate.aspx</DependentUpon>
     </Compile>
     <Compile Include="Admin\GroupRight.aspx.cs">
       <DependentUpon>GroupRight.aspx</DependentUpon>
