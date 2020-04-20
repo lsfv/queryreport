@@ -31,16 +31,7 @@ namespace CUSTOMRP.DAL
                         connection.Open();
 
                         cmd.CommandTimeout = CommandTimeout;
-
-                        foreach (SqlParameter parameter in cmdParms)
-                        {
-                            if ((parameter.Direction == ParameterDirection.InputOutput || parameter.Direction == ParameterDirection.Input) &&
-                                (parameter.Value == null))
-                            {
-                                parameter.Value = DBNull.Value;
-                            }
-                            cmd.Parameters.Add(parameter);
-                        }
+                        PreParms(cmdParms, cmd);
 
                         int rows = cmd.ExecuteNonQuery();
                         cmd.Parameters.Clear();     // much like other List<T> implementations. Calling .Clear() before dispose can reduce memory usage
@@ -63,6 +54,22 @@ namespace CUSTOMRP.DAL
             }
         }
 
+        private static void PreParms(SqlParameter[] cmdParms, SqlCommand cmd)
+        {
+            if (cmdParms != null)
+            {
+                foreach (SqlParameter parameter in cmdParms)
+                {
+                    if ((parameter.Direction == ParameterDirection.InputOutput || parameter.Direction == ParameterDirection.Input) &&
+                        (parameter.Value == null))
+                    {
+                        parameter.Value = DBNull.Value;
+                    }
+                    cmd.Parameters.Add(parameter);
+                }
+            }
+        }
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
         public static object GetSingle(int UserID, string strCmd, params SqlParameter[] cmdParms)
         {
@@ -79,15 +86,7 @@ namespace CUSTOMRP.DAL
 
                         cmd.CommandTimeout = CommandTimeout;
 
-                        foreach (SqlParameter parameter in cmdParms)
-                        {
-                            if ((parameter.Direction == ParameterDirection.InputOutput || parameter.Direction == ParameterDirection.Input) &&
-                                (parameter.Value == null))
-                            {
-                                parameter.Value = DBNull.Value;
-                            }
-                            cmd.Parameters.Add(parameter);
-                        }
+                        PreParms(cmdParms, cmd);
 
                         result = cmd.ExecuteScalar();
                         cmd.Parameters.Clear();     // much like other List<T> implementations. Calling .Clear() before dispose can reduce memory usage
@@ -126,15 +125,7 @@ namespace CUSTOMRP.DAL
 
                         cmd.CommandTimeout = CommandTimeout;
 
-                        foreach (SqlParameter parameter in cmdParms)
-                        {
-                            if ((parameter.Direction == ParameterDirection.InputOutput || parameter.Direction == ParameterDirection.Input) &&
-                                (parameter.Value == null))
-                            {
-                                parameter.Value = DBNull.Value;
-                            }
-                            cmd.Parameters.Add(parameter);
-                        }
+                        PreParms(cmdParms, cmd);
 
                         SqlDataAdapter da = new SqlDataAdapter(cmd);
                         da.Fill(result, "ds");
@@ -238,15 +229,7 @@ namespace CUSTOMRP.DAL
 
                 cmd.CommandTimeout = CommandTimeout;
 
-                foreach (SqlParameter parameter in cmdParms)
-                {
-                    if ((parameter.Direction == ParameterDirection.InputOutput || parameter.Direction == ParameterDirection.Input) &&
-                        (parameter.Value == null))
-                    {
-                        parameter.Value = DBNull.Value;
-                    }
-                    cmd.Parameters.Add(parameter);
-                }
+                PreParms(cmdParms, cmd);
 
                 reader = cmd.ExecuteReader();
                 result.Load(reader);
@@ -294,15 +277,7 @@ namespace CUSTOMRP.DAL
 
                 cmd.CommandTimeout = CommandTimeout;
 
-                foreach (SqlParameter parameter in cmdParms)
-                {
-                    if ((parameter.Direction == ParameterDirection.InputOutput || parameter.Direction == ParameterDirection.Input) &&
-                        (parameter.Value == null))
-                    {
-                        parameter.Value = DBNull.Value;
-                    }
-                    cmd.Parameters.Add(parameter);
-                }
+                PreParms(cmdParms, cmd);
 
                 reader = cmd.ExecuteReader();
                 result.Load(reader);

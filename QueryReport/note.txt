@@ -38,8 +38,6 @@ v4.
 
 
 
-
-
                         //// Slow, but there is no better way than this
                         //string[] colnames = GetColumnNamesForStoredProc(UserID, DBName, sourceName);    // Needs the whole, unmodified schema
                         //StringBuilder sb = new StringBuilder(string.Format("use {0}; DECLARE @Schema TABLE (", DBName));

@@ -1,0 +1,143 @@
+ip:::1
+DataTime：2020/4/19 9:26:21
+Url：http://localhost:8090/Admin/DbUpdate.aspx
+Message：“GO”附近有语法错误。
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void OnError(System.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action])
+Trace：   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteNonQueryTds(String methodName, Boolean async, Int32 timeout, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 CUSTOMRP.DAL.DbHelperSQL.ExecuteSql(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 54
+   在 CUSTOMRP.DAL.Common.executeSql(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\COMMON.cs:行号 21
+   在 CUSTOMRP.BLL.COMMON.executesql(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\COMMON.cs:行号 20
+   在 QueryReport.Admin.DbUpdate.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Admin\DbUpdate.aspx.cs:行号 20
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/19 9:31:06
+Url：http://localhost:8090/Admin/DbUpdate.aspx
+Message：“GO”附近有语法错误。
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void OnError(System.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action])
+Trace：   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteNonQueryTds(String methodName, Boolean async, Int32 timeout, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 CUSTOMRP.DAL.DbHelperSQL.ExecuteSql(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 54
+   在 CUSTOMRP.DAL.Common.executeSql(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\COMMON.cs:行号 21
+   在 CUSTOMRP.BLL.COMMON.executesql(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\COMMON.cs:行号 20
+   在 QueryReport.Admin.DbUpdate.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Admin\DbUpdate.aspx.cs:行号 20
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/19 9:31:13
+Url：http://localhost:8090/Admin/DbUpdate.aspx
+Message：“GO”附近有语法错误。
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void OnError(System.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action])
+Trace：   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteNonQueryTds(String methodName, Boolean async, Int32 timeout, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 CUSTOMRP.DAL.DbHelperSQL.ExecuteSql(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 54
+   在 CUSTOMRP.DAL.Common.executeSql(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\COMMON.cs:行号 21
+   在 CUSTOMRP.BLL.COMMON.executesql(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\COMMON.cs:行号 20
+   在 QueryReport.Admin.DbUpdate.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Admin\DbUpdate.aspx.cs:行号 20
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/19 9:31:23
+Url：http://localhost:8090/Admin/DbUpdate.aspx
+Message：“GO”附近有语法错误。
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void OnError(System.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action])
+Trace：   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteNonQueryTds(String methodName, Boolean async, Int32 timeout, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 CUSTOMRP.DAL.DbHelperSQL.ExecuteSql(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 54
+   在 CUSTOMRP.DAL.Common.executeSql(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\COMMON.cs:行号 21
+   在 CUSTOMRP.BLL.COMMON.executesql(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\COMMON.cs:行号 20
+   在 QueryReport.Admin.DbUpdate.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Admin\DbUpdate.aspx.cs:行号 20
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/19 9:49:46
+Url：http://localhost:8090/Admin/DbUpdate.aspx
+Message：未将对象引用设置到对象的实例。
+Source：DAL
+Type：System.NullReferenceException
+Function：System.Object GetSingle(Int32, System.String, System.Data.SqlClient.SqlParameter[])
+Trace：   在 CUSTOMRP.DAL.DbHelperSQL.GetSingle(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 100
+   在 CUSTOMRP.DAL.DBVersion_Script.CurrentVersion() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DBVersion_Script.cs:行号 200
+   在 CUSTOMRP.BLL.DBVersion_Script.CurrentVersion() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\dbscript.cs:行号 83
+   在 QueryReport.Admin.DbUpdate.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Admin\DbUpdate.aspx.cs:行号 25
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/19 9:52:27
+Url：http://localhost:8090/Report/rpexcel_printconfig.aspx
+Message：未将对象引用设置到对象的实例。
+Source：QueryReport
+Type：System.NullReferenceException
+Function：Void Page_Init(System.Object, System.EventArgs)
+Trace：   在 QueryReport.Report.rpexcel_printconfig.Page_Init(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel_printconfig.aspx.cs:行号 30
+   在 System.EventHandler.Invoke(Object sender, EventArgs e)
+   在 System.Web.UI.Control.OnInit(EventArgs e)
+   在 System.Web.UI.Page.OnInit(EventArgs e)
+   在 System.Web.UI.Control.InitRecursive(Control namingContainer)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/19 9:52:42
+Url：http://localhost:8090/Admin/DbUpdate.aspx
+Message：未将对象引用设置到对象的实例。
+Source：DAL
+Type：System.NullReferenceException
+Function：System.Object GetSingle(Int32, System.String, System.Data.SqlClient.SqlParameter[])
+Trace：   在 CUSTOMRP.DAL.DbHelperSQL.GetSingle(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 100
+   在 CUSTOMRP.DAL.DBVersion_Script.CurrentVersion() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DBVersion_Script.cs:行号 200
+   在 CUSTOMRP.BLL.DBVersion_Script.CurrentVersion() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\dbscript.cs:行号 83
+   在 QueryReport.Admin.DbUpdate.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Admin\DbUpdate.aspx.cs:行号 25
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/19 9:56:07
+Url：http://localhost:8090/Admin/DbUpdate.aspx
+Message：未将对象引用设置到对象的实例。
+Source：DAL
+Type：System.NullReferenceException
+Function：System.Object GetSingle(Int32, System.String, System.Data.SqlClient.SqlParameter[])
+Trace：   在 CUSTOMRP.DAL.DbHelperSQL.GetSingle(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 100
+   在 CUSTOMRP.DAL.DBVersion_Script.CurrentVersion() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DBVersion_Script.cs:行号 200
+   在 CUSTOMRP.BLL.DBVersion_Script.CurrentVersion() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\dbscript.cs:行号 83
+   在 QueryReport.Admin.DbUpdate.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Admin\DbUpdate.aspx.cs:行号 25
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************

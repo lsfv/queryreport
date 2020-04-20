@@ -190,4 +190,60 @@ namespace CUSTOMRP.DAL
         }
 
     }
+
+    public partial class DBVersion_Script
+    {
+        public int CurrentVersion()
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT isnull(max(history_version),-1)  FROM [DBVersion_History]");
+            object ret = DbHelperSQL.GetSingle(1, strSql.ToString(), null);
+            return (int)ret;
+        }
+
+        public int GetCountNeedUpdate(int current)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("SELECT count(*)  FROM [DBVersion_script] where script_version>" + current);
+            object ret = DbHelperSQL.GetSingle(1, strSql.ToString(), null);
+            return (int)ret;
+        }
+
+
+        /// <summary>
+		/// 增加一条数据
+		/// </summary>
+		public int AddHistory(int version,string extend)
+        {
+            StringBuilder strSql = new StringBuilder();
+            strSql.Append("insert into DBVersion_History(");
+            strSql.Append("history_version,history_extend,history_datetime");
+            strSql.Append(") values (");
+            strSql.Append("@history_version,@history_extend,@history_datetime");
+            strSql.Append(") ");
+            strSql.Append(";select @@IDENTITY");
+            SqlParameter[] parameters = {
+                        new SqlParameter("@history_version", SqlDbType.Int,4) ,
+                        new SqlParameter("@history_extend", SqlDbType.NVarChar,250) ,
+                        new SqlParameter("@history_datetime", SqlDbType.DateTime)
+
+            };
+
+            parameters[0].Value = version;
+            parameters[1].Value = extend;
+            parameters[2].Value = DateTime.Now;
+
+            object obj = DbHelperSQL.ExecuteSql(1, strSql.ToString(), parameters);
+            if (obj == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return Convert.ToInt32(obj);
+            }
+
+        }
+
+    }
 }

@@ -73,4 +73,67 @@ namespace CUSTOMRP.BLL
         #endregion
 
     }
+
+
+
+    public partial class DBVersion_Script
+    {
+
+        public DataTable GetNeedUpdate(int current)
+        {
+            return GetList("script_version>" + current);
+        }
+
+
+        public int CurrentVersion()
+        {
+            return dal.CurrentVersion();
+        }
+
+        public int GetCountNeedUpdate(int current)
+        {
+            if (current == -1)
+            {
+                return -1;
+            }
+            else
+            {
+                return dal.GetCountNeedUpdate(current);
+            }
+        }
+
+        public int addhistory(int version,string extend)
+        {
+            return dal.AddHistory(version, extend);
+        }
+
+
+        public static string sql_create = @"if (select count(*) from sys.objects where name='dbversion_script') =0 
+                            CREATE TABLE [dbo].[DBVersion_Script](
+                                    [script_version][int] NOT NULL,
+                                   [script_title] [nvarchar] (50) NOT NULL,
+                                    [script_desc] [nvarchar] (250) NOT NULL,
+                                     [script_sql] [nvarchar] (max) NOT NULL,
+	                                [script_extend] [nvarchar] (250) NOT NULL,
+                                  CONSTRAINT[PK_DBVersion_Script] PRIMARY KEY CLUSTERED
+                                (
+                                    [script_version] ASC
+                                )WITH(PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON[PRIMARY]
+                                ) ON[PRIMARY] TEXTIMAGE_ON[PRIMARY];";
+
+        public static string sql_create2 = @"if (select count(*) from sys.objects where name='DBVersion_History') =0  
+                                    begin
+                                    CREATE TABLE [dbo].[DBVersion_History](
+	                                [history_id] [int] IDENTITY(1,1) NOT NULL,
+	                                [history_version] [int] NOT NULL,
+	                                [history_extend] [nvarchar](250) NOT NULL,
+	                                [history_datetime] [datetime] NOT NULL,
+                                 CONSTRAINT [PK_DBVersion_History] PRIMARY KEY CLUSTERED 
+                                (
+	                                [history_id] ASC
+                                )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+                                ) ON [PRIMARY];
+                                ALTER TABLE [dbo].[DBVersion_History] ADD  CONSTRAINT [DF_DBVersion_History_history_datetime]  DEFAULT (getdate()) FOR [history_datetime];
+                                end";
+    }
 }
