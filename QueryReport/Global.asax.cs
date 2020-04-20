@@ -85,7 +85,7 @@ namespace QueryReport
                     writer.Close();
                 }
             }
-            Response.Redirect("~/ErrorPage2.aspx?message=" + errorInfo1.Replace(" ","").Replace("    ",""));
+            Response.Redirect("~/ErrorPage2.aspx?message=" + errorInfo1.Replace(" ","").Replace("    ","").Replace("\n", "").Replace("\t", "").Replace("\r", ""));
         }
 
         void Session_Start(object sender, EventArgs e)

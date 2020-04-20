@@ -1,0 +1,543 @@
+ip:::1
+DataTime：2020/4/20 12:18:17
+Url：http://localhost:8090/SignIn.aspx
+Message：不支持关键字: “queryreport_prd_linson;persist security info”。
+Source：System.Data
+Type：System.ArgumentException
+Function：System.Data.Common.NameValuePair ParseInternal(System.Collections.Hashtable, System.String, Boolean, System.Collections.Hashtable, Boolean)
+Trace：   在 System.Data.Common.DbConnectionOptions.ParseInternal(Hashtable parsetable, String connectionString, Boolean buildChain, Hashtable synonyms, Boolean firstKey)
+   在 System.Data.Common.DbConnectionOptions..ctor(String connectionString, Hashtable synonyms, Boolean useOdbcRules)
+   在 System.Data.SqlClient.SqlConnectionString..ctor(String connectionString)
+   在 System.Data.SqlClient.SqlConnectionFactory.CreateConnectionOptions(String connectionString, DbConnectionOptions previous)
+   在 System.Data.ProviderBase.DbConnectionFactory.GetConnectionPoolGroup(DbConnectionPoolKey key, DbConnectionPoolGroupOptions poolOptions, DbConnectionOptions& userConnectionOptions)
+   在 System.Data.SqlClient.SqlConnection.ConnectionString_Set(DbConnectionPoolKey key)
+   在 System.Data.SqlClient.SqlConnection.set_ConnectionString(String value)
+   在 System.Data.SqlClient.SqlConnection..ctor(String connectionString, SqlCredential credential)
+   在 CUSTOMRP.DAL.DbHelperSQL.Query(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 118
+   在 CUSTOMRP.DAL.DATABASE.GetDBListWithApp(Int32 UserID, String strWhere) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DATABASE.cs:行号 353
+   在 CUSTOMRP.BLL.DATABASE.GetDBListWithApp(Int32 UserID, String strWhere) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\DATABASE.cs:行号 136
+   在 QueryReport.SignIn.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 29
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 12:18:36
+Url：http://localhost:8090/SignIn.aspx
+Message：不支持关键字: “queryreport_prd_linson;persist security info”。
+Source：System.Data
+Type：System.ArgumentException
+Function：System.Data.Common.NameValuePair ParseInternal(System.Collections.Hashtable, System.String, Boolean, System.Collections.Hashtable, Boolean)
+Trace：   在 System.Data.Common.DbConnectionOptions.ParseInternal(Hashtable parsetable, String connectionString, Boolean buildChain, Hashtable synonyms, Boolean firstKey)
+   在 System.Data.Common.DbConnectionOptions..ctor(String connectionString, Hashtable synonyms, Boolean useOdbcRules)
+   在 System.Data.SqlClient.SqlConnectionString..ctor(String connectionString)
+   在 System.Data.SqlClient.SqlConnectionFactory.CreateConnectionOptions(String connectionString, DbConnectionOptions previous)
+   在 System.Data.ProviderBase.DbConnectionFactory.GetConnectionPoolGroup(DbConnectionPoolKey key, DbConnectionPoolGroupOptions poolOptions, DbConnectionOptions& userConnectionOptions)
+   在 System.Data.SqlClient.SqlConnection.ConnectionString_Set(DbConnectionPoolKey key)
+   在 System.Data.SqlClient.SqlConnection.set_ConnectionString(String value)
+   在 System.Data.SqlClient.SqlConnection..ctor(String connectionString, SqlCredential credential)
+   在 CUSTOMRP.DAL.DbHelperSQL.Query(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 118
+   在 CUSTOMRP.DAL.DATABASE.GetDBListWithApp(Int32 UserID, String strWhere) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DATABASE.cs:行号 353
+   在 CUSTOMRP.BLL.DATABASE.GetDBListWithApp(Int32 UserID, String strWhere) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\DATABASE.cs:行号 136
+   在 QueryReport.SignIn.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 29
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 12:19:29
+Url：http://localhost:8090/SignIn.aspx
+Message：不支持关键字: “queryreport_prd_linson;persist security info”。
+Source：System.Data
+Type：System.ArgumentException
+Function：System.Data.Common.NameValuePair ParseInternal(System.Collections.Hashtable, System.String, Boolean, System.Collections.Hashtable, Boolean)
+Trace：   在 System.Data.Common.DbConnectionOptions.ParseInternal(Hashtable parsetable, String connectionString, Boolean buildChain, Hashtable synonyms, Boolean firstKey)
+   在 System.Data.Common.DbConnectionOptions..ctor(String connectionString, Hashtable synonyms, Boolean useOdbcRules)
+   在 System.Data.SqlClient.SqlConnectionString..ctor(String connectionString)
+   在 System.Data.SqlClient.SqlConnectionFactory.CreateConnectionOptions(String connectionString, DbConnectionOptions previous)
+   在 System.Data.ProviderBase.DbConnectionFactory.GetConnectionPoolGroup(DbConnectionPoolKey key, DbConnectionPoolGroupOptions poolOptions, DbConnectionOptions& userConnectionOptions)
+   在 System.Data.SqlClient.SqlConnection.ConnectionString_Set(DbConnectionPoolKey key)
+   在 System.Data.SqlClient.SqlConnection.set_ConnectionString(String value)
+   在 System.Data.SqlClient.SqlConnection..ctor(String connectionString, SqlCredential credential)
+   在 CUSTOMRP.DAL.DbHelperSQL.Query(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 118
+   在 CUSTOMRP.DAL.DATABASE.GetDBListWithApp(Int32 UserID, String strWhere) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DATABASE.cs:行号 353
+   在 CUSTOMRP.BLL.DATABASE.GetDBListWithApp(Int32 UserID, String strWhere) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\DATABASE.cs:行号 136
+   在 QueryReport.SignIn.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 29
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 12:20:32
+Url：http://localhost:8090/SignIn.aspx
+Message：Login failed for user 'sa'.
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void .ctor(System.Data.ProviderBase.DbConnectionPoolIdentity, System.Data.SqlClient.SqlConnectionString, System.Data.SqlClient.SqlCredential, System.Object, System.String, System.Security.SecureString, Boolean, System.Data.SqlClient.SqlConnectionString, System.Data.SqlClient.SessionData, System.Data.ProviderBase.DbConnectionPool, System.String, Boolean)
+Trace：   在 System.Data.SqlClient.SqlInternalConnectionTds..ctor(DbConnectionPoolIdentity identity, SqlConnectionString connectionOptions, SqlCredential credential, Object providerInfo, String newPassword, SecureString newSecurePassword, Boolean redirectedUserInstance, SqlConnectionString userConnectionOptions, SessionData reconnectSessionData, DbConnectionPool pool, String accessToken, Boolean applyTransientFaultHandling)
+   在 System.Data.SqlClient.SqlConnectionFactory.CreateConnection(DbConnectionOptions options, DbConnectionPoolKey poolKey, Object poolGroupProviderInfo, DbConnectionPool pool, DbConnection owningConnection, DbConnectionOptions userOptions)
+   在 System.Data.ProviderBase.DbConnectionFactory.CreatePooledConnection(DbConnectionPool pool, DbConnection owningObject, DbConnectionOptions options, DbConnectionPoolKey poolKey, DbConnectionOptions userOptions)
+   在 System.Data.ProviderBase.DbConnectionPool.CreateObject(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   在 System.Data.ProviderBase.DbConnectionPool.UserCreateRequest(DbConnection owningObject, DbConnectionOptions userOptions, DbConnectionInternal oldConnection)
+   在 System.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, UInt32 waitForMultipleObjectsTimeout, Boolean allowCreate, Boolean onlyOneCheckConnection, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   在 System.Data.ProviderBase.DbConnectionPool.TryGetConnection(DbConnection owningObject, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal& connection)
+   在 System.Data.ProviderBase.DbConnectionFactory.TryGetConnection(DbConnection owningConnection, TaskCompletionSource`1 retry, DbConnectionOptions userOptions, DbConnectionInternal oldConnection, DbConnectionInternal& connection)
+   在 System.Data.ProviderBase.DbConnectionInternal.TryOpenConnectionInternal(DbConnection outerConnection, DbConnectionFactory connectionFactory, TaskCompletionSource`1 retry, DbConnectionOptions userOptions)
+   在 System.Data.SqlClient.SqlConnection.TryOpenInner(TaskCompletionSource`1 retry)
+   在 System.Data.SqlClient.SqlConnection.TryOpen(TaskCompletionSource`1 retry)
+   在 System.Data.SqlClient.SqlConnection.Open()
+   在 CUSTOMRP.DAL.DbHelperSQL.Query(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 139
+   在 CUSTOMRP.DAL.DATABASE.GetDBListWithApp(Int32 UserID, String strWhere) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DATABASE.cs:行号 353
+   在 CUSTOMRP.BLL.DATABASE.GetDBListWithApp(Int32 UserID, String strWhere) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\DATABASE.cs:行号 136
+   在 QueryReport.SignIn.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\SignIn.aspx.cs:行号 29
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 12:20:58
+Url：http://localhost:8090/Report/rpList.aspx
+Message：Invalid object name 'DWIHR_PRD_20200225.INFORMATION_SCHEMA.COLUMNS'.
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void OnError(System.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action])
+Trace：   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, String srcTable)
+   在 CUSTOMRP.DAL.DbHelperSQL.Query(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 139
+   在 CUSTOMRP.DAL.Common.query(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\COMMON.cs:行号 27
+   在 CUSTOMRP.BLL.COMMON.query(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\COMMON.cs:行号 25
+   在 CUSTOMRP.BLL.AppHelper.GetColumnInfoForTblView(Int32 UserID, String DBName, String tblviewname) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\AppHelper.cs:行号 373
+   在 QueryReport.Code.LoginUser.Create() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\LoginUser.cs:行号 89
+   在 QueryReport.Code.LoginUser.get_CurrentUser() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\LoginUser.cs:行号 26
+   在 QueryReport.Code.LoginUserPage.LoginUserPage_Init(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\LoginUserPage.cs:行号 31
+   在 System.Web.UI.Control.OnInit(EventArgs e)
+   在 System.Web.UI.Page.OnInit(EventArgs e)
+   在 System.Web.UI.Control.InitRecursive(Control namingContainer)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 12:23:19
+Url：http://localhost:8090/Report/rpList.aspx
+Message：Invalid object name 'DWIHR_PRD_20200225.INFORMATION_SCHEMA.COLUMNS'.
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void OnError(System.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action])
+Trace：   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, String srcTable)
+   在 CUSTOMRP.DAL.DbHelperSQL.Query(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 139
+   在 CUSTOMRP.DAL.Common.query(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\COMMON.cs:行号 27
+   在 CUSTOMRP.BLL.COMMON.query(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\COMMON.cs:行号 25
+   在 CUSTOMRP.BLL.AppHelper.GetColumnInfoForTblView(Int32 UserID, String DBName, String tblviewname) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\AppHelper.cs:行号 373
+   在 QueryReport.Code.LoginUser.Create() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\LoginUser.cs:行号 89
+   在 QueryReport.Code.LoginUser.get_CurrentUser() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\LoginUser.cs:行号 26
+   在 QueryReport.Code.LoginUserPage.LoginUserPage_Init(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\LoginUserPage.cs:行号 31
+   在 System.Web.UI.Control.OnInit(EventArgs e)
+   在 System.Web.UI.Page.OnInit(EventArgs e)
+   在 System.Web.UI.Control.InitRecursive(Control namingContainer)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 12:24:09
+Url：http://localhost:8090/Report/rpexcel2.aspx?id=1214&cmd=run
+Message：Invalid column name 'Code'.
+Invalid column name 'Description'.
+Invalid column name 'Value'.
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void btnRun_Click(System.Object, System.EventArgs)
+Trace：   在 QueryReport.rpexcel2.btnRun_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel2.aspx.cs:行号 385
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 13:53:28
+Url：http://localhost:8090/Report/rpexcel2.aspx?id=1214&cmd=run
+Message：Invalid column name 'Code'.
+Invalid column name 'Description'.
+Invalid column name 'Value'.
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void btnRun_Click(System.Object, System.EventArgs)
+Trace：   在 QueryReport.rpexcel2.btnRun_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel2.aspx.cs:行号 385
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 14:08:26
+Url：http://localhost:8090/Report/rpworddetail.aspx?id=1216&cmd=run
+Message：序列不包含任何元素
+Source：System.Core
+Type：System.InvalidOperationException
+Function：TSource First[TSource](System.Collections.Generic.IEnumerable`1[TSource])
+Trace：   在 System.Linq.Enumerable.First[TSource](IEnumerable`1 source)
+   在 QueryReport.rpwordsave.LoadCriteriaUIFromSession() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 456
+   在 QueryReport.rpwordsave.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 133
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 14:08:43
+Url：http://localhost:8090/Report/rpworddetail.aspx?id=1216
+Message：序列不包含任何元素
+Source：System.Core
+Type：System.InvalidOperationException
+Function：TSource First[TSource](System.Collections.Generic.IEnumerable`1[TSource])
+Trace：   在 System.Linq.Enumerable.First[TSource](IEnumerable`1 source)
+   在 QueryReport.rpwordsave.LoadCriteriaUIFromSession() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 456
+   在 QueryReport.rpwordsave.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 133
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 14:09:15
+Url：http://localhost:8090/Report/rpexcel_printconfig.aspx
+Message：未将对象引用设置到对象的实例。
+Source：QueryReport
+Type：System.NullReferenceException
+Function：Void Page_Init(System.Object, System.EventArgs)
+Trace：   在 QueryReport.Report.rpexcel_printconfig.Page_Init(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel_printconfig.aspx.cs:行号 103
+   在 System.EventHandler.Invoke(Object sender, EventArgs e)
+   在 System.Web.UI.Control.OnInit(EventArgs e)
+   在 System.Web.UI.Page.OnInit(EventArgs e)
+   在 System.Web.UI.Control.InitRecursive(Control namingContainer)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 14:15:17
+Url：http://localhost:8090/Report/rpworddetail.aspx?id=1216&cmd=run
+Message：序列不包含任何元素
+Source：System.Core
+Type：System.InvalidOperationException
+Function：TSource First[TSource](System.Collections.Generic.IEnumerable`1[TSource])
+Trace：   在 System.Linq.Enumerable.First[TSource](IEnumerable`1 source)
+   在 QueryReport.rpwordsave.LoadCriteriaUIFromSession() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 456
+   在 QueryReport.rpwordsave.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 133
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 14:17:33
+Url：http://localhost:8090/Report/rpworddetail.aspx?id=1216&cmd=run
+Message：序列不包含任何元素
+Source：System.Core
+Type：System.InvalidOperationException
+Function：TSource First[TSource](System.Collections.Generic.IEnumerable`1[TSource])
+Trace：   在 System.Linq.Enumerable.First[TSource](IEnumerable`1 source)
+   在 QueryReport.rpwordsave.LoadCriteriaUIFromSession() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 456
+   在 QueryReport.rpwordsave.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 133
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 14:17:44
+Url：http://localhost:8090/Report/rpworddetail.aspx?id=1216
+Message：序列不包含任何元素
+Source：System.Core
+Type：System.InvalidOperationException
+Function：TSource First[TSource](System.Collections.Generic.IEnumerable`1[TSource])
+Trace：   在 System.Linq.Enumerable.First[TSource](IEnumerable`1 source)
+   在 QueryReport.rpwordsave.LoadCriteriaUIFromSession() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 456
+   在 QueryReport.rpwordsave.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 133
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 14:18:11
+Url：http://localhost:8090/Report/rpexcel_printconfig.aspx
+Message：未将对象引用设置到对象的实例。
+Source：QueryReport
+Type：System.NullReferenceException
+Function：Void Page_Init(System.Object, System.EventArgs)
+Trace：   在 QueryReport.Report.rpexcel_printconfig.Page_Init(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel_printconfig.aspx.cs:行号 103
+   在 System.EventHandler.Invoke(Object sender, EventArgs e)
+   在 System.Web.UI.Control.OnInit(EventArgs e)
+   在 System.Web.UI.Page.OnInit(EventArgs e)
+   在 System.Web.UI.Control.InitRecursive(Control namingContainer)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 14:21:18
+Url：http://localhost:8090/Report/rpworddetail.aspx?id=1216&cmd=run
+Message：序列不包含任何元素
+Source：System.Core
+Type：System.InvalidOperationException
+Function：TSource First[TSource](System.Collections.Generic.IEnumerable`1[TSource])
+Trace：   在 System.Linq.Enumerable.First[TSource](IEnumerable`1 source)
+   在 QueryReport.rpwordsave.LoadCriteriaUIFromSession() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 456
+   在 QueryReport.rpwordsave.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 133
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 14:30:42
+Url：http://localhost:8090/Report/rpworddetail.aspx?id=1216&cmd=run
+Message：序列不包含任何元素
+Source：System.Core
+Type：System.InvalidOperationException
+Function：TSource First[TSource](System.Collections.Generic.IEnumerable`1[TSource])
+Trace：   在 System.Linq.Enumerable.First[TSource](IEnumerable`1 source)
+   在 QueryReport.rpwordsave.LoadCriteriaUIFromSession() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 457
+   在 QueryReport.rpwordsave.Page_Load(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpwordsave.aspx.cs:行号 133
+   在 System.Web.UI.Control.OnLoad(EventArgs e)
+   在 System.Web.UI.Control.LoadRecursive()
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 14:53:02
+Url：http://localhost:8090/Report/rpList.aspx
+Message：Invalid object name 'DWIHR_PRD_20200225.INFORMATION_SCHEMA.COLUMNS'.
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void OnError(System.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action])
+Trace：   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, String srcTable)
+   在 CUSTOMRP.DAL.DbHelperSQL.Query(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 139
+   在 CUSTOMRP.DAL.Common.query(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\COMMON.cs:行号 27
+   在 CUSTOMRP.BLL.COMMON.query(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\COMMON.cs:行号 25
+   在 CUSTOMRP.BLL.AppHelper.GetColumnInfoForTblView(Int32 UserID, String DBName, String tblviewname) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\AppHelper.cs:行号 373
+   在 QueryReport.Code.LoginUser.Create() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\LoginUser.cs:行号 89
+   在 QueryReport.Code.LoginUser.get_CurrentUser() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\LoginUser.cs:行号 26
+   在 QueryReport.Code.LoginUserPage.LoginUserPage_Init(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\LoginUserPage.cs:行号 31
+   在 System.Web.UI.Control.OnInit(EventArgs e)
+   在 System.Web.UI.Page.OnInit(EventArgs e)
+   在 System.Web.UI.Control.InitRecursive(Control namingContainer)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 14:54:06
+Url：http://localhost:8090/Report/rpList.aspx
+Message：Invalid object name 'DWIHR_PRD_20200225.INFORMATION_SCHEMA.COLUMNS'.
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void OnError(System.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action])
+Trace：   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, String srcTable)
+   在 CUSTOMRP.DAL.DbHelperSQL.Query(Int32 UserID, String strCmd, SqlParameter[] cmdParms) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 139
+   在 CUSTOMRP.DAL.Common.query(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\COMMON.cs:行号 27
+   在 CUSTOMRP.BLL.COMMON.query(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\COMMON.cs:行号 25
+   在 CUSTOMRP.BLL.AppHelper.GetColumnInfoForTblView(Int32 UserID, String DBName, String tblviewname) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\AppHelper.cs:行号 373
+   在 QueryReport.Code.LoginUser.Create() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\LoginUser.cs:行号 89
+   在 QueryReport.Code.LoginUser.get_CurrentUser() 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\LoginUser.cs:行号 26
+   在 QueryReport.Code.LoginUserPage.LoginUserPage_Init(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Code\LoginUserPage.cs:行号 31
+   在 System.Web.UI.Control.OnInit(EventArgs e)
+   在 System.Web.UI.Page.OnInit(EventArgs e)
+   在 System.Web.UI.Control.InitRecursive(Control namingContainer)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 14:54:33
+Url：http://localhost:8090/Report/rpexcel2.aspx?id=1214&cmd=run
+Message：Invalid column name 'Code'.
+Invalid column name 'Description'.
+Invalid column name 'Value'.
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void btnRun_Click(System.Object, System.EventArgs)
+Trace：   在 QueryReport.rpexcel2.btnRun_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel2.aspx.cs:行号 385
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 15:10:44
+Url：http://localhost:8090/Report/rpword.aspx
+Message：Incorrect syntax near the keyword 'FROM'.
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void OnError(System.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action])
+Trace：   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, String srcTable)
+   在 CUSTOMRP.DAL.DbHelperSQL.SafeQuery(Int32 UserID, String strCmd) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 182
+   在 CUSTOMRP.DAL.Common.SafeQuery(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\COMMON.cs:行号 34
+   在 CUSTOMRP.BLL.COMMON.SafeQuery(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\COMMON.cs:行号 30
+   在 CUSTOMRP.BLL.AppHelper.getDataForReport(Int32 UserID, Int32 svid, String DatabaseName, String colsString, String sqlplus, String criteriastring, String sortString, Boolean f_distinct, List`1 queryParams) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\AppHelper.cs:行号 706
+   在 QueryReport.Report.rpword.btnSampleDataFile_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpword.aspx.cs:行号 342
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 15:11:37
+Url：http://localhost:8090/Report/rpword.aspx
+Message：Incorrect syntax near the keyword 'FROM'.
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void OnError(System.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action])
+Trace：   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, String srcTable)
+   在 CUSTOMRP.DAL.DbHelperSQL.SafeQuery(Int32 UserID, String strCmd) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 182
+   在 CUSTOMRP.DAL.Common.SafeQuery(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\COMMON.cs:行号 34
+   在 CUSTOMRP.BLL.COMMON.SafeQuery(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\COMMON.cs:行号 30
+   在 CUSTOMRP.BLL.AppHelper.getDataForReport(Int32 UserID, Int32 svid, String DatabaseName, String colsString, String sqlplus, String criteriastring, String sortString, Boolean f_distinct, List`1 queryParams) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\AppHelper.cs:行号 706
+   在 QueryReport.Report.rpword.btnSampleDataFile_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpword.aspx.cs:行号 342
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 15:12:39
+Url：http://localhost:8090/Report/rpword.aspx
+Message：Incorrect syntax near the keyword 'FROM'.
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void OnError(System.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action])
+Trace：   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, String srcTable)
+   在 CUSTOMRP.DAL.DbHelperSQL.SafeQuery(Int32 UserID, String strCmd) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 182
+   在 CUSTOMRP.DAL.Common.SafeQuery(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\COMMON.cs:行号 34
+   在 CUSTOMRP.BLL.COMMON.SafeQuery(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\COMMON.cs:行号 30
+   在 CUSTOMRP.BLL.AppHelper.getDataForReport(Int32 UserID, Int32 svid, String DatabaseName, String colsString, String sqlplus, String criteriastring, String sortString, Boolean f_distinct, List`1 queryParams) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\AppHelper.cs:行号 706
+   在 QueryReport.Report.rpword.btnSampleDataFile_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpword.aspx.cs:行号 342
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 15:13:57
+Url：http://localhost:8090/Report/rpexcel_printconfig.aspx
+Message：未将对象引用设置到对象的实例。
+Source：QueryReport
+Type：System.NullReferenceException
+Function：Void Page_Init(System.Object, System.EventArgs)
+Trace：   在 QueryReport.Report.rpexcel_printconfig.Page_Init(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpexcel_printconfig.aspx.cs:行号 30
+   在 System.EventHandler.Invoke(Object sender, EventArgs e)
+   在 System.Web.UI.Control.OnInit(EventArgs e)
+   在 System.Web.UI.Page.OnInit(EventArgs e)
+   在 System.Web.UI.Control.InitRecursive(Control namingContainer)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 15:16:14
+Url：http://localhost:8090/Report/rpworddetail.aspx?id=1216
+Message：Invalid object name 'DWIHR_PRD_Chinesewoman.qreport.v_QR_Probation'.
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void OnError(System.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action])
+Trace：   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, String srcTable)
+   在 CUSTOMRP.DAL.DbHelperSQL.SafeQuery(Int32 UserID, String strCmd) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 182
+   在 CUSTOMRP.DAL.Common.SafeQuery(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\COMMON.cs:行号 34
+   在 CUSTOMRP.BLL.COMMON.SafeQuery(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\COMMON.cs:行号 30
+   在 CUSTOMRP.BLL.AppHelper.getDataForReport(Int32 UserID, Int32 svid, String DatabaseName, String colsString, String sqlplus, String criteriastring, String sortString, Boolean f_distinct, List`1 queryParams) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\AppHelper.cs:行号 706
+   在 QueryReport.rpworddetail.btnDownloadDatafile_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpworddetail.aspx.cs:行号 436
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************
+ip:::1
+DataTime：2020/4/20 15:17:05
+Url：http://localhost:8090/Report/rpworddetail.aspx?id=1216
+Message：Invalid object name 'DWIHR_PRD_Chinesewoman.qreport.v_QR_Probation'.
+Source：.Net SqlClient Data Provider
+Type：System.Data.SqlClient.SqlException
+Function：Void OnError(System.Data.SqlClient.SqlException, Boolean, System.Action`1[System.Action])
+Trace：   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean asyncWrite)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.Common.DbDataAdapter.FillInternal(DataSet dataset, DataTable[] datatables, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, Int32 startRecord, Int32 maxRecords, String srcTable, IDbCommand command, CommandBehavior behavior)
+   在 System.Data.Common.DbDataAdapter.Fill(DataSet dataSet, String srcTable)
+   在 CUSTOMRP.DAL.DbHelperSQL.SafeQuery(Int32 UserID, String strCmd) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\DbHelperSQL.cs:行号 182
+   在 CUSTOMRP.DAL.Common.SafeQuery(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\DAL\COMMON.cs:行号 34
+   在 CUSTOMRP.BLL.COMMON.SafeQuery(Int32 UserID, String sql) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\COMMON.cs:行号 30
+   在 CUSTOMRP.BLL.AppHelper.getDataForReport(Int32 UserID, Int32 svid, String DatabaseName, String colsString, String sqlplus, String criteriastring, String sortString, Boolean f_distinct, List`1 queryParams) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\BLL\AppHelper.cs:行号 706
+   在 QueryReport.rpworddetail.btnDownloadDatafile_Click(Object sender, EventArgs e) 位置 C:\QueryReport\QueryReport_MasterOrigin\gogocopybranch\port\queryreport\QueryReport\Report\rpworddetail.aspx.cs:行号 436
+   在 System.Web.UI.HtmlControls.HtmlButton.OnServerClick(EventArgs e)
+   在 System.Web.UI.Page.ProcessRequestMain(Boolean includeStagesBeforeAsyncPoint, Boolean includeStagesAfterAsyncPoint)
+********************************************************************************************

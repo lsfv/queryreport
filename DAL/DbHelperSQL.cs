@@ -146,7 +146,6 @@ namespace CUSTOMRP.DAL
                     }
                 }
             }
-
             return result;
         }
 

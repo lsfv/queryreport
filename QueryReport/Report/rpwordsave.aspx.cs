@@ -451,67 +451,76 @@ namespace QueryReport
             //
             // Alex 2018.09.20 - End
 
+
             foreach (Fields cn in container.criteriaColumn)
             {
-                ColumnInfo columnInfo = columninfos.Where(x => x.ColName == cn.ColumnName).First();
-                CUSTOMRP.Model.REPORTCOLUMN col = myReport.ReportColumns.Where(x => x.ColumnFunc == REPORTCOLUMN.ColumnFuncs.Criteria && x.COLUMNNAME == cn.ColumnName).FirstOrDefault();
-
-                if ("String" == columnInfo.DataType)
+                var theColumm = columninfos.Where(x => x.ColName == cn.ColumnName);
+                if (theColumm.Count() > 0)
                 {
-                    Controls.CriteriaString control = (Controls.CriteriaString)Page.LoadControl("~/controls/CriteriaString.ascx");
-                    control.ColumnName = columnInfo.ColName;
-                    control.DisplayName = columnInfo.DisplayName;
+                    ColumnInfo columnInfo = theColumm.First();
+                    CUSTOMRP.Model.REPORTCOLUMN col = myReport.ReportColumns.Where(x => x.ColumnFunc == REPORTCOLUMN.ColumnFuncs.Criteria && x.COLUMNNAME == cn.ColumnName).FirstOrDefault();
 
-                    if ((!IsPostBack) && (col != null))
+                    if ("String" == columnInfo.DataType)
                     {
-                        control.op1 = col.CRITERIA2;
-                        control.range1 = col.CRITERIA3;
-                        control.range2 = col.CRITERIA4;
+                        Controls.CriteriaString control = (Controls.CriteriaString)Page.LoadControl("~/controls/CriteriaString.ascx");
+                        control.ColumnName = columnInfo.ColName;
+                        control.DisplayName = columnInfo.DisplayName;
+
+                        if ((!IsPostBack) && (col != null))
+                        {
+                            control.op1 = col.CRITERIA2;
+                            control.range1 = col.CRITERIA3;
+                            control.range2 = col.CRITERIA4;
+                        }
+
+                        this.Panel1.Controls.Add(control);
                     }
-
-                    this.Panel1.Controls.Add(control);
-                }
-                if ("DateTime" == columnInfo.DataType)
-                {
-                    Controls.CriteriaString control = (Controls.CriteriaString)Page.LoadControl("~/controls/CriteriaString.ascx");
-                    control.ColumnName = columnInfo.ColName;
-                    control.DisplayName = columnInfo.DisplayName;
-                    control.ControlType = "datetime";
-
-                    if ((!IsPostBack) && (col != null))
+                    if ("DateTime" == columnInfo.DataType)
                     {
-                        control.op1 = col.CRITERIA2;
-                        control.range1 = col.CRITERIA3;
-                        control.range2 = col.CRITERIA4;
+                        Controls.CriteriaString control = (Controls.CriteriaString)Page.LoadControl("~/controls/CriteriaString.ascx");
+                        control.ColumnName = columnInfo.ColName;
+                        control.DisplayName = columnInfo.DisplayName;
+                        control.ControlType = "datetime";
+
+                        if ((!IsPostBack) && (col != null))
+                        {
+                            control.op1 = col.CRITERIA2;
+                            control.range1 = col.CRITERIA3;
+                            control.range2 = col.CRITERIA4;
+                        }
+
+                        this.Panel1.Controls.Add(control);
                     }
-
-                    this.Panel1.Controls.Add(control);
-                }
-                else if (("Int" == columnInfo.DataType) || ("Decimal" == columnInfo.DataType))
-                {
-                    Controls.CriteriaNumber control = (Controls.CriteriaNumber)Page.LoadControl("~/Controls/CriteriaNumber.ascx");
-                    control.ColumnName = columnInfo.ColName;
-                    control.DisplayName = columnInfo.DisplayName;
-
-                    if ((!IsPostBack) && (col != null))
+                    else if (("Int" == columnInfo.DataType) || ("Decimal" == columnInfo.DataType))
                     {
-                        control.op1 = col.CRITERIA2;
-                        control.range1 = col.CRITERIA3;
-                        control.range2 = col.CRITERIA4;
+                        Controls.CriteriaNumber control = (Controls.CriteriaNumber)Page.LoadControl("~/Controls/CriteriaNumber.ascx");
+                        control.ColumnName = columnInfo.ColName;
+                        control.DisplayName = columnInfo.DisplayName;
+
+                        if ((!IsPostBack) && (col != null))
+                        {
+                            control.op1 = col.CRITERIA2;
+                            control.range1 = col.CRITERIA3;
+                            control.range2 = col.CRITERIA4;
+                        }
+
+                        this.Panel1.Controls.Add(control);
                     }
+                    else if ("Enum" == columnInfo.DataType)
+                    {
+                        Controls.CriteriaInt control = (Controls.CriteriaInt)Page.LoadControl("~/controls/CriteriaInt.ascx");
+                        control.ColumnName = columnInfo.ColName;
+                        control.DisplayName = columnInfo.DisplayName;
+                        CUSTOMRP.Model.RpEnum rp = new RpEnum();
+                        Type a = rp.GetType().GetNestedType((mySV.SOURCEVIEWNAME + "_" + cn).ToUpper());
+                        control.dt = Common.Utils.GetTableFEnum(a, "text", "value");
 
-                    this.Panel1.Controls.Add(control);
+                        this.Panel1.Controls.Add(control);
+                    }
                 }
-                else if ("Enum" == columnInfo.DataType)
+                else
                 {
-                    Controls.CriteriaInt control = (Controls.CriteriaInt)Page.LoadControl("~/controls/CriteriaInt.ascx");
-                    control.ColumnName = columnInfo.ColName;
-                    control.DisplayName = columnInfo.DisplayName;
-                    CUSTOMRP.Model.RpEnum rp = new RpEnum();
-                    Type a = rp.GetType().GetNestedType((mySV.SOURCEVIEWNAME + "_" + cn).ToUpper());
-                    control.dt = Common.Utils.GetTableFEnum(a, "text", "value");
-
-                    this.Panel1.Controls.Add(control);
+                    throw new Exception("no citerias column :" + cn.ColumnName);
                 }
             }
         }
