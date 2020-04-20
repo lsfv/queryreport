@@ -14,7 +14,7 @@ namespace QueryReport
         {
             if (!string.IsNullOrWhiteSpace(Request.QueryString["message"]))
             {
-                this.Label1.Text = "Error Msg:" + Request.QueryString["message"];
+                this.Label1.Text = "Error Msg:" + Server.UrlDecode(Request.QueryString["message"]);
             }
         }
     }

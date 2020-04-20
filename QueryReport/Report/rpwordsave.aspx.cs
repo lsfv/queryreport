@@ -194,117 +194,117 @@ namespace QueryReport
         //run
         protected void btnPrint_Click(object sender, EventArgs e)
         {
-            //try
-            //{
-                string WordFilePath = null;
-                string downloadFilename = null;
-                if ((myReport != null) && (myReport.WordFile != null) && (File.Exists(g_Config["WordTemplatePath"] + myReport.WordFile.WordFileName)))
+
+            string WordFilePath = null;
+            string downloadFilename = null;
+            if ((myReport != null) && (myReport.WordFile != null) && (File.Exists(g_Config["WordTemplatePath"] + myReport.WordFile.WordFileName)))
+            {
+                WordFilePath = myReport.WordFile.WordFileName;
+                downloadFilename = myReport.WordFile.OrigFileName;
+            }
+            else
+            {
+                CUSTOMRP.Model.WORDTEMPLATE template = WebHelper.bllWORDTEMPLATE.GetModelByReportID(me.ID, myReport.ID, me.ID);
+                if (template != null)
                 {
-                    WordFilePath = myReport.WordFile.WordFileName;
-                    downloadFilename = myReport.WordFile.OrigFileName;
+                    if (File.Exists(g_Config["WordTemplatePath"] + template.TemplateFileName))
+                    {
+                        WordFilePath = template.TemplateFileName;
+                        downloadFilename = myReport.RPTITLE + ".docx";
+                    }
+                }
+            }
+
+            if (WordFilePath == null)
+            {
+                Response.Write(String.Format("<script type=\"text/javascript\">alert(\"{0}\")</script>",
+                    AppNum.ErrorMsg.filenotfounderror));
+                return;
+            }
+
+            string strSqlColumn, strSqlPlus, strSqlCriteria, strSqlSortOn;
+            getSql(ref rpcr, out strSqlColumn, out strSqlCriteria, out strSqlPlus, out strSqlSortOn);
+
+            if (String.IsNullOrWhiteSpace(strSqlColumn))
+            {
+                #region Get Column Names
+
+                string[] colnames = null;
+                CUSTOMRP.Model.SOURCEVIEW sv = WebHelper.bllSOURCEVIEW.GetModel(me.ID, myReport.SVID);
+                List<CUSTOMRP.Model.SOURCEVIEWCOLUMN> svc = WebHelper.bllSOURCEVIEWCOLUMN.GetModelsForSourceView(me.ID, sv.ID, true).OrderBy(x => x.DisplayName).ToList();
+
+                switch (sv.SourceType)
+                {
+                    case CUSTOMRP.Model.SOURCEVIEW.SourceViewType.View:
+                    case CUSTOMRP.Model.SOURCEVIEW.SourceViewType.Table:
+                        {
+                            try
+                            {
+                                columninfos = CUSTOMRP.BLL.AppHelper.GetColumnInfoForTblView(me.ID, me.DatabaseNAME, sv.TBLVIEWNAME);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                                columninfos = new List<CUSTOMRP.Model.ColumnInfo>();
+                                this.lblJavascript.Text = String.Format("<script type=\"text/javascript\">alert('Error in retrieving columns for [{0}]. Please check view defination.');</script>", sv.TBLVIEWNAME);
+                            }
+                            if (svc == null)
+                            {
+                                colnames = CUSTOMRP.BLL.AppHelper.GetColumnNamesForTblView(me.ID, me.DatabaseNAME, sv.TBLVIEWNAME);
+                                // Filter result to only columns that is requested
+                                columninfos = columninfos.Where(x => colnames.Contains(x.ColName)).ToList();
+                            }
+                        }
+                        break;
+                    case CUSTOMRP.Model.SOURCEVIEW.SourceViewType.StoredProc:
+                        {
+                            try
+                            {
+                                columninfos = CUSTOMRP.BLL.AppHelper.GetColumnInfoForStoredProc(me.ID, me.DatabaseNAME, sv.ID);
+                            }
+                            catch (Exception ex)
+                            {
+                                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                                columninfos = new List<CUSTOMRP.Model.ColumnInfo>();
+                                this.lblJavascript.Text = String.Format("<script type=\"text/javascript\">alert('Error in retrieving columns for [{0}]. Please check stored proc defination.');</script>", sv.TBLVIEWNAME);
+                            }
+                            if (svc == null)
+                            {
+                                colnames = CUSTOMRP.BLL.AppHelper.GetColumnNamesForStoredProc(me.ID, me.DatabaseNAME, sv.TBLVIEWNAME);
+                                // Filter result to only columns that is requested
+                                columninfos = columninfos.Where(x => colnames.Contains(x.ColName)).ToList();
+                            }
+                        }
+                        break;
+                }
+
+                if (svc.Count == 0)
+                {
+                    // do sorting
+                    columninfos = columninfos.OrderBy(p => p.ColName).ToList();
                 }
                 else
                 {
-                    CUSTOMRP.Model.WORDTEMPLATE template = WebHelper.bllWORDTEMPLATE.GetModelByReportID(me.ID, myReport.ID, me.ID);
-                    if (template != null)
-                    {
-                        if (File.Exists(g_Config["WordTemplatePath"] + template.TemplateFileName))
-                        {
-                            WordFilePath = template.TemplateFileName;
-                            downloadFilename = myReport.RPTITLE + ".docx";
-                        }
-                    }
+                    columninfos = (from c in columninfos
+                                   join s in svc.Where(x => x.ColumnType == CUSTOMRP.Model.SOURCEVIEWCOLUMN.ColumnTypes.Normal) on c.ColName equals s.COLUMNNAME into lefts
+                                   from s in lefts.DefaultIfEmpty()
+                                   where (s == null || !s.HIDDEN)
+                                   orderby s.DisplayName, c.ColName
+                                   select new CUSTOMRP.Model.ColumnInfo()
+                                   {
+                                       ColName = c.ColName,
+                                       DisplayName = (s == null || String.IsNullOrEmpty(s.DISPLAYNAME)) ? c.ColName : s.DISPLAYNAME, // no need to show actual column name here if DisplayName is supplied
+                                       DataType = c.DataType,
+                                   }).ToList();
                 }
 
-                if (WordFilePath == null)
-                {
-                    Response.Write(String.Format("<script type=\"text/javascript\">alert(\"{0}\")</script>",
-                        AppNum.ErrorMsg.filenotfounderror));
-                    return;
-                }
+                strSqlColumn = String.Join(",", columninfos.Select(x => "[" + x.ColName + "]").ToArray());
 
-                string strSqlColumn, strSqlPlus, strSqlCriteria, strSqlSortOn;
-                getSql(ref rpcr, out strSqlColumn, out strSqlCriteria, out strSqlPlus, out strSqlSortOn);
+                #endregion
+            }
 
-                if (String.IsNullOrWhiteSpace(strSqlColumn))
-                {
-                    #region Get Column Names
-
-                    string[] colnames = null;
-                    CUSTOMRP.Model.SOURCEVIEW sv = WebHelper.bllSOURCEVIEW.GetModel(me.ID, myReport.SVID);
-                    List<CUSTOMRP.Model.SOURCEVIEWCOLUMN> svc = WebHelper.bllSOURCEVIEWCOLUMN.GetModelsForSourceView(me.ID, sv.ID, true).OrderBy(x => x.DisplayName).ToList();
-
-                    switch (sv.SourceType)
-                    {
-                        case CUSTOMRP.Model.SOURCEVIEW.SourceViewType.View:
-                        case CUSTOMRP.Model.SOURCEVIEW.SourceViewType.Table:
-                            {
-                                try
-                                {
-                                    columninfos = CUSTOMRP.BLL.AppHelper.GetColumnInfoForTblView(me.ID, me.DatabaseNAME, sv.TBLVIEWNAME);
-                                }
-                                catch (Exception ex)
-                                {
-                                    System.Diagnostics.Debug.WriteLine(ex.ToString());
-                                    columninfos = new List<CUSTOMRP.Model.ColumnInfo>();
-                                    this.lblJavascript.Text = String.Format("<script type=\"text/javascript\">alert('Error in retrieving columns for [{0}]. Please check view defination.');</script>", sv.TBLVIEWNAME);
-                                }
-                                if (svc == null)
-                                {
-                                    colnames = CUSTOMRP.BLL.AppHelper.GetColumnNamesForTblView(me.ID, me.DatabaseNAME, sv.TBLVIEWNAME);
-                                    // Filter result to only columns that is requested
-                                    columninfos = columninfos.Where(x => colnames.Contains(x.ColName)).ToList();
-                                }
-                            }
-                            break;
-                        case CUSTOMRP.Model.SOURCEVIEW.SourceViewType.StoredProc:
-                            {
-                                try
-                                {
-                                    columninfos = CUSTOMRP.BLL.AppHelper.GetColumnInfoForStoredProc(me.ID, me.DatabaseNAME, sv.ID);
-                                }
-                                catch (Exception ex)
-                                {
-                                    System.Diagnostics.Debug.WriteLine(ex.ToString());
-                                    columninfos = new List<CUSTOMRP.Model.ColumnInfo>();
-                                    this.lblJavascript.Text = String.Format("<script type=\"text/javascript\">alert('Error in retrieving columns for [{0}]. Please check stored proc defination.');</script>", sv.TBLVIEWNAME);
-                                }
-                                if (svc == null)
-                                {
-                                    colnames = CUSTOMRP.BLL.AppHelper.GetColumnNamesForStoredProc(me.ID, me.DatabaseNAME, sv.TBLVIEWNAME);
-                                    // Filter result to only columns that is requested
-                                    columninfos = columninfos.Where(x => colnames.Contains(x.ColName)).ToList();
-                                }
-                            }
-                            break;
-                    }
-
-                    if (svc.Count == 0)
-                    {
-                        // do sorting
-                        columninfos = columninfos.OrderBy(p => p.ColName).ToList();
-                    }
-                    else
-                    {
-                        columninfos = (from c in columninfos
-                                       join s in svc.Where(x => x.ColumnType == CUSTOMRP.Model.SOURCEVIEWCOLUMN.ColumnTypes.Normal) on c.ColName equals s.COLUMNNAME into lefts
-                                       from s in lefts.DefaultIfEmpty()
-                                       where (s == null || !s.HIDDEN)
-                                       orderby s.DisplayName, c.ColName
-                                       select new CUSTOMRP.Model.ColumnInfo()
-                                       {
-                                           ColName = c.ColName,
-                                           DisplayName = (s == null || String.IsNullOrEmpty(s.DISPLAYNAME)) ? c.ColName : s.DISPLAYNAME, // no need to show actual column name here if DisplayName is supplied
-                                           DataType = c.DataType,
-                                       }).ToList();
-                    }
-
-                    strSqlColumn = String.Join(",", columninfos.Select(x => "[" + x.ColName + "]").ToArray());
-
-                    #endregion
-                }
-
-                // v1.8.8 Alex 2018.09.24 - Overloaded getDataForReport to accept QueryParams - Begin
+            if (strSqlColumn != "")
+            {
                 var sqlParams_queryParams = new List<SqlParameter>();
                 foreach (var x in container.queryParams)
                 {
@@ -331,39 +331,44 @@ namespace QueryReport
                     }
                 }
 
-                //v1.2.0 - Cheong - 2016/07/04 - Add option to hide duplicate items
-                //this.rpdt = CUSTOMRP.BLL.AppHelper.getDataForReport(myReport.SVID, me.DatabaseNAME, strSqlColumn, strSqlPlus, strSqlCriteria, strSqlSortOn, true);
                 this.rpdt = CUSTOMRP.BLL.AppHelper.getDataForReport(me.ID, myReport.SVID, me.DatabaseNAME, strSqlColumn, strSqlPlus, strSqlCriteria, strSqlSortOn, myReport.fHideDuplicate, sqlParams_queryParams);
-                // v1.8.8 Alex 2018.09.24 - Overloaded getDataForReport to accept QueryParams - End
 
-                if (container.Format == 1)
+                if (rpdt != null)
                 {
-                    Server.Transfer("htmlexport.aspx?active=html", true);
-                }
-                else if (container.Format == 0)
-                {
-                    string path = g_Config["WordTemplatePath"] + WordFilePath;
-                    string fileName = container.ReportName + ".docx";
 
-                    using (MemoryStream filestream = MailMerge.PerformMailMergeFromTemplate(path, rpdt, columninfos.Select(x => x.DisplayName).ToArray()))
+                    if (container.Format == 1)
                     {
-                        Context.Response.ContentType = "application/octet-stream";
-                        //Context.Response.AddHeader("Content-Disposition", "attachment; filename=\"" + downloadFilename + "\"");
-                        Context.Response.AddHeader("Content-Disposition", String.Format("attachment; filename=\"{0}\"; filename*=utf-8''{1}", downloadFilename, HttpUtility.UrlPathEncode(downloadFilename)));
-                        Context.Response.AddHeader("Content-Length", filestream.Length.ToString());
-                        byte[] fileBuffer = new byte[filestream.Length];
-                        filestream.Read(fileBuffer, 0, (int)filestream.Length);
-                        //CA2202
-                        //filestream.Close();
-                        Context.Response.BinaryWrite(fileBuffer);
-                        Context.Response.End();
+                        Server.Transfer("htmlexport.aspx?active=html", true);
+                    }
+                    else if (container.Format == 0)
+                    {
+                        string path = g_Config["WordTemplatePath"] + WordFilePath;
+                        string fileName = container.ReportName + ".docx";
+
+                        using (MemoryStream filestream = MailMerge.PerformMailMergeFromTemplate(path, rpdt, columninfos.Select(x => x.DisplayName).ToArray()))
+                        {
+                            Context.Response.ContentType = "application/octet-stream";
+                            //Context.Response.AddHeader("Content-Disposition", "attachment; filename=\"" + downloadFilename + "\"");
+                            Context.Response.AddHeader("Content-Disposition", String.Format("attachment; filename=\"{0}\"; filename*=utf-8''{1}", downloadFilename, HttpUtility.UrlPathEncode(downloadFilename)));
+                            Context.Response.AddHeader("Content-Length", filestream.Length.ToString());
+                            byte[] fileBuffer = new byte[filestream.Length];
+                            filestream.Read(fileBuffer, 0, (int)filestream.Length);
+                            //CA2202
+                            //filestream.Close();
+                            Context.Response.BinaryWrite(fileBuffer);
+                            Context.Response.End();
+                        }
                     }
                 }
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw ex;
-            //}
+                else
+                {
+                    this.lblJavascript.Text = String.Format("<script type=\"text/javascript\">alert(\"{0}\");</script>", "Empty data!");
+                }
+            }
+            else
+            {
+                this.lblJavascript.Text = String.Format("<script type=\"text/javascript\">alert(\"{0}\");</script>", "Zero Column,please check!");
+            }
         }
 
         public void btnBack_Click(object sender, EventArgs e)
